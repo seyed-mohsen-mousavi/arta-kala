@@ -1,103 +1,390 @@
+import Brand from "@/components/Brand";
+import Card from "@/components/Card";
+import FlipClock from "@/components/CountdownTimer";
+import HomeSlider from "@/components/HomeSlider";
+import OffCard from "@/components/OffCard";
+import QuickBlogCard from "@/components/QuickBlogCard";
+import Slider from "@/components/Slider";
+import ProductType from "@/types/product";
 import Image from "next/image";
+import Link from "next/link";
 
+export type Image = {
+  id: number;
+  src: string;
+  alt: string;
+  link: string;
+};
+const images = [
+  {
+    id: 1,
+    src: "/slider/1.webp",
+    alt: "عکس ۱",
+    link: "",
+  },
+  {
+    id: 2,
+    src: "/slider/2.webp",
+    alt: "عکس ۲",
+    link: "",
+  },
+  {
+    id: 3,
+    src: "/slider/3.webp",
+    alt: "عکس ۳",
+    link: "",
+  },
+  {
+    id: 4,
+    src: "/slider/4.webp",
+    alt: "عکس ۴",
+    link: "",
+  },
+];
+const products: ProductType[] = [
+  {
+    id: 1,
+    name: "لپ‌تاپ ایسوس مدل VivoBook 15",
+    currentPrice: 25000000,
+    originalPrice: 28000000,
+    images: ["/product/d2.jpg", "/product/d1.jpg"],
+  },
+  {
+    id: 2,
+    name: "لپ‌تاپ ایسوس مدل VivoBook 15",
+    currentPrice: 25000000,
+    originalPrice: 28000000,
+    images: ["/product/d2.jpg", "/product/d1.jpg"],
+  },
+  {
+    id: 3,
+    name: "لپ‌تاپ ایسوس مدل VivoBook 15",
+    currentPrice: 25000000,
+    originalPrice: 28000000,
+    images: ["/product/d2.jpg", "/product/d1.jpg"],
+  },
+  {
+    id: 4,
+    name: "لپ‌تاپ ایسوس مدل VivoBook 15",
+    currentPrice: 25000000,
+    originalPrice: 28000000,
+    images: ["/product/d2.jpg", "/product/d1.jpg"],
+  },
+  {
+    id: 5,
+    name: "لپ‌تاپ ایسوس مدل VivoBook 15",
+    currentPrice: 25000000,
+    originalPrice: 28000000,
+    images: ["/product/d2.jpg", "/product/d1.jpg"],
+  },
+  {
+    id: 6,
+    name: "لپ‌تاپ ایسوس مدل VivoBook 15",
+    currentPrice: 25000000,
+    originalPrice: 28000000,
+    images: ["/product/d2.jpg", "/product/d1.jpg"],
+  },
+];
+const quickCategories: { label: string; image: string }[] = [
+  {
+    label: "فرز",
+    image: "/quick-category/1.jpg",
+  },
+  {
+    label: "​جارو شارژی و کارواش",
+    image: "/quick-category/2.jpg",
+  },
+  {
+    label: "شیرآلات",
+    image: "/quick-category/3.png",
+  },
+  {
+    label: "​شستشو و نظافت",
+    image: "/quick-category/4.jpg",
+  },
+  {
+    label: "روشنایی",
+    image: "/quick-category/5.jpg",
+  },
+  {
+    label: "​دریل",
+    image: "/quick-category/6.jpg",
+  },
+];
+const brands: { link: string; name: string; image: string }[] = [
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/1.jpg",
+  },
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/2.jpg",
+  },
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/3.jpg",
+  },
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/1.jpg",
+  },
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/2.jpg",
+  },
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/3.jpg",
+  },
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/1.jpg",
+  },
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/2.jpg",
+  },
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/3.jpg",
+  },
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/1.jpg",
+  },
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/2.jpg",
+  },
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/3.jpg",
+  },
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/1.jpg",
+  },
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/2.jpg",
+  },
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/3.jpg",
+  },
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/1.jpg",
+  },
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/2.jpg",
+  },
+  {
+    link: "/",
+    name: "نمیدانم",
+    image: "/brands/3.jpg",
+  },
+];
+const blogs: { id: number; title: string; image: string }[] = [
+  {
+    id: 1,
+    image: "/blog.jpg",
+    title: "آشنایی با انواع فرز و کاربرد آنها",
+  },
+  {
+    id: 2,
+    image: "/blog.jpg",
+    title: "آشنایی با انواع فرز و کاربرد آنها",
+  },
+  {
+    id: 3,
+    image: "/blog.jpg",
+    title: "آشنایی با انواع فرز و کاربرد آنها",
+  },
+  {
+    id: 4,
+    image: "/blog.jpg",
+    title: "آشنایی با انواع فرز و کاربرد آنها",
+  },
+  {
+    id: 5,
+    image: "/blog.jpg",
+    title: "آشنایی با انواع فرز و کاربرد آنها",
+  },
+  {
+    id: 6,
+    image: "/blog.jpg",
+    title: "آشنایی با انواع فرز و کاربرد آنها",
+  },
+];
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="w-full">
+      <section className="flex gap-2 w-full h-full py-4">
+        <div className="relative w-full max-w-2/3 flex justify-center items-center">
+          <HomeSlider images={images} />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <div className="flex flex-col space-y-5 w-1/3">
+          <Link href={""}>
+            <Image
+              src={"/dep.jpg"}
+              alt=""
+              width={200}
+              height={200}
+              className="object-cover w-full h-full rounded-md"
+            />
+          </Link>
+          <Link href={""}>
+            {" "}
+            <Image
+              src={"/dep2.webp"}
+              alt=""
+              width={200}
+              height={200}
+              className="object-cover w-full h-full rounded-md"
+            />
+          </Link>
+        </div>
+      </section>
+      <section className="max-w-[1270px] mx-auto space-y-2">
+        <div className="flex flex-row-reverse flex-wrap gap-5 items-center w-full justify-around py-5">
+          {quickCategories.map((qc, index) => (
+            <Link
+              key={index}
+              href={"/"}
+              className="flex flex-col items-center gap-1 "
+            >
+              <Image
+                src={qc.image}
+                alt={qc.label}
+                width={200}
+                height={200}
+                loading="lazy"
+                className="object-fill size-32"
+              />
+              <p className="font-bold text-xs">{qc.label}</p>
+            </Link>
+          ))}
+        </div>
+        <div className="bg-primary-500 rounded-3xl p-4 shadow-[0px_9px_14px_0px_rgba(254,192,1,0.2)] flex gap-10">
+          <div className="flex flex-col items-center gap-6 justify-between pr-10">
+            <h2 className="text-red-600 text-[42px] font-semibold">آف مارت</h2>
+            <FlipClock targetDate={new Date("2025-07-10T00:00:00")} />
+            <button className="bg-red-600 text-white px-7 py-1.5 rounded-full border-2 border-red-700 hover:bg-red-700 transition-colors ease-in-out">
+              مشاهده همه آف ها
+            </button>
+          </div>
+          <div className="w-full max-w-3/4">
+            <Slider items={products} Card={OffCard} />
+          </div>
+        </div>
+        <div className="flex items-center gap-10 h-48 my-7">
           <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+            src={"/c1.jpg"}
+            alt="تبلیغ"
+            width={480}
+            height={180}
+            className="w-full rounded-3xl object-cover h-full"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
           <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+            src={"/c2.jpg"}
+            alt="تبلیغ"
+            width={480}
+            height={180}
+            className="w-full rounded-3xl object-cover h-full"
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        </div>
+        <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4">
+          <div className="w-full flex justify-between px-4">
+            <h4 className="font-semibold text-2xl">جدیدترین</h4>{" "}
+            <Link href={"/"} className="underline text-lg">
+              مشاهده بیشتر محصولات​​​​​​​
+            </Link>
+          </div>
+          <div className="px-12 mt-5">
+            <Slider
+              spaceBetween={35}
+              className="!text-primary"
+              items={products}
+              Card={Card}
+            />
+          </div>
+        </div>
+        <Image
+          src={"/ads.jpg"}
+          alt="تبلیغ"
+          width={1160}
+          height={200}
+          className="w-full rounded-3xl mb-5"
+        />
+        <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4">
+          <div className="w-full flex justify-between px-4">
+            <h4 className="font-semibold text-2xl">پرفروش ها</h4>{" "}
+            <Link href={"/"} className="underline text-lg">
+              مشاهده بیشتر محصولات​​​​​​​
+            </Link>
+          </div>
+          <div className="px-12 mt-5">
+            <Slider
+              spaceBetween={35}
+              className="!text-primary"
+              items={products}
+              Card={Card}
+            />
+          </div>
+        </div>
+        <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 flex">
+          <div className="w-full flex flex-col gap-5 px-4">
+            <h4 className="font-semibold text-2xl">بلاگ</h4>{" "}
+            <div className="flex flex-col gap-0.5">
+              <Link href={"/"}>دانستنی‌های ابزار دستی(۲۲)</Link>
+              <Link href={"/"}>دانستنی های ابزار برقی و شارژی(۶۰)</Link>
+              <Link href={"/"}>دانستنی‌های ابزار بادی و بنزینی(۱)</Link>
+              <Link href={"/"}>دانستنی های ابزار الکتریک و روشنایی(۱)</Link>
+            </div>
+            <Link href={"/"} className="underline text-lg">
+              مشاهده مطالب بیشتر
+            </Link>
+          </div>
+          <div className="px-12 mt-5 max-w-3/4">
+            <Slider
+              spaceBetween={10}
+              className="!text-primary"
+              items={blogs}
+              Card={QuickBlogCard}
+              slidesPerView={3}
+            />
+          </div>
+        </div>
+        <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 mt-10">
+          <div className="px-12 mt-5 h-32">
+            <Slider
+              spaceBetween={35}
+              className="!text-primary"
+              items={brands}
+              Card={Brand}
+            />
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
