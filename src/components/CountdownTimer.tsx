@@ -93,7 +93,11 @@ const FlipClock: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
   };
 
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft());
+  const [isClient, setIsClient] = useState(false);
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   const [hoursShuffle, setHoursShuffle] = useState(true);
   const [minutesShuffle, setMinutesShuffle] = useState(true);
   const [secondsShuffle, setSecondsShuffle] = useState(true);
@@ -118,32 +122,34 @@ const FlipClock: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
     return () => clearInterval(timerID);
   }, [timeLeft, targetDate]);
 
-  return (
-    <div className="w-[170px] space-y-3">
-      <div className={"flipClock"}>
-        <FlipUnitContainer
-          unit={"seconds"}
-          digit={timeLeft.seconds}
-          shuffle={secondsShuffle}
-        />
-        <FlipUnitContainer
-          unit={"minutes"}
-          digit={timeLeft.minutes}
-          shuffle={minutesShuffle}
-        />
-        <FlipUnitContainer
-          unit={"hours"}
-          digit={timeLeft.hours}
-          shuffle={hoursShuffle}
-        />
+  if (!isClient) {
+    return (
+      <div className="w-[170px] space-y-3">
+        <div className={"flipClock"}>
+          <FlipUnitContainer
+            unit={"seconds"}
+            digit={timeLeft.seconds}
+            shuffle={secondsShuffle}
+          />
+          <FlipUnitContainer
+            unit={"minutes"}
+            digit={timeLeft.minutes}
+            shuffle={minutesShuffle}
+          />
+          <FlipUnitContainer
+            unit={"hours"}
+            digit={timeLeft.hours}
+            shuffle={hoursShuffle}
+          />
+        </div>
+        <div className="w-full bg-red-600 text-white flex items-center justify-between px-2">
+          <span>ثانیه</span>
+          <span className="pr-2">دقیقه</span>
+          <span>ساعت</span>
+        </div>
       </div>
-      <div className="w-full bg-red-600 text-white flex items-center justify-between px-2">
-        <span>ثانیه</span>
-        <span className="pr-2">دقیقه</span>
-        <span>ساعت</span>
-      </div>
-    </div>
-  );
+    );
+  }
 };
 
 export default FlipClock;

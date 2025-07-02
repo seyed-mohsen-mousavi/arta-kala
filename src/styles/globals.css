@@ -16,3 +16,8 @@ li::marker {
 body {
   font-size: 14px;
 }
+@layer base {
+  body {
+    @apply text-[15px] md:text-[17px] lg:text-[18px] leading-relaxed;
+  }
+}

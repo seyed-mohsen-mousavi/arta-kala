@@ -1,14 +1,18 @@
 import Brand from "@/components/Brand";
 import Card from "@/components/Card";
-import FlipClock from "@/components/CountdownTimer";
+import dynamic from "next/dynamic";
+
 import HomeSlider from "@/components/HomeSlider";
 import OffCard from "@/components/OffCard";
 import QuickBlogCard from "@/components/QuickBlogCard";
 import Slider from "@/components/Slider";
+import api from "@/services/api";
 import ProductType from "@/types/product";
 import Image from "next/image";
 import Link from "next/link";
+import FlipClock from "@/components/ClientFlipClockWrapper";
 
+const targetTime = new Date("2025-07-10T00:00:00");
 export type Image = {
   id: number;
   src: string;
@@ -238,34 +242,37 @@ const blogs: { id: number; title: string; image: string }[] = [
 export default function Home() {
   return (
     <div className="w-full">
-      <section className="flex gap-2 w-full h-full py-4">
-        <div className="relative w-full max-w-2/3 flex justify-center items-center">
+      {/* Header  */}
+      <section className="flex flex-col md:flex-row gap-4 w-full h-full py-4">
+        <div className="w-full md:w-2/3 flex justify-center items-center min-h-[250px] md:h-auto">
           <HomeSlider images={images} />
         </div>
-        <div className="flex flex-col space-y-5 w-1/3">
+
+        <div className="flex flex-col space-y-4 w-full md:w-1/3">
           <Link href={""}>
             <Image
               src={"/dep.jpg"}
               alt=""
               width={200}
               height={200}
-              className="object-cover w-full h-full rounded-md"
+              className="object-cover w-full  h-full rounded-md"
             />
           </Link>
           <Link href={""}>
-            {" "}
             <Image
               src={"/dep2.webp"}
               alt=""
               width={200}
               height={200}
-              className="object-cover w-full h-full rounded-md"
+              className="object-cover w-full  h-full rounded-md"
             />
           </Link>
         </div>
       </section>
+      {/* Main */}
       <section className="max-w-[1270px] mx-auto space-y-2">
-        <div className="flex flex-row-reverse flex-wrap gap-5 items-center w-full justify-around py-5">
+        {/* Quick Categories */}
+        <div className="flex flex-row-reverse flex-wrap md:gap-5 items-center w-full justify-around py-5">
           {quickCategories.map((qc, index) => (
             <Link
               key={index}
@@ -278,25 +285,33 @@ export default function Home() {
                 width={200}
                 height={200}
                 loading="lazy"
-                className="object-fill size-32"
+                className="object-fill size-24 md:size-32"
               />
               <p className="font-bold text-xs">{qc.label}</p>
             </Link>
           ))}
         </div>
-        <div className="bg-primary-500 rounded-3xl p-4 shadow-[0px_9px_14px_0px_rgba(254,192,1,0.2)] flex gap-10">
-          <div className="flex flex-col items-center gap-6 justify-between pr-10">
-            <h2 className="text-red-600 text-[42px] font-semibold">آف مارت</h2>
-            <FlipClock targetDate={new Date("2025-07-10T00:00:00")} />
-            <button className="bg-red-600 text-white px-7 py-1.5 rounded-full border-2 border-red-700 hover:bg-red-700 transition-colors ease-in-out">
+        {/* OFF Mart */}
+        <div className="bg-primary-500 rounded-3xl p-4 shadow-[0px_9px_14px_0px_rgba(254,192,1,0.2)] flex flex-col lg:flex-row gap-10">
+          <div className="flex flex-col items-center gap-6 justify-between pr-10 w-full">
+            <div className="flex flex-row lg:flex-col w-full justify-between">
+              <h2 className="text-red-600 text-4xl lg:text-[42px] font-bold">
+                آف مارت
+              </h2>
+              <FlipClock targetDate={new Date("2025-07-05T00:00:00")} />
+            </div>
+            <button className="hidden lg:block bg-red-600 text-white px-7 py-1.5 rounded-full border-2 border-red-700 hover:bg-red-700 transition-colors ease-in-out">
               مشاهده همه آف ها
             </button>
           </div>
-          <div className="w-full max-w-3/4">
+          <div className="w-full lg:max-w-3/4 px-4 rounded-2xl">
             <Slider items={products} Card={OffCard} />
           </div>
+          <button className="lg:hidden block mx-auto bg-red-600 text-white px-7 py-1.5 rounded-full border-2 border-red-700 hover:bg-red-700 transition-colors ease-in-out">
+            مشاهده همه آف ها
+          </button>
         </div>
-        <div className="flex items-center gap-10 h-48 my-7">
+        <div className="flex flex-col lg:flex-row items-center gap-2 sm:gap-5 lg:gap-10 lg:h-48 my-7">
           <Image
             src={"/c1.jpg"}
             alt="تبلیغ"
@@ -312,6 +327,7 @@ export default function Home() {
             className="w-full rounded-3xl object-cover h-full"
           />
         </div>
+        {/* New  */}
         <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4">
           <div className="w-full flex justify-between px-4">
             <h4 className="font-semibold text-2xl">جدیدترین</h4>{" "}
@@ -333,8 +349,9 @@ export default function Home() {
           alt="تبلیغ"
           width={1160}
           height={200}
-          className="w-full rounded-3xl mb-5"
+          className="w-full rounded-xl lg:rounded-3xl mb-5"
         />
+        {/* Populer */}
         <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4">
           <div className="w-full flex justify-between px-4">
             <h4 className="font-semibold text-2xl">پرفروش ها</h4>{" "}
@@ -351,10 +368,11 @@ export default function Home() {
             />
           </div>
         </div>
-        <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 flex">
-          <div className="w-full flex flex-col gap-5 px-4">
-            <h4 className="font-semibold text-2xl">بلاگ</h4>{" "}
-            <div className="flex flex-col gap-0.5">
+        {/* Blog */}
+        <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 flex lg:flex-row flex-col">
+          <div className="w-full flex lg:flex-col justify-between gap-5 px-4">
+            <h4 className="font-semibold text-2xl">بلاگ</h4>
+            <div className="hidden  gap-0.5 lg:flex flex-col">
               <Link href={"/"}>دانستنی‌های ابزار دستی(۲۲)</Link>
               <Link href={"/"}>دانستنی های ابزار برقی و شارژی(۶۰)</Link>
               <Link href={"/"}>دانستنی‌های ابزار بادی و بنزینی(۱)</Link>
@@ -364,7 +382,7 @@ export default function Home() {
               مشاهده مطالب بیشتر
             </Link>
           </div>
-          <div className="px-12 mt-5 max-w-3/4">
+          <div className="px-12 mt-5 lg:max-w-3/4">
             <Slider
               spaceBetween={10}
               className="!text-primary"
@@ -374,6 +392,7 @@ export default function Home() {
             />
           </div>
         </div>
+        {/* Brands */}
         <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 mt-10">
           <div className="px-12 mt-5 h-32">
             <Slider

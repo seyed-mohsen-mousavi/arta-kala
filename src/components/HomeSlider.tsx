@@ -20,9 +20,11 @@ function Slider({ images }: { images: ImageType[] }) {
         loop={false}
         navigation={false}
         autoplay
+        
         keyboard={{ enabled: true }}
         modules={[Keyboard, Autoplay, Navigation]}
-        className="size-full"
+        className="size-full h-[200px] sm:h-[300px] md:h-full"
+        
         onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
       >
@@ -58,17 +60,17 @@ function Slider({ images }: { images: ImageType[] }) {
 
       <button
         onClick={() => swiperRef.current?.slideNext()}
-        className="absolute top-1/2 left-2 -translate-y-1/2  text-[#a4a4a4]  z-20 drop-shadow-xl"
+        className="absolute top-1/2 left-1 md:left-2 -translate-y-1/2  text-[#a4a4a4]  z-20 drop-shadow-xl hover:-translate-x-2 transition-transform ease-in-out"
         aria-label="Previous Slide"
       >
-        <GoChevronLeft className="size-12" />
+        <GoChevronLeft className="size-8 sm:size-10 lg:size-12" />
       </button>
       <button
         onClick={() => swiperRef.current?.slidePrev()}
-        className="absolute top-1/2 right-2 -translate-y-1/2  text-[#a4a4a4]  z-20 drop-shadow-xl"
+        className="absolute top-1/2  right-1 md:right-2 -translate-y-1/2  text-[#a4a4a4]  z-20 drop-shadow-xl hover:translate-x-2 transition-transform ease-in-out"
         aria-label="Next Slide"
       >
-        <GoChevronRight className="size-12" />
+        <GoChevronRight className="size-8 sm:size-10 lg:size-12" />
       </button>
     </div>
   );

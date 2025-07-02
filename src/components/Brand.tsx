@@ -5,9 +5,9 @@ import Link from "next/link";
 
 export default function Brand({ item }: { item: any }) {
   return (
-    <Link href={item?.link}>
+    <Link href={item?.link} className="size-full">
       <Image
-        className="h-32 block mx-auto object-contain w-full"
+        className="h-32 block mx-auto object-contain w-full h-full"
         width={200}
         src={item.image}
         alt={item.name}
