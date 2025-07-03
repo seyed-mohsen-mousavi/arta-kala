@@ -163,7 +163,7 @@ function Navbar({ categories }: { categories: Category[] }) {
     <div>
       <div className="h-20"></div>
       <div
-        className={`w-full z-50 h-[54px] bg-primary text-[#3d464d] transition-all duration-300 shadow sm:text-[10px] xl:text-xs 2xl:text-smsm:text-[10px] 2xl:text-sm  ${
+        className={`w-full z-50 h-[54px] bg-primary text-[#3d464d] transition-all duration-300 shadow   ${
           scrolled ? "fixed top-0 " : "relative"
         }`}
       >
@@ -173,7 +173,7 @@ function Navbar({ categories }: { categories: Category[] }) {
               <div className="w-22">
                 <motion.div
                   animate={{
-                    y: [0, -10, 0],
+                    y: [0, -3.5, 0],
                     scale: [1, 1.05, 1],
                   }}
                   transition={{
@@ -182,7 +182,7 @@ function Navbar({ categories }: { categories: Category[] }) {
                     repeatType: "loop",
                     ease: "easeInOut",
                   }}
-                  className="-ml-18 size-12 translate-y-2"
+                  className="-ml-18 size-12 translate-y-1"
                 >
                   <Image
                     alt="logo"
