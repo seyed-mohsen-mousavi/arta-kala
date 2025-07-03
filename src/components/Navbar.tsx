@@ -87,7 +87,6 @@ import { motion } from "framer-motion";
 // ];
 
 import { GetShopCategoriesTreeList } from "@/services/shopActions";
-import { Category } from "@/types/categories";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -97,8 +96,9 @@ import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { RiMenu3Fill } from "react-icons/ri";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { CategoryNode } from "@/types/categories";
 
-function Navbar({ categories }: { categories: Category[] }) {
+function Navbar({ categories }: { categories: CategoryNode[] }) {
   const pathname = usePathname();
 
   const links = [
@@ -120,20 +120,22 @@ function Navbar({ categories }: { categories: Category[] }) {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  const renderCategories = (categories: Category[]) => {
+  const renderCategories = (categories: CategoryNode[]) => {
     return (
       <ul className="relative">
         {categories.map((category, index) => (
           <li
             key={index}
-            className="group relative hover:bg-[#525d66] whitespace-nowrap"
+            className="group relative hover:bg-[#525d66] whitespace-nowrap pt-2"
           >
             <Link
-              href={`/`}
-              className="font-normal flex items-center justify-between px-4 w-full h-full py-2"
+              href={`/products/?category_id=${category.id}`}
+              className="font-normal flex items-center justify-between px-4 w-full h-full py-2 text-sm"
             >
               {category.name}
-              <GoChevronLeft className="size-4 fill-[#98aab3]" />
+              {category.children && category.children.length > 0 && (
+                <GoChevronLeft className="size-4 fill-[#98aab3]" />
+              )}
             </Link>
             {category.children && category.children.length > 0 && (
               <div className="absolute top-0 right-full bg-white text-[#3d464d] rounded-xs shadow-lg group-hover:visible group-hover:opacity-100 invisible opacity-0 transition-all duration-200 z-50 p-4">
@@ -143,7 +145,10 @@ function Navbar({ categories }: { categories: Category[] }) {
                       key={index}
                       className="relative max-w-[25%] flex-[0_0_25%] w-full py-px"
                     >
-                      <Link href="/" className="hover:text-primary transition">
+                      <Link
+                        href={`/products/?category_id=${child.id}`}
+                        className="hover:text-primary transition "
+                      >
                         {child.name}
                       </Link>
                     </li>
@@ -197,7 +202,7 @@ function Navbar({ categories }: { categories: Category[] }) {
                 <div
                   onMouseEnter={() => setIsOpen(true)}
                   onMouseLeave={() => setIsOpen(false)}
-                  className="relative sm:w-[190px] lg:w-[190px]  xl:w-[260px] 2xl:w-80 h-[42px]"
+                  className="relative sm:w-[190px] lg:w-[190px]  xl:w-[260px] 2xl:w-80 h-[35px]"
                 >
                   <div className="absolute bg-[#3d464d] top-0  size-full rounded-xs pt-10">
                     <ul

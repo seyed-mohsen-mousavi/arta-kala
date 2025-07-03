@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
 import Navbar from "@/components/Navbar";
 import { GetShopCategoriesTreeList } from "@/services/shopActions";
-import Providers from "./providers";
 // import Providers from "./providers";
 import localFont from "next/font/local";
 
@@ -38,7 +36,7 @@ const pelak = localFont({
   src: [
     {
       path: "fonts/Pelak-Regular.woff2",
-      weight: "400",  
+      weight: "400",
       style: "normal",
     },
     {
@@ -88,11 +86,9 @@ export default async function RootLayout({
         className={`${iranyekan.variable} ${pelak.variable} ${noora.variable} ${dana.variable} ${iranyekan.className} antialiased overflow-x-hidden overflow-y-auto w-full h-full bg-[#f9f9f9]`}
       >
         <Navbar categories={result?.data} />
-        <Providers>
-          <main className="container customSm:max-w-[566px]  w-full mx-auto mb-20 px-2 lg:px-0 h-screen">
-            {children}
-          </main>
-        </Providers>
+        <main className="container customSm:max-w-[566px]  w-full mx-auto mb-20 px-2 lg:px-0 h-screen">
+          {children}
+        </main>
       </body>
     </html>
   );

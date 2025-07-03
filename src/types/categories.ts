@@ -1,5 +1,6 @@
-export type Category = {
-    id: number;
+export type CategoryNode = {
+    id: number | string;
     name: string;
-    children?: Category[];
+    slug: string;
+    children?: CategoryNode[];
 };
