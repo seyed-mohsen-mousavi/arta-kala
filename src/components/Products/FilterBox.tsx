@@ -235,10 +235,8 @@ export default function FilterBox({
                     hideStepper
                     size="sm"
                     classNames={{
-                      inputWrapper:
-                        "border border-zinc-300 p-1 rounded-full w-full text-center bg-transparent shadow-none",
-                      input:
-                        "outline-none border-none !text-zinc-500 text-center font-dana",
+                      inputWrapper: "input !rounded-full",
+                      input: "input font-dana  border-none",
                     }}
                     minValue={minPrice}
                     maxValue={maxPrice}
@@ -255,10 +253,8 @@ export default function FilterBox({
                     onValueChange={handleMaxChange}
                     hideStepper
                     classNames={{
-                      inputWrapper:
-                        "border border-zinc-300 p-3 rounded-full w-full text-center bg-transparent shadow-none",
-                      input:
-                        "outline-none border-none !text-zinc-500 text-center font-dana",
+                      inputWrapper: "input !rounded-full",
+                      input: "input font-dana  border-none",
                     }}
                     minValue={minPrice}
                     maxValue={maxPrice}

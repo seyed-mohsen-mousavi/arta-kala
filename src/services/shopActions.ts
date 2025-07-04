@@ -80,3 +80,8 @@ export async function DeleteShopCart() {
         console.log(error)
     }
 }
+// Comments ---
+
+export async function GetComments(product_slug: string) {
+
+}

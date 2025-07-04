@@ -225,10 +225,8 @@ function AddToCart({
                     hideStepper
                     size="sm"
                     classNames={{
-                      inputWrapper:
-                        "border border-zinc-300 p-1 rounded-xs w-full text-center bg-transparent shadow-none",
-                      input:
-                        "outline-none border-none !text-zinc-500 font-dana pr-2 focus:border-zinc-400",
+                      inputWrapper: "input !rounded-full",
+                      input: "input font-dana  border-none",
                     }}
                     minValue={1}
                     aria-label="مقدار سبد خرید"
@@ -245,7 +243,7 @@ function AddToCart({
               </ModalBody>
               <ModalFooter>
                 <button
-                  className="w-full p-3 bg-primary text-zinc-700 "
+                  className="w-full p-3 bg-primary text-zinc-700 hover:bg-[#3d464d] hover:text-white transition-colors ease-in-out"
                   type="submit"
                 >
                   اعمال مقدار

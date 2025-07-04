@@ -1,96 +1,9 @@
 "use client";
 import { motion } from "framer-motion";
 
-// const categories: Category[] = [
-//   {
-//     id: 1,
-//     name: "ابزار دستی",
-//     children: [
-//       { id: 2, name: "آچار" },
-//       { id: 3, name: "چکش" },
-//       { id: 4, name: "پیچ‌گوشتی" },
-//       { id: 5, name: "سوهان" },
-//       { id: 6, name: "انبردست" },
-//       { id: 7, name: "متر" },
-//       { id: 8, name: "کاتر" },
-//       { id: 9, name: "رنده" },
-//       { id: 5, name: "سوهان" },
-//       { id: 6, name: "انبردست" },
-//       { id: 7, name: "متر" },
-//       { id: 8, name: "کاتر" },
-//       { id: 9, name: "رنده" },
-//       { id: 5, name: "سوهان" },
-//       { id: 6, name: "انبردست" },
-//       { id: 7, name: "متر" },
-//       { id: 8, name: "کاتر" },
-//       { id: 9, name: "رنده" },
-//       { id: 5, name: "سوهان" },
-//       { id: 6, name: "انبردست" },
-//       { id: 7, name: "متر" },
-//       { id: 8, name: "کاتر" },
-//       { id: 9, name: "رنده" },
-//       { id: 5, name: "سوهان" },
-//       { id: 6, name: "انبردست" },
-//       { id: 7, name: "متر" },
-//       { id: 8, name: "کاتر" },
-//       { id: 9, name: "رنده" },
-//       { id: 5, name: "سوهان" },
-//       { id: 6, name: "انبردست" },
-//       { id: 7, name: "متر" },
-//       { id: 8, name: "کاتر" },
-//       { id: 9, name: "رنده" },
-//       { id: 5, name: "سوهان" },
-//       { id: 6, name: "انبردست" },
-//       { id: 7, name: "متر" },
-//       { id: 8, name: "کاتر" },
-//       { id: 9, name: "رنده" },
-//       { id: 5, name: "سوهان" },
-//       { id: 6, name: "انبردست" },
-//       { id: 7, name: "متر" },
-//       { id: 8, name: "کاتر" },
-//       { id: 9, name: "رنده" },
-//       { id: 5, name: "سوهان" },
-//       { id: 6, name: "انبردست" },
-//       { id: 7, name: "متر" },
-//       { id: 8, name: "کاتر" },
-//       { id: 9, name: "رنده" },
-//     ],
-//   },
-//   {
-//     id: 10,
-//     name: "ابزار برقی",
-//     children: [
-//       { id: 11, name: "دریل" },
-//       { id: 12, name: "سنگ فرز" },
-//       { id: 13, name: "دستگاه جوش" },
-//       { id: 14, name: "سنباده برقی" },
-//       { id: 15, name: "پیچ‌گوشتی برقی" },
-//       { id: 16, name: "میخ‌کوب" },
-//       { id: 17, name: "اره برقی" },
-//       { id: 18, name: "پمپ باد" },
-//     ],
-//   },
-//   {
-//     id: 19,
-//     name: "ابزار باغبانی",
-//     children: [
-//       { id: 20, name: "بیل" },
-//       { id: 21, name: "چاقوی باغبانی" },
-//       { id: 22, name: "قیچی باغبانی" },
-//       { id: 23, name: "علف‌زن" },
-//       { id: 24, name: "سم‌پاش" },
-//       { id: 25, name: "چرخ دستی" },
-//       { id: 26, name: "نازل آبپاش" },
-//       { id: 27, name: "شن‌کش" },
-//     ],
-//   },
-// ];
-
-import { GetShopCategoriesTreeList } from "@/services/shopActions";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { CiSearch } from "react-icons/ci";
 import { GoChevronLeft, GoChevronUp } from "react-icons/go";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { RiMenu3Fill } from "react-icons/ri";
@@ -112,14 +25,14 @@ function Navbar({ categories }: { categories: CategoryNode[] }) {
   const [isOpen, setIsOpen] = useState(false);
   const [jobIsOpen, setJobIsOpen] = useState(false);
   const [sideOpen, setSideOpen] = useState(false);
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     setScrolled(window.scrollY > 20);
+  //   };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, []);
   const renderCategories = (categories: CategoryNode[]) => {
     return (
       <ul className="relative">
@@ -247,18 +160,13 @@ function Navbar({ categories }: { categories: CategoryNode[] }) {
             </div>
             <button
               onClick={handleOpen}
-              className="bg-white p-2 rounded-lg lg:hidden"
+              className="bg-white p-2 rounded-sm lg:hidden"
             >
-              <RiMenu3Fill className="size-6" />
+              <RiMenu3Fill className="size-7 sm:size-8 md:size-9" />
             </button>
             <div className="bg-white absolute h-screen"></div>
             <div className="space-x-2 flex items-center ">
-              <Link
-                className="py-1 px-3 rounded-2xl bg-white text-black font-semibold"
-                href={"/"}
-              >
-                ورود / عضویت{" "}
-              </Link>
+              <LoginModal />
               <Link
                 className="py-1 px-3 rounded-2xl bg-white text-black font-semibold"
                 href={"/"}
@@ -266,7 +174,13 @@ function Navbar({ categories }: { categories: CategoryNode[] }) {
                 بازاریاب شو
               </Link>
               <button>
-                <CiSearch className="size-6" />
+                <Image
+                  alt="دکمه سرچ"
+                  width={50}
+                  height={50}
+                  className="size-6 brightness-50"
+                  src={"/search.png"}
+                />
               </button>
             </div>
           </div>
@@ -282,3 +196,81 @@ function Navbar({ categories }: { categories: CategoryNode[] }) {
 }
 
 export default Navbar;
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+  Checkbox,
+  Input,
+} from "@heroui/react";
+import { HiXMark } from "react-icons/hi2";
+function LoginModal() {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  return (
+    <div>
+      <button
+        onClick={onOpen}
+        className="py-1 px-3 rounded-2xl bg-white text-black font-semibold"
+      >
+        ورود / عضویت{" "}
+      </button>
+      <Modal
+        hideCloseButton
+        isOpen={isOpen}
+        placement="top-center"
+        onOpenChange={onOpenChange}
+      >
+        <ModalContent className="text-sm rounded-sm">
+          {(onClose) => (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <ModalHeader className="flex items-center justify-between gap-1">
+                <p>ورود به حساب کاربری</p>
+                <button type="button" onClick={onClose}>
+                  <HiXMark className="size-6" />
+                </button>
+              </ModalHeader>
+              <ModalBody>
+                <label htmlFor="phone_number">شماره تلفن</label>
+                <input id="phone_number" type="text" className="input" />
+                <label htmlFor="password">رمز عبور</label>
+                <input id="password" type="password" className="input" />
+                <div className="flex py-2 px-1 justify-between">
+                  <Checkbox
+                    classNames={{
+                      label: "text-small",
+                    }}
+                  >
+                    مرا به خاطر داشته باش
+                  </Checkbox>
+                </div>
+              </ModalBody>
+              <ModalFooter className="mb-4">
+                <button
+                  type="submit"
+                  className="w-full py-3 bg-primary text-sm"
+                >
+                  ورود به حساب
+                </button>
+              </ModalFooter>
+              <div className="w-full bg-[#f9f9f9] border-t border-zinc-200 py-8 text-center text-xs">
+                کاربر جدید هستید؟{" "}
+                <button className="spoiler-link relative text-cyan-400">
+                  همین الان عضو بشید
+                </button>
+              </div>
+            </form>
+          )}
+        </ModalContent>
+      </Modal>
+    </div>
+  );
+}

@@ -4,9 +4,58 @@ import { FaFileAlt } from "react-icons/fa";
 import { HiChatAlt2 } from "react-icons/hi";
 import parse from "html-react-parser";
 import sanitizeHtml from "sanitize-html";
+import Image from "next/image";
+import type { DOMNode, Element } from "html-react-parser";
+import { LiaCommentSolid } from "react-icons/lia";
 
 export default function TabsBox({ description_2 }: { description_2: any }) {
-  console.log(description_2);
+  const sanitizedHtml = sanitizeHtml(description_2, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+    allowedAttributes: {
+      ...sanitizeHtml.defaults.allowedAttributes,
+      img: ["src", "alt", "width", "height", "class", "style"],
+      a: ["href", "name", "target", "class"],
+    },
+    transformTags: {
+      a: (tagName, attribs) => {
+        return {
+          tagName: "a",
+          attribs: {
+            ...attribs,
+            class:
+              (attribs.class || "") +
+              " text-cyan-400 spoiler-link relative no-underline",
+          },
+        };
+      },
+    },
+  });
+
+  const transform = (node: DOMNode) => {
+    if (node.type === "tag" && node.name === "img") {
+      const { src, alt, width, height } = (node as Element).attribs;
+
+      if (!src) return null;
+
+      const fullSrc = src.startsWith("http")
+        ? src
+        : `https://mpttools.co${src}`;
+
+      const widthNum = width ? parseInt(width) : 600;
+      const heightNum = height ? parseInt(height) : 400;
+
+      return (
+        <Image
+          src={fullSrc}
+          alt={alt || ""}
+          width={widthNum}
+          height={heightNum}
+          className="max-w-[500px] max-h-80 object-contain mx-auto"
+        />
+      );
+    }
+  };
+
   return (
     <div className="flex w-full flex-col ">
       <Tabs
@@ -34,15 +83,7 @@ export default function TabsBox({ description_2 }: { description_2: any }) {
           className="w-full h-full"
         >
           <div className="prose p-5 w-full max-w-full">
-            {parse(
-              sanitizeHtml(description_2, {
-                allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
-                allowedAttributes: {
-                  ...sanitizeHtml.defaults.allowedAttributes,
-                  img: ["src", "alt", "width", "height", "class", "style"],
-                },
-              })
-            )}
+            <div>{parse(sanitizedHtml, { replace: transform })}</div>
           </div>
         </Tab>
         <Tab
@@ -55,17 +96,36 @@ export default function TabsBox({ description_2 }: { description_2: any }) {
           }
         >
           <div className="p-5">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fuga
-            tempora aspernatur perspiciatis nostrum? Voluptates perspiciatis
-            vitae commodi laboriosam, consequuntur a sed nulla fugit fugiat
-            rerum, modi deleniti nisi temporibus? Eligendi! Lorem, ipsum dolor
-            sit amet consectetur adipisicing elit. Eligendi officia rem
-            exercitationem natus, nihil harum nobis cumque! Eaque cumque porro
-            commodi, laborum perspiciatis quod enim, ipsum iste assumenda
-            aspernatur ab!
+            <Comments />
           </div>
         </Tab>
       </Tabs>
+    </div>
+  );
+}
+
+function Comments({}) {
+  return (
+    <div className="w-full h-full  divide-y-1 divide-zinc-200">
+      <div className="w-full flex flex-col items-start gap-5 pb-5">
+        <p className="text-base font-bold">
+          شما هم می‌توانید در مورد این کالا نظر بدهید.
+        </p>
+        <p>
+          برای ثبت نظر، لازم است ابتدا وارد حساب کاربری خود شوید. اگر این محصول
+          را قبلا از ابزارمارکت خریده باشید، نظر شما به عنوان مالک محصول ثبت
+          خواهد شد.
+        </p>
+        <button className="bg-primary hover:bg-[#3d464d] text-black hover:text-white  px-4 py-3 rounded-xs flex items-center gap-3 transition-colors ease-in-out">
+          <LiaCommentSolid className="size-6" /> افزودن نظر جدید
+        </button>
+      </div>
+      <div className="w-full pt-5">
+        <p className="text-black font-semibold text-sm mb-2">
+          نظرات کاربران به این محصول | 0 نظر
+        </p>
+
+      </div>
     </div>
   );
 }

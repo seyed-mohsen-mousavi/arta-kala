@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @plugin './hero.ts';
+@plugin './typography.ts';
 @source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 @custom-variant dark (&:is(.dark *));
 @config "../../tailwind.config.js";
@@ -19,7 +20,6 @@
   --font-pelak: "pelak", sans-serif;
   --font-dana: "dana", sans-serif;
   --font-noora: "noora", sans-serif;
-  
 }
 
 button {
@@ -65,6 +65,9 @@ li::marker {
   html {
     font-size: 11px;
   }
+}
+.input {
+  @apply outline-none !text-zinc-500 border border-zinc-300 p-3 rounded-sm w-full bg-transparent shadow-none
 }
 html {
   font-size: 12px;
@@ -126,3 +129,4 @@ html {
   border-bottom: 1px dashed #8b91a2;
   margin-top: 0.8em;
 }
+

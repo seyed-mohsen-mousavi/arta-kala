@@ -33,7 +33,6 @@ export default async function Page({
     const path = findCategoryPath(categories, categoryFind.id);
     if (path) breadcrumb = path;
   }
-  console.log(data);
   return (
     <div>
       <BreadcrumbsBox name={data.name} breadcrumb={breadcrumb} />
@@ -66,7 +65,7 @@ export default async function Page({
             </div>
             <div>
               <p className="font-semibold text-base mb-2">توضیحات</p>
-              <div className="prose text-sm">
+              <div className="prose text-sm [&_a]:spoiler-link">
                 {parse(sanitizeHtml(data.description_1))}
               </div>
             </div>
