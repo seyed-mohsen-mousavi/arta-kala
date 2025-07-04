@@ -19,7 +19,6 @@ function ProductSlider({
   className?: string;
 }) {
   const swiperRef: any = useRef(null);
-
   return (
     <div className="relative w-full h-full">
       <Swiper
@@ -44,7 +43,7 @@ function ProductSlider({
         }}
       >
         {items.map((item: any, index: number) => (
-          <SwiperSlide key={item.id || index}>
+          <SwiperSlide key={item.id || index} className="p-3">
             <Card item={item} />
           </SwiperSlide>
         ))}

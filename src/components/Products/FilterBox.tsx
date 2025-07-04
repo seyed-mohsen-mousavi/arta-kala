@@ -25,8 +25,8 @@ export default function FilterBox({
   const [selectedKeys, setSelectedKeys] = useState<any>(new Set(["1"]));
   const [selectedKeys2, setSelectedKeys2] = useState<any>(new Set(["1"]));
   const [value, setValue] = useState<SliderValue>([
-    searchParams?.get("min_price") || minPrice,
-    searchParams?.get("max_price") || maxPrice,
+    Number(searchParams?.get("min_price")) || minPrice,
+    Number(searchParams?.get("max_price")) || maxPrice,
   ]);
   const [minInput, setMinInput] = useState(minPrice);
   const [maxInput, setMaxInput] = useState(maxPrice);
@@ -96,7 +96,7 @@ export default function FilterBox({
       <div className="bg-white shadow rounded-sm p-2 flex justify-between w-full px-3 items-center">
         <div>
           <p className="text-zinc-800">ارسال رایگان سفارش</p>
-          <p className="font-light text-zinc-500">
+          <p className="font-light text-zinc-500 font-dana pt-1">
             سفارش‌های بالای 5 میلیون تومان
           </p>
         </div>

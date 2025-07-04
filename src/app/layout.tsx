@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import { GetShopCategoriesTreeList } from "@/services/shopActions";
 // import Providers from "./providers";
 import localFont from "next/font/local";
+import Providers from "./providers";
 
 const iranyekan = localFont({
   variable: "--font-iranyekan",
@@ -81,14 +82,16 @@ export default async function RootLayout({
   const result = await GetShopCategoriesTreeList();
 
   return (
-    <html lang="fa-IR" dir="rtl" className="scroll-smooth w-screen">
+    <html lang="fa-IR" dir="rtl" className="scroll-smooth bg-[#f9f9f9]">
       <body
-        className={`${iranyekan.variable} ${pelak.variable} ${noora.variable} ${dana.variable} ${iranyekan.className} antialiased overflow-x-hidden overflow-y-auto w-full h-full bg-[#f9f9f9]`}
+        className={`${iranyekan.variable} ${pelak.variable} ${noora.variable} ${dana.variable} ${iranyekan.className} w-full h-full relative antialiased overflow-x-hidden overflow-y-auto  text-[#212529]`}
       >
         <Navbar categories={result?.data} />
-        <main className="container customSm:max-w-[566px]  w-full mx-auto mb-20 px-2 lg:px-0 h-screen">
-          {children}
-        </main>
+        <Providers>
+          <main className="container customSm:max-w-[566px]  w-full mx-auto pb-20 px-2 lg:px-0 h-full">
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );

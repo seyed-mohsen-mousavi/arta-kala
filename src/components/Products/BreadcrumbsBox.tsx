@@ -20,10 +20,11 @@ export function findCategoryPath(
 }
 type Props = {
   breadcrumb: CategoryNode[];
+  name?: string;
 };
-function BreadcrumbsBox({ breadcrumb }: Props) {
+function BreadcrumbsBox({ breadcrumb, name }: Props) {
   return (
-    <div className="pb-14">
+    <div className="pb-16">
       <div className="py-5 w-full shadow absolute right-0 bg-white">
         <div className="container mx-auto flex items-center gap-3">
           <strong className="text-base">محصولات</strong>
@@ -31,13 +32,18 @@ function BreadcrumbsBox({ breadcrumb }: Props) {
             <Link href="/">خانه</Link>
             <span>/</span>
             <Link href="/products">محصولات</Link>
-
             {breadcrumb.map((cat, index) => (
               <span key={cat.id} className="flex items-center gap-1">
                 <span>/</span>
                 <Link href={`/products?category_id=${cat.id}`}>{cat.name}</Link>
               </span>
             ))}
+            {name && (
+              <>
+                <span>/</span>
+                <Link href="/products">{name}</Link>
+              </>
+            )}
           </div>
         </div>
       </div>

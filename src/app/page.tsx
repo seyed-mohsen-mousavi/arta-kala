@@ -1,9 +1,5 @@
 import Brand from "@/components/Brand";
-import Card from "@/components/Card";
-import dynamic from "next/dynamic";
-
 import HomeSlider from "@/components/HomeSlider";
-import OffCard from "@/components/OffCard";
 import QuickBlogCard from "@/components/QuickBlogCard";
 import Slider from "@/components/Slider";
 import api from "@/services/api";
@@ -11,6 +7,8 @@ import ProductType from "@/types/product";
 import Image from "next/image";
 import Link from "next/link";
 import FlipClock from "@/components/ClientFlipClockWrapper";
+import Card from "@/components/Products/Card";
+import { GetProducts } from "@/services/shopActions";
 
 const targetTime = new Date("2025-07-10T00:00:00");
 export type Image = {
@@ -45,50 +43,7 @@ const images = [
     link: "",
   },
 ];
-const products: ProductType[] = [
-  {
-    id: 1,
-    name: "لپ‌تاپ ایسوس مدل VivoBook 15",
-    currentPrice: 25000000,
-    originalPrice: 28000000,
-    images: ["/product/d2.jpg", "/product/d1.jpg"],
-  },
-  {
-    id: 2,
-    name: "لپ‌تاپ ایسوس مدل VivoBook 15",
-    currentPrice: 25000000,
-    originalPrice: 28000000,
-    images: ["/product/d2.jpg", "/product/d1.jpg"],
-  },
-  {
-    id: 3,
-    name: "لپ‌تاپ ایسوس مدل VivoBook 15",
-    currentPrice: 25000000,
-    originalPrice: 28000000,
-    images: ["/product/d2.jpg", "/product/d1.jpg"],
-  },
-  {
-    id: 4,
-    name: "لپ‌تاپ ایسوس مدل VivoBook 15",
-    currentPrice: 25000000,
-    originalPrice: 28000000,
-    images: ["/product/d2.jpg", "/product/d1.jpg"],
-  },
-  {
-    id: 5,
-    name: "لپ‌تاپ ایسوس مدل VivoBook 15",
-    currentPrice: 25000000,
-    originalPrice: 28000000,
-    images: ["/product/d2.jpg", "/product/d1.jpg"],
-  },
-  {
-    id: 6,
-    name: "لپ‌تاپ ایسوس مدل VivoBook 15",
-    currentPrice: 25000000,
-    originalPrice: 28000000,
-    images: ["/product/d2.jpg", "/product/d1.jpg"],
-  },
-];
+
 const quickCategories: { label: string; image: string }[] = [
   {
     label: "فرز",
@@ -239,7 +194,10 @@ const blogs: { id: number; title: string; image: string }[] = [
     title: "آشنایی با انواع فرز و کاربرد آنها",
   },
 ];
-export default function Home() {
+export default async function Home() {
+  const { data } = await GetProducts();
+  const products: ProductType[] = data.results;
+  console.log(products);
   return (
     <div className="w-full">
       {/* Header  */}
@@ -305,7 +263,7 @@ export default function Home() {
             </button>
           </div>
           <div className="w-full lg:max-w-3/4 px-4 rounded-2xl">
-            <Slider items={products} Card={OffCard} />
+            <Slider items={products} Card={Card} />
           </div>
           <button className="lg:hidden block mx-auto bg-red-600 text-white px-7 py-1.5 rounded-full border-2 border-red-700 hover:bg-red-700 transition-colors ease-in-out">
             مشاهده همه آف ها

@@ -39,7 +39,7 @@ export default async function LayoutShell({
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {products.length > 0 ? (
               products.map((product: any) => (
-                <Card key={product.id} product={product} />
+                <Card key={product.id} item={product} />
               ))
             ) : (
               <div className="col-span-4  text-zinc-500 bg-white shadow rounded-xs p-5">

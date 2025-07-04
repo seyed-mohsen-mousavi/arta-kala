@@ -1,16 +1,26 @@
 @import "tailwindcss";
 @plugin './hero.ts';
+@plugin './typography.ts';
 @source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 @custom-variant dark (&:is(.dark *));
 @config "../../tailwind.config.js";
 @theme {
   --color-primary: #ffd333;
+  --color-primary-100: #fff8e6;
+  --color-primary-200: #ffedc2;
+  --color-primary-300: #ffe2a0;
+  --color-primary-400: #ffd666;
   --color-primary-500: #fec001d6;
+  --color-primary-600: #fdbd3c;
+  --color-primary-700: #f8b02a;
   --color-primary-800: #a37731;
+  --color-primary-900: #a37731;
+  --color-danger:#ef4056;
   --font-iranyekan: "iranyekan", sans-serif;
   --font-pelak: "pelak", sans-serif;
   --font-dana: "dana", sans-serif;
   --font-noora: "noora", sans-serif;
+  
 }
 
 button {
@@ -105,4 +115,15 @@ html {
 .checkbox:checked + .switch .slider {
   left: calc(50% - 18px / 2 + 10px);
   top: calc(50% - 18px / 2);
+}
+
+.spoiler-link:after {
+  left: 0;
+  right: 0;
+  top: 50%;
+  margin-top: 1em;
+  content: "";
+  position: absolute;
+  border-bottom: 1px dashed #8b91a2;
+  margin-top: 0.8em;
 }
