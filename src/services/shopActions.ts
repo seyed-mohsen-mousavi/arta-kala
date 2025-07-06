@@ -1,6 +1,5 @@
 "use server";
 import api from "./api";
-import { AxiosResponse } from "axios";
 // Shop ----
 
 export async function GetShopCategoriesTreeList() {

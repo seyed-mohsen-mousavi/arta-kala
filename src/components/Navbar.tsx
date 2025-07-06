@@ -1,10 +1,10 @@
 "use client";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { GoChevronLeft, GoChevronUp } from "react-icons/go";
+import { GoChevronLeft, GoChevronRight, GoChevronUp } from "react-icons/go";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { RiMenu3Fill } from "react-icons/ri";
 import { usePathname } from "next/navigation";
@@ -18,21 +18,44 @@ function Navbar({ categories }: { categories: CategoryNode[] }) {
     { href: "/", label: "صفحه اصلی" },
     { href: "/products", label: "محصولات" },
     { href: "/articles", label: "مقالات" },
-    { href: "/about", label: "درباره ما" },
-    { href: "/contact", label: "تماس با ما" },
+    { href: "/about-us", label: "درباره ما" },
+    { href: "/contact-info", label: "تماس با ما" },
   ];
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [jobIsOpen, setJobIsOpen] = useState(false);
   const [sideOpen, setSideOpen] = useState(false);
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     setScrolled(window.scrollY > 20);
-  //   };
+  const navbarRef = useRef<HTMLDivElement>(null);
+  const [isSticky, setIsSticky] = useState(false);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsSticky(!entry.isIntersecting);
+      },
+      { threshold: 1.0 }
+    );
 
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, []);
+    if (navbarRef.current) {
+      observer.observe(navbarRef.current);
+    }
+
+    return () => {
+      if (navbarRef.current) {
+        observer.unobserve(navbarRef.current);
+      }
+    };
+  }, []);
+  useEffect(() => {
+    const handleScroll = () => {
+      const navbarTop = navbarRef.current?.offsetTop || 0;
+      const scrollTop = window.scrollY;
+      setScrolled(scrollTop >= navbarTop);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const renderCategories = (categories: CategoryNode[]) => {
     return (
       <ul className="relative">
@@ -78,12 +101,11 @@ function Navbar({ categories }: { categories: CategoryNode[] }) {
     setSideOpen(true);
   };
   return (
-    <div>
-      <div className="h-20"></div>
+    <>
+      <div className="h-20" />{" "}
       <div
-        className={`w-full z-50 h-[54px] bg-primary text-[#3d464d] transition-all duration-300 shadow   ${
-          scrolled ? "fixed top-0 " : "relative"
-        }`}
+        ref={navbarRef}
+        className="sticky top-0 z-50 h-[54px]  backdrop-blur bg-primary/90 transition-all duration-300 shadow-md"
       >
         <div className="container customSm:max-w-[566px] px-4 lg:px-0 mx-auto w-full h-full">
           <div className="flex items-center justify-between relative h-full">
@@ -158,12 +180,7 @@ function Navbar({ categories }: { categories: CategoryNode[] }) {
                 ))}
               </nav>
             </div>
-            <button
-              onClick={handleOpen}
-              className="bg-white p-2 rounded-sm lg:hidden"
-            >
-              <RiMenu3Fill className="size-7 sm:size-8 md:size-9" />
-            </button>
+            <MobileDrawer links={links} categories={categories} />
             <div className="bg-white absolute h-screen"></div>
             <div className="space-x-2 flex items-center ">
               <LoginModal />
@@ -191,26 +208,15 @@ function Navbar({ categories }: { categories: CategoryNode[] }) {
           isOpen ? "opacity-100 visible" : "opacity-0 invisible"
         } fixed top-0 right-0 w-full h-full transition-all ease-linear`}
       ></div>
-    </div>
+    </>
   );
 }
 
 export default Navbar;
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  useDisclosure,
-  Checkbox,
-  Input,
-} from "@heroui/react";
-import { HiXMark } from "react-icons/hi2";
+import { useDisclosure } from "@heroui/react";
+import AuthModal from "./AuthModal";
 function LoginModal() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
   return (
     <div>
       <button
@@ -219,58 +225,249 @@ function LoginModal() {
       >
         ورود / عضویت{" "}
       </button>
-      <Modal
-        hideCloseButton
-        isOpen={isOpen}
-        placement="top-center"
-        onOpenChange={onOpenChange}
-      >
-        <ModalContent className="text-sm rounded-sm">
-          {(onClose) => (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-              }}
-            >
-              <ModalHeader className="flex items-center justify-between gap-1">
-                <p>ورود به حساب کاربری</p>
-                <button type="button" onClick={onClose}>
-                  <HiXMark className="size-6" />
-                </button>
-              </ModalHeader>
-              <ModalBody>
-                <label htmlFor="phone_number">شماره تلفن</label>
-                <input id="phone_number" type="text" className="input" />
-                <label htmlFor="password">رمز عبور</label>
-                <input id="password" type="password" className="input" />
-                <div className="flex py-2 px-1 justify-between">
-                  <Checkbox
-                    classNames={{
-                      label: "text-small",
-                    }}
-                  >
-                    مرا به خاطر داشته باش
-                  </Checkbox>
-                </div>
-              </ModalBody>
-              <ModalFooter className="mb-4">
-                <button
-                  type="submit"
-                  className="w-full py-3 bg-primary text-sm"
-                >
-                  ورود به حساب
-                </button>
-              </ModalFooter>
-              <div className="w-full bg-[#f9f9f9] border-t border-zinc-200 py-8 text-center text-xs">
-                کاربر جدید هستید؟{" "}
-                <button className="spoiler-link relative text-cyan-400">
-                  همین الان عضو بشید
-                </button>
-              </div>
-            </form>
-          )}
-        </ModalContent>
-      </Modal>
+      <AuthModal isOpen={isOpen} onOpenChange={onOpenChange} />
     </div>
+  );
+}
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerBody,
+  DrawerFooter,
+} from "@heroui/react";
+import { HiXMark } from "react-icons/hi2";
+type MobileCategoryProps = {
+  categories: CategoryNode[];
+  level?: number;
+  handleBack: () => void;
+  setStack: React.Dispatch<React.SetStateAction<CategoryNode[][]>>;
+  stack: CategoryNode[][];
+  setCurrent: React.Dispatch<React.SetStateAction<CategoryNode[] | null>>;
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
+  onClose: any;
+  current: CategoryNode[] | null;
+};
+
+function MobileCategory({
+  categories,
+  setStack,
+  stack,
+  setCurrent,
+  current,
+  setTitle,
+  onClose,
+}: MobileCategoryProps) {
+  const handleEnter = (category: CategoryNode) => {
+    if (category.children?.length) {
+      setStack((prev) => [...prev, current ?? categories]);
+      setCurrent(category.children);
+      setTitle((prevTitle) => {
+        return category.name;
+      });
+    }
+  };
+
+  const handleShowRootCategories = () => {
+    setCurrent(categories);
+  };
+
+  return (
+    <div className="w-full bg-white overflow-hidden flex flex-col">
+      <div
+        className={`border-b border-zinc-200 text-zinc-600 font-light py-3 px-4 flex justify-between items-center `}
+      >
+        <button
+          onClick={() => {
+            handleShowRootCategories();
+            setTitle("دسته بندی کالاها");
+            setStack([]);
+          }}
+          className="text-lg active:opacity-50 w-full h-full text-right"
+        >
+          دسته‌بندی کالاها
+        </button>
+        <GoChevronLeft className="text-zinc-400 size-9 font-bold absolute left-2 pointer-events-none" />
+      </div>
+
+      <div className="flex-1 overflow-hidden">
+        <AnimatePresence initial={false}>
+          {stack.map((cats, index) => (
+            <motion.div
+              key={`level-${index}`}
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ duration: 0.3 }}
+              className="absolute inset-0 bg-white"
+              style={{ zIndex: index }}
+            >
+              <ul className="flex flex-col gap-3">
+                {cats.map((cat: CategoryNode) => (
+                  <li
+                    key={cat.id}
+                    className="flex items-center justify-between border-b border-zinc-200 text-zinc-600 font-light py-3 px-4 active:opacity-50"
+                  >
+                    {cat.children?.length ? (
+                      <button
+                        className="text-lg text-right w-full h-full"
+                        onClick={() => handleEnter(cat)}
+                      >
+                        {cat.name}
+                      </button>
+                    ) : (
+                      <Link
+                        onClick={onClose}
+                        href={`/products/?category_id=${cat.id}`}
+                        className="text-lg text-right w-full h-full"
+                      >
+                        {cat.name}
+                      </Link>
+                    )}
+
+                    {cat.children?.length ? (
+                      <GoChevronLeft className="text-zinc-400 size-9 font-bold absolute pointer-events-none left-3" />
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
+
+          {current && (
+            <motion.div
+              key={`level-${stack.length}`}
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ duration: 0.3 }}
+              className="absolute inset-0 bg-white"
+              style={{ zIndex: stack.length }}
+            >
+              <ul className="flex flex-col gap-3">
+                {current.map((cat: CategoryNode) => (
+                  <li
+                    key={cat.id}
+                    className="flex items-center justify-between border-b border-zinc-200 text-zinc-600 font-light py-3 px-4 active:opacity-50"
+                  >
+                    {cat.children?.length ? (
+                      <button
+                        className="text-lg text-right w-full h-full"
+                        onClick={() => handleEnter(cat)}
+                      >
+                        {cat.name}
+                      </button>
+                    ) : (
+                      <Link
+                        onClick={onClose}
+                        href={`/products/?category_id=${cat.id}`}
+                        className="text-lg text-right w-full h-full"
+                      >
+                        {cat.name}
+                      </Link>
+                    )}
+
+                    {cat.children?.length ? (
+                      <GoChevronLeft className="text-zinc-400 size-9 font-bold absolute pointer-events-none left-3" />
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
+export function MobileDrawer({
+  categories,
+  links,
+}: {
+  categories: CategoryNode[];
+  links: any;
+}) {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [stack, setStack] = useState<CategoryNode[][]>([]);
+  const [titleStack, setTitleStack] = useState<string[]>([]);
+  const [current, setCurrent] = useState<CategoryNode[] | null>(null);
+  const [title, setTitle] = useState("منوی دسترسی");
+  const isRoot = current === null;
+
+  const handleBack = () => {
+    const prev = stack[stack.length - 1];
+    const prevTitle = titleStack[titleStack.length - 1];
+
+    setStack((prevStack) => prevStack.slice(0, -1));
+    setTitleStack((prevTitles) => prevTitles.slice(0, -1));
+    setCurrent(prev ?? null);
+    setTitle(prevTitle ?? "منوی دسترسی");
+  };
+
+  return (
+    <>
+      <button
+        onClick={onOpen}
+        className="hover:bg-white/50 active:bg-white/50 p-2 rounded-sm lg:hidden text-zinc-600 transition-colors ease-in-out"
+      >
+        <RiMenu3Fill className="size-7 sm:size-8 md:size-9" />
+      </button>
+
+      <Drawer hideCloseButton isOpen={isOpen} onOpenChange={onOpenChange}>
+        <DrawerContent>
+          {(onClose) => (
+            <>
+              <DrawerHeader className="flex flex-col gap-1 bg-[#f3f3f3] border-b border-b-zinc-300 text-zinc-500">
+                <div className="flex items-center justify-between gap-2 py-2">
+                  <div className="flex items-center gap-3">
+                    {!isRoot && (
+                      <button
+                        className="text-sm text-zinc-600 flex items-center gap-1"
+                        onClick={handleBack}
+                      >
+                        <GoChevronRight className="size-8 text-zinc-500" />
+                      </button>
+                    )}
+                    <p>{title}</p>
+                  </div>
+                  <button type="button" onClick={onClose}>
+                    <HiXMark className="size-8" />
+                  </button>
+                </div>
+              </DrawerHeader>
+
+              <DrawerBody className="relative overflow-hidden px-0">
+                <MobileCategory
+                  stack={stack}
+                  setStack={setStack}
+                  current={current}
+                  setCurrent={setCurrent}
+                  handleBack={handleBack}
+                  categories={categories}
+                  setTitle={(newTitle) => {
+                    setTitleStack((prev) => [...prev, title]);
+                    setTitle(newTitle);
+                  }}
+                  onClose={onClose}
+                />
+                {links.map((link: any) => (
+                  <Link
+                    key={link.href}
+                    onClick={onClose}
+                    className="border-b border-zinc-200 text-zinc-600 font-light pt-3 pb-4 px-4 flex justify-between items-center text-lg active:opacity-50"
+                    href={link.href}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </DrawerBody>
+
+              <DrawerFooter />
+            </>
+          )}
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 }

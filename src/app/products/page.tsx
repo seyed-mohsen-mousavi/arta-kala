@@ -9,7 +9,7 @@ export default async function ProductsPage({
   const { data } = await GetProducts(searchParams);
   const categoryRes = await GetShopCategoriesTreeList();
   const categories = categoryRes?.data || [];
-
+  console.log(data)
   return (
     <LayoutShell
       categories={categories}

@@ -4,8 +4,9 @@ import Link from "next/link";
 import PaginationBox from "./PaginationBox";
 import Card from "./Card";
 import { BreadcrumbItem, Breadcrumbs } from "@heroui/react";
-import BreadcrumbsBox, { findCategoryPath } from "./BreadcrumbsBox";
+import BreadcrumbsBox from "./BreadcrumbsBox";
 import { CategoryNode } from "@/types/categories";
+import { findCategoryPath } from "@/app/product/[slug]/page";
 
 export default async function LayoutShell({
   categories,
@@ -30,13 +31,13 @@ export default async function LayoutShell({
 
   return (
     <div className="space-y-5">
-      <BreadcrumbsBox breadcrumb={breadcrumb} />
+      <BreadcrumbsBox name="محصولات" breadcrumb={breadcrumb} />
       <section className="flex gap-4 w-full h-full ">
         <FilterBox categories={categories} selected={selected} />
         <div className="size-full space-y-5">
-          <SortBox />
+          <SortBox categories={categories} />
           {/* لیست محصولات */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {products.length > 0 ? (
               products.map((product: any) => (
                 <Card key={product.id} item={product} />

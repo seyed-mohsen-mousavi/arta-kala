@@ -27,7 +27,7 @@ interface FormValues {
   otp: string;
 }
 
-export default function AuthLogin({ isOpen, onOpenChange }: any) {
+export default function AuthModal({ isOpen, onOpenChange }: any) {
   const [isLogin, setIsLogin] = useState(true);
   const [isSendOtp, setIsSendOtp] = useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState("");

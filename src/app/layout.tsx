@@ -84,7 +84,7 @@ export default async function RootLayout({
   return (
     <html lang="fa-IR" dir="rtl" className="scroll-smooth bg-[#f9f9f9]">
       <body
-        className={`${iranyekan.variable} ${pelak.variable} ${noora.variable} ${dana.variable} ${iranyekan.className} w-full h-full relative antialiased overflow-x-hidden overflow-y-auto  text-[#212529]`}
+        className={`${iranyekan.variable} ${pelak.variable} ${noora.variable} ${dana.variable} ${iranyekan.className} w-full min-h-screen relative antialiased text-[#212529]`}
       >
         <Navbar categories={result?.data} />
         <Providers>

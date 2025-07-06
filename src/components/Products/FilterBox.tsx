@@ -14,9 +14,11 @@ const maxPrice = 459420000;
 export default function FilterBox({
   categories,
   selected,
+  isShow,
 }: {
   categories: any[];
   selected?: boolean;
+  isShow?: boolean;
 }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -91,9 +93,11 @@ export default function FilterBox({
   );
 
   return (
-    <div className="h-full w-1/3 hidden md:flex flex-col gap-2 sticky">
-      {/* Free Delivery Box */}
-      <div className="bg-white shadow rounded-sm p-2 flex justify-between w-full px-3 items-center">
+    <div
+      className={`h-full ${isShow ? "space-y-4" : "hidden lg:flex w-1/3"} flex-col gap-2 sticky`}
+    >
+      {
+        !isShow && <div className="bg-white shadow rounded-sm p-2 flex justify-between w-full px-3 items-center">
         <div>
           <p className="text-zinc-800">ارسال رایگان سفارش</p>
           <p className="font-light text-zinc-500 font-dana pt-1">
@@ -104,7 +108,7 @@ export default function FilterBox({
           <Image fill src="/free-delivery-free.svg" alt="" />
         </div>
       </div>
-      {/* Delete Filters */}
+      }
       <button>
         {selected && (
           <div
@@ -117,7 +121,6 @@ export default function FilterBox({
           </div>
         )}
       </button>
-      {/* Available Switch */}
       <div className="bg-white shadow rounded-sm px-3 py-2 flex gap-3 items-center text-zinc-700">
         <div className="switch-container">
           <input
@@ -133,7 +136,6 @@ export default function FilterBox({
         </div>
         <p className="text-light">نمایش کالا های موجود</p>
       </div>
-      {/* Category Accordion */}
       <div className="bg-white shadow rounded-sm px-3 py-0 text-zinc-700 relative">
         <GoChevronUp
           className={`size-5 absolute top-5 left-5 transition-transform duration-300 ${
@@ -176,7 +178,6 @@ export default function FilterBox({
         </Accordion>
       </div>
 
-      {/* Price Accordion */}
       <div className="relative bg-white shadow rounded-sm py-0 text-zinc-700">
         <GoChevronUp
           className={`size-5 absolute top-5 left-5 transition-transform duration-300 ${
@@ -265,7 +266,7 @@ export default function FilterBox({
                 </div>
               </div>
               <button
-                className="bg-primary mx-auto p-3 font-light rounded-xs"
+                className="btn-primary mx-auto p-3 font-light rounded-xs"
                 type="submit"
               >
                 اعمال محدوده قیمت مورد نظر

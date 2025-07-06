@@ -3,7 +3,7 @@ import { NumberInput, Spinner } from "@heroui/react";
 import { addToast } from "@heroui/toast";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { MdChevronLeft } from "react-icons/md";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import {
   Modal,
   ModalContent,
@@ -115,7 +115,7 @@ function AddToCart({
       <div className="relative w-2/3" ref={dropdownRef}>
         <button
           onClick={() => setDropDownOpen(!dropDownOpen)}
-          className={`w-full p-3 flex items-center justify-between font-bold border border-zinc-300 z-20`}
+          className={`w-full p-3 flex items-center justify-between font-bold border border-zinc-300 z-20 font-dana`}
         >
           {quantity} عدد
           <span>
@@ -123,11 +123,17 @@ function AddToCart({
           </span>
         </button>
         {dropDownOpen && (
-          <div className="top-11 absolute bg-white w-full z-10 border-t border-zinc-300 text-zinc-700 shadow-lg">
+          <div className="animate-fade-up animate-duration-300 animate-ease-linear animate-normal bottom-0 sm:bottom-auto right-0 sm:top-11 fixed sm:absolute bg-white w-full z-10 border-t border-zinc-300 text-zinc-700 sm:shadow-lg shadow-2xl rounded-t-2xl sm:rounded-none transition-all ease-linear">
+            <div className="sm:hidden flex items-center justify-between p-5">
+              <p className="font-semibold">انتخاب مقدار</p>
+              <button type="button" onClick={() => setDropDownOpen(false)}>
+                <HiXMark className="size-6" />
+              </button>
+            </div>
             {[1, 2, 3, ...customQuantities.filter((q) => q > 3)].map((num) => (
               <button
                 key={num}
-                className={`w-full p-3 flex items-center justify-between font-bold hover:bg-primary-200 ${
+                className={`w-full p-3 flex items-center justify-between font-bold hover:bg-primary-200 font-dana ${
                   num === quantity ? "bg-primary-200" : ""
                 }`}
                 onClick={() => {
@@ -153,15 +159,11 @@ function AddToCart({
       </div>
       <button
         onClick={handleAddToCart}
-        className="bg-danger font-semibold px-4 py-2 text-zinc-100 hover:bg-danger/95 transition-colors duration-300 ease-in-out w-full flex items-center gap-2 justify-center"
+        className="bg-danger text-sm sm:text-base font-semibold px-4 py-2 text-zinc-100 hover:bg-danger/95 transition-colors duration-300 ease-in-out w-full flex items-center gap-2 justify-center"
       >
         افزودن به سبد خرید
         {isLoading ? (
-          <Spinner
-            classNames={{ label: "text-foreground mt-4" }}
-            variant="simple"
-            size="sm"
-          />
+          <Spinner variant="default" size="sm" color="default" />
         ) : (
           <svg
             className="size-5 text-zinc-400 !stroke-1"
@@ -180,15 +182,17 @@ function AddToCart({
           variants: {
             enter: {
               opacity: 1,
+              y: 0,
               transition: {
-                duration: 0.3,
+                duration: 0.2,
                 ease: "easeOut",
               },
             },
             exit: {
               opacity: 0,
+              y: 100,
               transition: {
-                duration: 0.2,
+                duration: 0.1,
                 ease: "easeIn",
               },
             },
@@ -196,6 +200,8 @@ function AddToCart({
         }}
         onOpenChange={onOpenChange}
         size="lg"
+        placement="bottom-center"
+        className="max-w-full m-0 sm:max-w-lg animate-fade-up animate-duration-300 animate-ease-linear animate-normal"
       >
         <ModalContent className="text-sm rounded-sm">
           {(onClose) => (
@@ -209,13 +215,28 @@ function AddToCart({
               }}
             >
               <ModalHeader className="flex items-center justify-between gap-1">
-                <p>وارد کردن مقدار دلخواه</p>
-                <button type="button" onClick={onClose}>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      setDropDownOpen(true);
+                      onClose();
+                    }}
+                    className="flex sm:hidden"
+                  >
+                    <MdChevronRight className="size-6" />
+                  </button>
+                  <p>وارد کردن مقدار دلخواه</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="hidden sm:block"
+                >
                   <HiXMark className="size-6" />
                 </button>
               </ModalHeader>
               <ModalBody>
-                <p className="font-semibold mt-4">
+                <p className="font-semibold sm:mt-4">
                   لطفا مقدار مورد نیاز را وارد کنید
                 </p>
                 <div className="relative">
@@ -231,6 +252,7 @@ function AddToCart({
                     minValue={1}
                     aria-label="مقدار سبد خرید"
                     id="quantity"
+                    inputMode="numeric"
                   />
                   <label
                     htmlFor="quantity"
@@ -242,10 +264,7 @@ function AddToCart({
                 <p className="text-xs">*واحد شمارش بر اساس عدد است.</p>
               </ModalBody>
               <ModalFooter>
-                <button
-                  className="w-full p-3 bg-primary text-zinc-700 hover:bg-[#3d464d] hover:text-white transition-colors ease-in-out"
-                  type="submit"
-                >
+                <button className="w-full btn-primary" type="submit">
                   اعمال مقدار
                 </button>
               </ModalFooter>

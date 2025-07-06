@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-    images: {
+  images: {
     remotePatterns: [new URL('https://mpttools.co/media/**')],
   },
 };

@@ -12,5 +12,7 @@ module.exports = {
         "2xl": "1236px",
       },
     },
+    
   },
+  
 };

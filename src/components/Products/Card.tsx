@@ -23,7 +23,7 @@ function Card({ item }: { item: any }) {
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
           />
           {/* {item.isAmazing && (
-          <span className="absolute top-2 left-2 bg-red-500 px-2 py-1  rounded-sm text-white text-sm">
+          <span className="absolute top-2 left-2 bg-danger px-2 py-1  rounded-sm text-white text-sm">
             {Math.round(discountPercent)}% جشنواره
           </span>
         )} */}
@@ -32,16 +32,16 @@ function Card({ item }: { item: any }) {
           {item.name}
         </h3>
         <div className="flex w-full justify-between items-center">
-          <button className="group-hover/card:bg-red-500 group-hover/card:text-white text-zinc-400 rounded-full p-2.5 mt-1 hover:bg-red-600 flex items-center gap-2 transition-colors duration-300 ease-in-outoverflow-hidden">
+          <button className="group-hover/card:bg-danger group-hover/card:text-white text-zinc-400 rounded-full p-2.5 mt-1 hover:bg-red-600 flex items-center gap-2 transition-colors duration-300 ease-in-outoverflow-hidden">
             <BsCart3 className="w-5 h-5" />
-            <p className="text-xs font-semibold whitespace-nowrap max-w-0 opacity-0 group-hover/card:max-w-[120px] group-hover/card:opacity-100 transition-[max-width,opacity] duration-300 ease-in-outoverflow-hidden">
+            <p className="text-[10px] xl:text-xs font-semibold whitespace-nowrap max-w-0 opacity-0 group-hover/card:max-w-[120px] group-hover/card:opacity-100 transition-[max-width,opacity] duration-300 ease-in-outoverflow-hidden">
               افزودن به سبد خرید
             </p>
           </button>
 
           <div className="flex flex-col items-end">
             <p>
-              {/* <span className="rounded-full text-sm bg-red-500 text-white px-2 py-1">
+              {/* <span className="rounded-full text-sm bg-danger text-white px-2 py-1">
               {Math.round(discountPercent).toLocaleString("fa-IR")}%
             </span> */}
               {/* <span>
@@ -53,7 +53,7 @@ function Card({ item }: { item: any }) {
             <p className="font-bold mt-2">
               <span className="text-xl">
                 {item.price.toLocaleString("fa-IR")}
-              </span>{" "}
+              </span>
               <span className="text-sm">تومان</span>
             </p>
           </div>

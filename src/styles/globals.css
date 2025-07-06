@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "tailwindcss-animated";
+
 @plugin './hero.ts';
 @plugin './typography.ts';
 @source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
@@ -68,6 +70,9 @@ li::marker {
 }
 .input {
   @apply outline-none !text-zinc-500 border border-zinc-300 p-3 rounded-sm w-full bg-transparent shadow-none
+}
+.btn-primary {
+  @apply p-3 bg-primary text-zinc-700 hover:bg-[#3d464d] hover:text-white transition-colors ease-in-out
 }
 html {
   font-size: 12px;
