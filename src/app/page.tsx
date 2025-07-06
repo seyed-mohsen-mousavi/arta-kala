@@ -6,9 +6,9 @@ import api from "@/services/api";
 import ProductType from "@/types/product";
 import Image from "next/image";
 import Link from "next/link";
-import FlipClock from "@/components/ClientFlipClockWrapper";
 import Card from "@/components/Products/Card";
 import { GetProducts } from "@/services/shopActions";
+import FlipClock from "@/components/CountdownTimer";
 
 const targetTime = new Date("2025-07-10T00:00:00");
 export type Image = {
@@ -250,19 +250,19 @@ export default async function Home() {
           ))}
         </div>
         {/* OFF Mart */}
-        <div className="bg-primary-500 rounded-3xl p-4 shadow-[0px_9px_14px_0px_rgba(254,192,1,0.2)] flex flex-col lg:flex-row gap-10">
-          <div className="flex flex-col items-center gap-6 justify-between pr-10 w-full">
-            <div className="flex flex-row lg:flex-col w-full justify-between">
-              <h2 className="text-red-600 text-4xl lg:text-[42px] font-bold">
+        <div className="bg-primary-500 rounded-3xl p-4 shadow-[0px_9px_14px_0px_rgba(254,192,1,0.2)] grid grid-cols-1 lg:grid-cols-5 gap-10">
+          <div className="w-full col col-span-1 flex flex-col items-center gap-6 justify-between pr-10">
+            <div className="flex flex-row lg:flex-col w-full h-full justify-between font-dana">
+              <h2 className="text-red-600 text-4xl lg:text-[42px] font-bold w-full font-dana">
                 آف مارت
               </h2>
-              <FlipClock targetDate={new Date("2025-07-05T00:00:00")} />
+              <FlipClock targetDate={new Date("2025-07-07T00:00:00")} />
             </div>
             <button className="hidden lg:block bg-red-600 text-white px-7 py-1.5 rounded-full border-2 border-red-700 hover:bg-red-700 transition-colors ease-in-out">
               مشاهده همه آف ها
             </button>
           </div>
-          <div className="w-full lg:max-w-3/4 px-4 rounded-2xl">
+          <div className="w-full lg:col-span-4 px-4 rounded-2xl">
             <Slider items={products} Card={Card} />
           </div>
           <button className="lg:hidden block mx-auto bg-red-600 text-white px-7 py-1.5 rounded-full border-2 border-red-700 hover:bg-red-700 transition-colors ease-in-out">
@@ -286,7 +286,7 @@ export default async function Home() {
           />
         </div>
         {/* New  */}
-        <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4">
+        <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white">
           <div className="w-full flex justify-between px-4">
             <h4 className="font-semibold text-2xl">جدیدترین</h4>{" "}
             <Link href={"/"} className="underline text-lg">
@@ -310,7 +310,7 @@ export default async function Home() {
           className="w-full rounded-xl lg:rounded-3xl mb-5"
         />
         {/* Populer */}
-        <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4">
+        <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white">
           <div className="w-full flex justify-between px-4">
             <h4 className="font-semibold text-2xl">پرفروش ها</h4>{" "}
             <Link href={"/"} className="underline text-lg">
@@ -327,7 +327,7 @@ export default async function Home() {
           </div>
         </div>
         {/* Blog */}
-        <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 flex lg:flex-row flex-col">
+        <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white flex lg:flex-row flex-col">
           <div className="w-full flex lg:flex-col justify-between gap-5 px-4">
             <h4 className="font-semibold text-2xl">بلاگ</h4>
             <div className="hidden  gap-0.5 lg:flex flex-col">
@@ -351,8 +351,8 @@ export default async function Home() {
           </div>
         </div>
         {/* Brands */}
-        <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 mt-10">
-          <div className="px-12 mt-5 h-32">
+        <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white mt-10">
+          <div className="px-12  h-full">
             <Slider
               spaceBetween={35}
               className="!text-primary"

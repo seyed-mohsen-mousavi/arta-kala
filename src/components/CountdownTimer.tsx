@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import "@/styles/flip.css";
+import { Spinner } from "@heroui/react";
 
 interface AnimatedCardProps {
   animation: string;
@@ -124,7 +125,15 @@ const FlipClock: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
 
   if (!isClient) {
     return (
-      <div className="w-[170px] space-y-3">
+      <div className="flex items-center justify-center size-full">
+        <Spinner color="danger" size="lg" />
+      </div>
+    ); // یا یه لودر
+  }
+
+  return (
+    <div className="space-y-3 flex flex-col items-center justify-center size-full">
+      <div className="flex flex-col items-center gap-2">
         <div className={"flipClock"}>
           <FlipUnitContainer
             unit={"seconds"}
@@ -142,14 +151,14 @@ const FlipClock: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
             shuffle={hoursShuffle}
           />
         </div>
-        <div className="w-full bg-red-600 text-white flex items-center justify-between px-2">
+        <div className="w-full mx-auto bg-red-600 text-white flex items-center justify-between px-2">
           <span>ثانیه</span>
           <span className="pr-2">دقیقه</span>
           <span>ساعت</span>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 };
 
 export default FlipClock;
