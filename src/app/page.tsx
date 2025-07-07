@@ -2,7 +2,6 @@ import Brand from "@/components/Brand";
 import HomeSlider from "@/components/HomeSlider";
 import QuickBlogCard from "@/components/QuickBlogCard";
 import Slider from "@/components/Slider";
-import api from "@/services/api";
 import ProductType from "@/types/product";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,7 +9,6 @@ import Card from "@/components/Products/Card";
 import { GetProducts } from "@/services/shopActions";
 import FlipClock from "@/components/CountdownTimer";
 
-const targetTime = new Date("2025-07-10T00:00:00");
 export type Image = {
   id: number;
   src: string;

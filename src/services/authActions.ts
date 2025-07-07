@@ -1,6 +1,5 @@
 "use server"
 import { cookies } from 'next/headers';
-import api from './api';
 export async function refreshAccessToken() {
     const { refreshCookie } = await getAuthTokens();
     if (!refreshCookie) throw new Error("No refresh token found");

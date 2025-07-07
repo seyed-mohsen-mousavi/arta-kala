@@ -24,7 +24,7 @@ function BreadcrumbsBox({ breadcrumb, name, link }: Props) {
                 <Link href="/products">محصولات</Link>
               </>
             )}
-            {breadcrumb.map((cat, index) => (
+            {breadcrumb.map((cat) => (
               <span key={cat.id} className="flex items-center gap-1">
                 <span>/</span>
                 <Link href={`/products?category_id=${cat.id}`}>{cat.name}</Link>

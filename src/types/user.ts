@@ -1,6 +1,27 @@
 export interface User {
-    identity: any;
-    cart: any;
-    pre_invoices: any;
-    orders: any
+    identity: {
+        phone_number: string;
+        first_name: string | null;
+        last_name: string | null;
+        national_code: string | null;
+        email: string | null;
+        job: string | null;
+        address: string | null;
+        postal_code: string | null;
+        birth_date: string | null;
+        province: string | null;
+        city: string | null;
+        referral_code: string;
+        points: number;
+    };
+    cart: {
+        message: string;
+        items: any[];
+    };
+    pre_invoices: {
+        message: string;
+    };
+    orders: {
+        message: string;
+    };
 }

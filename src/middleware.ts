@@ -3,7 +3,7 @@ import { verify } from 'jsonwebtoken'
 
 export function middleware(req: NextRequest) {
     const token = req.cookies.get('access_token')?.value
-    const { pathname, searchParams } = req.nextUrl
+    const { pathname } = req.nextUrl
 
     // فقط مسیرهایی که باید محافظت بشن
     const PROTECTED_PATHS = ['/dashboard']

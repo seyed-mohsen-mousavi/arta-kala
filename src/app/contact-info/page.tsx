@@ -11,8 +11,6 @@ async function page() {
   const result = await homeContactInfoList();
   const contactInfo: Contact[] = result?.data;
 
-  console.log(contactInfo);
-
   return (
     <div className="space-y-10">
       <BreadcrumbsBox name="ارتباط با ما" breadcrumb={[]} />

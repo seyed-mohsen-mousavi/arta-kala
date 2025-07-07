@@ -11,7 +11,6 @@ import {
   DrawerHeader,
   useDisclosure,
 } from "@heroui/react";
-import { useState } from "react";
 import { HiXMark } from "react-icons/hi2";
 
 function SortBox({ categories }: { categories: CategoryNode[] }) {
@@ -69,7 +68,6 @@ function SortBox({ categories }: { categories: CategoryNode[] }) {
           isOpen={isOpen}
           onOpenChange={onOpenChange}
           className="bg-[#f3f3f3] w-full"
-          
         >
           <DrawerContent>
             {(onClose) => (
@@ -86,7 +84,7 @@ function SortBox({ categories }: { categories: CategoryNode[] }) {
                 </DrawerHeader>
 
                 <DrawerBody className="relative overflow-hidden px-0 w-full">
-                  <FilterBox  isShow categories={categories} />
+                  <FilterBox isShow categories={categories} />
                 </DrawerBody>
               </>
             )}
@@ -99,7 +97,9 @@ function SortBox({ categories }: { categories: CategoryNode[] }) {
             className="border-2 outline-none p-2 appearance-none pr-10 border-zinc-200 text-zinc-600 bg-white w-full"
           >
             {sortOptions.map((opt, i) => (
-              <option key={i} value={opt.value}>{opt.label}</option>
+              <option key={i} value={opt.value}>
+                {opt.label}
+              </option>
             ))}
           </select>
           <FaSortAmountUp className="size-5 absolute top-3 right-2 text-zinc-600" />

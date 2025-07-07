@@ -39,9 +39,9 @@ export const sendOtp = async (phone_number: string) => {
                 color: "danger"
             })
         }
-    } catch (error) {
+    } catch (error: any) {
         addToast({
-            title: "ورود ناموفق بود"
+            title: error?.response?.message || "ورود ناموفق بود"
         })
     }
 }
@@ -74,11 +74,13 @@ export const verifyOtp = async (phone_number: string, code: string, referral_cod
     }
 }
 // dashboard
-export const GetUserDashboard = async (cookie: string) => {
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxOTAyODMyLCJpYXQiOjE3NTE5MDE2MzIsImp0aSI6IjRkM2QwY2VmOTAyNTQwMDE5NTEzNGJmYzA5NWZlZmIwIiwidXNlcl9pZCI6MX0.bDfvU9Du_cdnVZjMBnthnj97n9CUzRjEPrP0i_6djYQ"
+export const GetUserDashboard = async (cookieHeader: string) => {
+    console.log(cookieHeader)
     try {
         const result = await api.get("/users/dashboard/", {
             headers: {
-                "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxODg0NzUxLCJpYXQiOjE3NTE4ODM1NTEsImp0aSI6ImVlNzhhMWVlYzA5MjQyZWVhOTNkNmQzMDg4MWQ2NjMwIiwidXNlcl9pZCI6MX0.wVcJ4tEgMw2Dg3zPrV4UGUskMy9A3RFDN0yEF7sX9cs`
+                "Authorization": `Bearer ${token}`
             }
         })
         return result.data

@@ -3,11 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { GoChevronLeft, GoChevronRight, GoChevronUp } from "react-icons/go";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { RiMenu3Fill } from "react-icons/ri";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { CategoryNode } from "@/types/categories";
 import {
@@ -22,7 +22,6 @@ import { useUser } from "@/context/UserContext";
 function Navbar({ categories }: { categories: CategoryNode[] }) {
   const pathname = usePathname();
   const { onOpen }: any = useAuthModal();
-
   const links = [
     { href: "/", label: "صفحه اصلی" },
     { href: "/products", label: "محصولات" },
@@ -78,7 +77,7 @@ function Navbar({ categories }: { categories: CategoryNode[] }) {
   };
   return (
     <>
-      <div className="h-20" />{" "}
+      <div className="h-20" />
       <div
         ref={navbarRef}
         className="sticky top-0 z-50 h-[54px]  backdrop-blur bg-primary/90 transition-all duration-300 shadow-md"
@@ -222,7 +221,7 @@ function MobileCategory({
     if (category.children?.length) {
       setStack((prev) => [...prev, current ?? categories]);
       setCurrent(category.children);
-      setTitle((prevTitle) => {
+      setTitle(() => {
         return category.name;
       });
     }

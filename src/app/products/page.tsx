@@ -1,15 +1,16 @@
 import LayoutShell from "@/components/Products/LayoutShell";
 import { GetProducts, GetShopCategoriesTreeList } from "@/services/shopActions";
-
+type ProductsPageProps = {
+  searchParams: Promise<Record<string, string | string[]>>;
+};
 export default async function ProductsPage({
   searchParams,
-}: {
-  searchParams: { [key: string]: string };
-}) {
-  const { data } = await GetProducts(searchParams);
+}: ProductsPageProps) {
+  const search = await searchParams;
+  const { data } = await GetProducts(search);
   const categoryRes = await GetShopCategoriesTreeList();
   const categories = categoryRes?.data || [];
-  console.log(data)
+  console.log(data);
   return (
     <LayoutShell
       categories={categories}

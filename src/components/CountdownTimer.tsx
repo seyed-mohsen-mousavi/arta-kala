@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "@/styles/flip.css";
 import { Spinner } from "@heroui/react";
 
@@ -41,7 +41,7 @@ const FlipUnitContainer: React.FC<FlipUnitContainerProps> = ({
   shuffle,
   unit,
 }) => {
-  let currentDigit = digit;
+  const currentDigit = digit;
   let previousDigit = digit - 1;
 
   if (unit !== "hours") {
@@ -79,7 +79,7 @@ interface TimeLeft {
 }
 
 const FlipClock: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
-  const calculateTimeLeft = (): TimeLeft => {
+  const calculateTimeLeft = useCallback((): TimeLeft => {
     const difference = targetDate.getTime() - new Date().getTime();
 
     if (difference <= 0) {
@@ -91,7 +91,7 @@ const FlipClock: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
       minutes: Math.floor((difference / (1000 * 60)) % 60),
       seconds: Math.floor((difference / 1000) % 60),
     };
-  };
+  }, [targetDate]);
 
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft());
   const [isClient, setIsClient] = useState(false);
@@ -99,6 +99,7 @@ const FlipClock: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
   const [hoursShuffle, setHoursShuffle] = useState(true);
   const [minutesShuffle, setMinutesShuffle] = useState(true);
   const [secondsShuffle, setSecondsShuffle] = useState(true);
@@ -121,14 +122,14 @@ const FlipClock: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
     }, 1000);
 
     return () => clearInterval(timerID);
-  }, [timeLeft, targetDate]);
+  }, [calculateTimeLeft, timeLeft]);
 
   if (!isClient) {
     return (
       <div className="flex items-center justify-center size-full">
         <Spinner color="danger" size="lg" />
       </div>
-    ); // یا یه لودر
+    );
   }
 
   return (
@@ -160,5 +161,6 @@ const FlipClock: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
     </div>
   );
 };
+
 
 export default FlipClock;

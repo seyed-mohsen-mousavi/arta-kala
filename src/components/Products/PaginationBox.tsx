@@ -1,6 +1,5 @@
 "use client";
 
-import type { SVGProps } from "react";
 import type { PaginationItemRenderProps } from "@heroui/react";
 
 import React from "react";

@@ -2,12 +2,12 @@ import LayoutShell from "@/components/Products/LayoutShell";
 import { GetProducts, GetShopCategoriesTreeList } from "@/services/shopActions";
 
 type Props = {
-  params: { page: string };
-  searchParams: { [key: string]: string | string[] };
+  params: Promise<{ page: string }>;
+  searchParams: Promise<Record<string, string | string[]>>;
 };
 
 export default async function ProductsPage({ params, searchParams }: Props) {
-  const currentPage = Number(params.page) || 1;
+  const currentPage = Number((await params).page) || 1;
 
   const filters = {
     ...searchParams,
@@ -26,7 +26,7 @@ export default async function ProductsPage({ params, searchParams }: Props) {
         count: data?.count || 0,
         page: data?.page || 1,
       }}
-      searchParams={filters}
+      searchParams={searchParams}
     />
   );
 }

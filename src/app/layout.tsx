@@ -8,7 +8,6 @@ import Providers from "./providers";
 import { UserProvider } from "@/context/UserContext";
 import { GetUserDashboard } from "@/services/usersActions";
 import { cookies } from "next/headers";
-import { User } from "@/types/user";
 import { AuthModalProvider } from "@/context/AuthModalProvider";
 import AuthModal from "@/components/AuthModal";
 
@@ -89,10 +88,10 @@ export default async function RootLayout({
   let user = null;
   const cookieStore = await cookies();
   const cookieHeader = cookieStore.toString();
-  // if (cookieHeader.includes("access_token")) {
-  //   user = await GetUserDashboard(cookieHeader);
-  // }
-  user = await GetUserDashboard(cookieHeader);
+  if (cookieHeader.includes("access_token")) {
+    user = await GetUserDashboard(cookieHeader);
+  }
+  // user = await GetUserDashboard();
 
   return (
     <html lang="fa-IR" dir="rtl" className="scroll-smooth bg-[#f9f9f9]">
@@ -101,13 +100,13 @@ export default async function RootLayout({
       >
         <UserProvider initialUser={user}>
           <AuthModalProvider>
+            <AuthModal />
             <Navbar categories={result?.data} />
             <Providers>
               <main className="container customSm:max-w-[566px]  w-full mx-auto pb-20 px-2 lg:px-0 h-full">
                 {children}
               </main>
             </Providers>
-            <AuthModal />
           </AuthModalProvider>
         </UserProvider>
       </body>

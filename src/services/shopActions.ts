@@ -81,6 +81,6 @@ export async function DeleteShopCart() {
 }
 // Comments ---
 
-export async function GetComments(product_slug: string) {
+// export async function GetComments(product_slug: string) {
 
-}
+// }

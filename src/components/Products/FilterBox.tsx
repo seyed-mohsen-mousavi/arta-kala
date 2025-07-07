@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { GoChevronUp } from "react-icons/go";
 import { NumberInput, Slider, SliderValue } from "@heroui/react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { CategoryNode } from "@/types/categories";
 
 const minPrice = 3000;
 const maxPrice = 459420000;
@@ -16,7 +17,7 @@ export default function FilterBox({
   selected,
   isShow,
 }: {
-  categories: any[];
+  categories: CategoryNode[];
   selected?: boolean;
   isShow?: boolean;
 }) {
@@ -96,19 +97,19 @@ export default function FilterBox({
     <div
       className={`h-full ${isShow ? "space-y-4" : "hidden lg:flex w-1/3"} flex-col gap-2 sticky`}
     >
-      {
-        !isShow && <div className="bg-white shadow rounded-sm p-2 flex justify-between w-full px-3 items-center">
-        <div>
-          <p className="text-zinc-800">ارسال رایگان سفارش</p>
-          <p className="font-light text-zinc-500 font-dana pt-1">
-            سفارش‌های بالای 5 میلیون تومان
-          </p>
+      {!isShow && (
+        <div className="bg-white shadow rounded-sm p-2 flex justify-between w-full px-3 items-center">
+          <div>
+            <p className="text-zinc-800">ارسال رایگان سفارش</p>
+            <p className="font-light text-zinc-500 font-dana pt-1">
+              سفارش‌های بالای 5 میلیون تومان
+            </p>
+          </div>
+          <div className="size-14 relative">
+            <Image fill src="/free-delivery-free.svg" alt="" />
+          </div>
         </div>
-        <div className="size-14 relative">
-          <Image fill src="/free-delivery-free.svg" alt="" />
-        </div>
-      </div>
-      }
+      )}
       <button>
         {selected && (
           <div

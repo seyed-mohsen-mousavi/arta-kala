@@ -1,9 +1,7 @@
 import NotFound from "@/components/NotFound";
 
 function notFound() {
-  return (
-    <NotFound />
-  );
+  return <NotFound />;
 }
 
 export default notFound;

@@ -13,7 +13,6 @@ interface aboutT {
   title: string;
   video: string | null;
 }
-
 const transform = (node: DOMNode) => {
   if (node.type === "tag" && node.name === "img") {
     const { src, alt, width, height } = (node as Element).attribs;
@@ -40,7 +39,6 @@ async function page() {
   const result = await homeAboutUsList();
   const aboutUs: aboutT[] = result?.data;
 
-  console.log(result?.data);
   return (
     <div className="space-y-10">
       <BreadcrumbsBox name="درباره ما" breadcrumb={[]} />

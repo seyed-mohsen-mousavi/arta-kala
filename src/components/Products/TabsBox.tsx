@@ -8,7 +8,7 @@ import Image from "next/image";
 import type { DOMNode, Element } from "html-react-parser";
 import { LiaCommentSolid } from "react-icons/lia";
 
-export default function TabsBox({ description_2 }: { description_2: any }) {
+export default function TabsBox({ description_2 }: { description_2: string }) {
   const sanitizedHtml = sanitizeHtml(description_2, {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
     allowedAttributes: {
@@ -63,10 +63,10 @@ export default function TabsBox({ description_2 }: { description_2: any }) {
         radius="none"
         aria-label="Options"
         variant="light"
-        className="w-full p-0 !-mb-1"
+        className="w-full p-0 "
         classNames={{
           base: "bg-[#f8f8f8] !border-b !border-[#dfdfdf] ",
-          tabList: "p-0 m-0",
+          tabList: "p-0 m-0 !-mb-1",
           tab: "h-full w-full px-6 py-4 text-gray-600 data-[selected=true]:bg-white  data-[selected=true]:text-zinc-500 text-zinc-500",
         }}
       >
@@ -105,7 +105,6 @@ export default function TabsBox({ description_2 }: { description_2: any }) {
 }
 
 function Comments({}) {
-
   return (
     <div className="w-full h-full  divide-y-1 divide-zinc-200">
       <div className="w-full flex flex-col items-start gap-5 pb-5">
@@ -117,7 +116,7 @@ function Comments({}) {
           را قبلا از ابزارمارکت خریده باشید، نظر شما به عنوان مالک محصول ثبت
           خواهد شد.
         </p>
-        <button  className="bg-primary hover:bg-[#3d464d] text-black hover:text-white  px-4 py-3 rounded-xs flex items-center gap-3 transition-colors ease-in-out">
+        <button className="bg-primary hover:bg-[#3d464d] text-black hover:text-white  px-4 py-3 rounded-xs flex items-center gap-3 transition-colors ease-in-out">
           <LiaCommentSolid className="size-6" /> افزودن نظر جدید
         </button>
       </div>
@@ -125,7 +124,6 @@ function Comments({}) {
         <p className="text-black font-semibold text-sm mb-2">
           نظرات کاربران به این محصول | 0 نظر
         </p>
-
       </div>
     </div>
   );

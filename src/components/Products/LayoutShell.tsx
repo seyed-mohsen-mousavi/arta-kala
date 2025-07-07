@@ -1,12 +1,12 @@
 import FilterBox from "@/components/Products/FilterBox";
 import SortBox from "@/components/Products/SortBox";
-import Link from "next/link";
 import PaginationBox from "./PaginationBox";
 import Card from "./Card";
-import { BreadcrumbItem, Breadcrumbs } from "@heroui/react";
 import BreadcrumbsBox from "./BreadcrumbsBox";
 import { CategoryNode } from "@/types/categories";
 import { findCategoryPath } from "@/app/product/[slug]/page";
+import ProductType from "@/types/product";
+export const dynamic = "force-dynamic";
 
 export default async function LayoutShell({
   categories,
@@ -14,9 +14,9 @@ export default async function LayoutShell({
   searchParams,
   pagination,
 }: {
-  categories: any[];
-  products: any;
-  searchParams: { [key: string]: string | number | boolean };
+  categories: CategoryNode[];
+  products: ProductType[];
+  searchParams: Promise<Record<string, string | string[]>>;
   pagination?: { count: number; page: number };
 }) {
   const params = await searchParams;
