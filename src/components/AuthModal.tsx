@@ -1,3 +1,4 @@
+"use client";
 import {
   Checkbox,
   InputOtp,
@@ -21,20 +22,23 @@ import {
   signupSchema,
 } from "@/schemas/authSchema";
 import { convertPersianToEnglish } from "@/utils/converNumbers";
-import { sendOtp, verifyOtp } from "@/services/usersActions";
+import { login, sendOtp, verifyOtp } from "@/services/usersActions";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useAuthModal } from "@/context/AuthModalProvider";
 
-interface FormValues {
-  otp: string;
-}
-
-export default function AuthModal({ isOpen, onOpenChange }: any) {
+export default function AuthModal() {
+  const { isOpen, onOpenChange, onClose }: any = useAuthModal();
   const [isLogin, setIsLogin] = useState(true);
   const [isSendOtp, setIsSendOtp] = useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const router = useRouter();
+  const pathName = usePathname();
+  const searchParams = useSearchParams();
   const {
     register: registerLogin,
     handleSubmit: handleLoginSubmit,
     formState: { errors: loginErrors },
+    reset: resetLogin,
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
@@ -54,8 +58,20 @@ export default function AuthModal({ isOpen, onOpenChange }: any) {
   } = useForm<OtpFormValues>({
     resolver: zodResolver(otpSchema),
   });
-  const onLoginSubmit = (data: LoginFormValues) => {
-    console.log("🔐 Login Data:", data);
+  const onLoginSubmit = async ({ phone_number, password }: LoginFormValues) => {
+    const result = await login(convertPersianToEnglish(phone_number), password);
+
+    if (result?.status === 200) {
+      resetLogin();
+      onClose();
+      const params = new URLSearchParams(searchParams.toString());
+      if (params.has("AuthRequired")) {
+        params.delete("AuthRequired");
+      }
+      const newQuery = params.toString();
+      const newUrl = newQuery ? `${pathName}?${newQuery}` : pathName;
+      router.replace(newUrl, { scroll: false });
+    }
   };
 
   const onSignupSubmit = async ({ phone_number }: SignupFormValues) => {
@@ -68,7 +84,6 @@ export default function AuthModal({ isOpen, onOpenChange }: any) {
   };
 
   const onOtpSubmit = async (data: OtpFormValues) => {
-    console.log({ ...data, phoneNumber });
     await verifyOtp(
       convertPersianToEnglish(phoneNumber),
       data.code,
@@ -81,7 +96,7 @@ export default function AuthModal({ isOpen, onOpenChange }: any) {
       isOpen={isOpen}
       placement="top-center"
       onOpenChange={onOpenChange}
-      className="max-w-full max-h-full h-full m-0 sm:max-w-lg sm:h-auto "
+      className="max-w-full max-h-full h-full m-0 sm:max-w-lg sm:h-auto outline-none"
     >
       <ModalContent className="text-sm rounded-sm overflow-auto h-full">
         {(onClose) => (

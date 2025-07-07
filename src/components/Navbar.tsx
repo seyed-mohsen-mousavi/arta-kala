@@ -7,12 +7,21 @@ import { useEffect, useRef, useState } from "react";
 import { GoChevronLeft, GoChevronRight, GoChevronUp } from "react-icons/go";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { RiMenu3Fill } from "react-icons/ri";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import clsx from "clsx";
 import { CategoryNode } from "@/types/categories";
-
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerBody,
+  DrawerFooter,
+} from "@heroui/react";
+import { HiXMark } from "react-icons/hi2";
+import { useUser } from "@/context/UserContext";
 function Navbar({ categories }: { categories: CategoryNode[] }) {
   const pathname = usePathname();
+  const { onOpen }: any = useAuthModal();
 
   const links = [
     { href: "/", label: "صفحه اصلی" },
@@ -21,40 +30,10 @@ function Navbar({ categories }: { categories: CategoryNode[] }) {
     { href: "/about-us", label: "درباره ما" },
     { href: "/contact-info", label: "تماس با ما" },
   ];
-  const [scrolled, setScrolled] = useState(false);
+  const user = useUser();
+  console.log(user);
   const [isOpen, setIsOpen] = useState(false);
-  const [jobIsOpen, setJobIsOpen] = useState(false);
-  const [sideOpen, setSideOpen] = useState(false);
   const navbarRef = useRef<HTMLDivElement>(null);
-  const [isSticky, setIsSticky] = useState(false);
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsSticky(!entry.isIntersecting);
-      },
-      { threshold: 1.0 }
-    );
-
-    if (navbarRef.current) {
-      observer.observe(navbarRef.current);
-    }
-
-    return () => {
-      if (navbarRef.current) {
-        observer.unobserve(navbarRef.current);
-      }
-    };
-  }, []);
-  useEffect(() => {
-    const handleScroll = () => {
-      const navbarTop = navbarRef.current?.offsetTop || 0;
-      const scrollTop = window.scrollY;
-      setScrolled(scrollTop >= navbarTop);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const renderCategories = (categories: CategoryNode[]) => {
     return (
@@ -96,9 +75,6 @@ function Navbar({ categories }: { categories: CategoryNode[] }) {
         ))}
       </ul>
     );
-  };
-  const handleOpen = () => {
-    setSideOpen(true);
   };
   return (
     <>
@@ -183,7 +159,12 @@ function Navbar({ categories }: { categories: CategoryNode[] }) {
             <MobileDrawer links={links} categories={categories} />
             <div className="bg-white absolute h-screen"></div>
             <div className="space-x-2 flex items-center ">
-              <LoginModal />
+              <button
+                onClick={onOpen}
+                className="py-1 px-3 rounded-2xl bg-white text-black font-semibold outline-none ring-0 border-none"
+              >
+                ورود / عضویت{" "}
+              </button>
               <Link
                 className="py-1 px-3 rounded-2xl bg-white text-black font-semibold"
                 href={"/"}
@@ -214,29 +195,8 @@ function Navbar({ categories }: { categories: CategoryNode[] }) {
 
 export default Navbar;
 import { useDisclosure } from "@heroui/react";
-import AuthModal from "./AuthModal";
-function LoginModal() {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  return (
-    <div>
-      <button
-        onClick={onOpen}
-        className="py-1 px-3 rounded-2xl bg-white text-black font-semibold"
-      >
-        ورود / عضویت{" "}
-      </button>
-      <AuthModal isOpen={isOpen} onOpenChange={onOpenChange} />
-    </div>
-  );
-}
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerBody,
-  DrawerFooter,
-} from "@heroui/react";
-import { HiXMark } from "react-icons/hi2";
+import { useAuthModal } from "@/context/AuthModalProvider";
+
 type MobileCategoryProps = {
   categories: CategoryNode[];
   level?: number;

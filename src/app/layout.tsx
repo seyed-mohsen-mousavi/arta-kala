@@ -5,6 +5,12 @@ import { GetShopCategoriesTreeList } from "@/services/shopActions";
 // import Providers from "./providers";
 import localFont from "next/font/local";
 import Providers from "./providers";
+import { UserProvider } from "@/context/UserContext";
+import { GetUserDashboard } from "@/services/usersActions";
+import { cookies } from "next/headers";
+import { User } from "@/types/user";
+import { AuthModalProvider } from "@/context/AuthModalProvider";
+import AuthModal from "@/components/AuthModal";
 
 const iranyekan = localFont({
   variable: "--font-iranyekan",
@@ -80,18 +86,30 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const result = await GetShopCategoriesTreeList();
+  let user = null;
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.toString();
+  // if (cookieHeader.includes("access_token")) {
+  //   user = await GetUserDashboard(cookieHeader);
+  // }
+  user = await GetUserDashboard(cookieHeader);
 
   return (
     <html lang="fa-IR" dir="rtl" className="scroll-smooth bg-[#f9f9f9]">
       <body
         className={`${iranyekan.variable} ${pelak.variable} ${noora.variable} ${dana.variable} ${iranyekan.className} w-full min-h-screen relative antialiased text-[#212529]`}
       >
-        <Navbar categories={result?.data} />
-        <Providers>
-          <main className="container customSm:max-w-[566px]  w-full mx-auto pb-20 px-2 lg:px-0 h-full">
-            {children}
-          </main>
-        </Providers>
+        <UserProvider initialUser={user}>
+          <AuthModalProvider>
+            <Navbar categories={result?.data} />
+            <Providers>
+              <main className="container customSm:max-w-[566px]  w-full mx-auto pb-20 px-2 lg:px-0 h-full">
+                {children}
+              </main>
+            </Providers>
+            <AuthModal />
+          </AuthModalProvider>
+        </UserProvider>
       </body>
     </html>
   );
