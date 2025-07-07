@@ -19,7 +19,9 @@ import {
 } from "@heroui/react";
 import { HiXMark } from "react-icons/hi2";
 import { useUser } from "@/context/UserContext";
-function Navbar({ categories }: { categories: CategoryNode[] }) {
+function Navbar() {
+  const categories = useCategories();
+
   const pathname = usePathname();
   const { onOpen }: any = useAuthModal();
   const links = [
@@ -195,6 +197,7 @@ function Navbar({ categories }: { categories: CategoryNode[] }) {
 export default Navbar;
 import { useDisclosure } from "@heroui/react";
 import { useAuthModal } from "@/context/AuthModalProvider";
+import { useCategories } from "@/context/CategoriesContext";
 
 type MobileCategoryProps = {
   categories: CategoryNode[];

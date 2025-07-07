@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@fortawesome/react-fontawesome": "^0.2.2",
     "@heroui/accordion": "^2.2.19",
     "@heroui/react": "^2.8.0-beta.11",
     "@heroui/toast": "^2.0.12",

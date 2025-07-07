@@ -5,14 +5,18 @@ import type { PaginationItemRenderProps } from "@heroui/react";
 import React from "react";
 import { cn, Pagination, PaginationItemType } from "@heroui/react";
 import { GoChevronLeft } from "react-icons/go";
+import { useRouter } from "next/navigation";
 
 export default function PaginationBox({
   page,
   count,
+  searchParams,
 }: {
   page?: number;
   count: number;
+  searchParams: any;
 }) {
+  const router = useRouter();
   const renderItem = ({
     ref,
     key,
@@ -21,6 +25,7 @@ export default function PaginationBox({
     onNext,
     onPrevious,
     setPage,
+    page,
     className,
   }: PaginationItemRenderProps) => {
     if (value === PaginationItemType.NEXT) {
@@ -79,7 +84,6 @@ export default function PaginationBox({
       </button>
     );
   };
-
   return (
     <Pagination
       dir="rtl"
@@ -92,7 +96,10 @@ export default function PaginationBox({
       total={Math.ceil(count / 24)}
       boundaries={3}
       variant="light"
-      onChange={(page) => console.log("Page changed to:", page)}
+      onChange={(page) => {
+        const params = new URLSearchParams(searchParams).toString();
+        router.push(`/products/page/${page}?${params}`);
+      }}
     />
   );
 }

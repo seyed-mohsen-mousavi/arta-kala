@@ -7,20 +7,19 @@ import { useEffect, useState } from "react";
 import { GoChevronUp } from "react-icons/go";
 import { NumberInput, Slider, SliderValue } from "@heroui/react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { CategoryNode } from "@/types/categories";
+import { useCategories } from "@/context/CategoriesContext";
 
 const minPrice = 3000;
 const maxPrice = 459420000;
 
 export default function FilterBox({
-  categories,
   selected,
   isShow,
 }: {
-  categories: CategoryNode[];
   selected?: boolean;
   isShow?: boolean;
 }) {
+  const categories = useCategories();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();

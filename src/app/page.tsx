@@ -195,6 +195,10 @@ const blogs: { id: number; title: string; image: string }[] = [
 export default async function Home() {
   const { data } = await GetProducts();
   const products: ProductType[] = data.results;
+  const { data: newData } = await GetProducts({ sort: "newest" });
+  const newestProducts: ProductType[] = newData.results;
+  const { data: populerData } = await GetProducts({ sort: "popularity" });
+  const popularProducts: ProductType[] = populerData.results;
   return (
     <div className="w-full">
       {/* Header  */}
@@ -286,7 +290,7 @@ export default async function Home() {
         <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white">
           <div className="w-full flex justify-between px-4">
             <h4 className="font-semibold text-2xl">جدیدترین</h4>{" "}
-            <Link href={"/"} className="underline text-lg">
+            <Link href={"/products?sort=newest"} className="underline text-lg">
               مشاهده بیشتر محصولات​​​​​​​
             </Link>
           </div>
@@ -294,7 +298,7 @@ export default async function Home() {
             <Slider
               spaceBetween={35}
               className="!text-primary"
-              items={products}
+              items={newestProducts}
               Card={Card}
             />
           </div>
@@ -309,8 +313,8 @@ export default async function Home() {
         {/* Populer */}
         <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white">
           <div className="w-full flex justify-between px-4">
-            <h4 className="font-semibold text-2xl">پرفروش ها</h4>{" "}
-            <Link href={"/"} className="underline text-lg">
+            <h4 className="font-semibold text-2xl">محبوب ترین ها</h4>{" "}
+            <Link href={"/products?sort=popularity"} className="underline text-lg">
               مشاهده بیشتر محصولات​​​​​​​
             </Link>
           </div>
@@ -318,7 +322,7 @@ export default async function Home() {
             <Slider
               spaceBetween={35}
               className="!text-primary"
-              items={products}
+              items={popularProducts}
               Card={Card}
             />
           </div>

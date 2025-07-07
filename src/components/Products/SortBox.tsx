@@ -12,13 +12,15 @@ import {
   useDisclosure,
 } from "@heroui/react";
 import { HiXMark } from "react-icons/hi2";
+import { useCategories } from "@/context/CategoriesContext";
 
-function SortBox({ categories }: { categories: CategoryNode[] }) {
+function SortBox() {
+  const categories = useCategories();
   const sortOptions = [
     { label: "جدیدترین", value: "newest" },
     { label: "محبوب ترین", value: "popularity" },
-    { label: "ارزان ترین", value: "price_asc" },
-    { label: "گران ترین", value: "price_desc" },
+    { label: "ارزان ترین", value: "price_desc" },
+    { label: "گران ترین", value: "price_asc" },
   ];
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const searchParams = useSearchParams();
@@ -84,7 +86,7 @@ function SortBox({ categories }: { categories: CategoryNode[] }) {
                 </DrawerHeader>
 
                 <DrawerBody className="relative overflow-hidden px-0 w-full">
-                  <FilterBox isShow categories={categories} />
+                  <FilterBox isShow />
                 </DrawerBody>
               </>
             )}

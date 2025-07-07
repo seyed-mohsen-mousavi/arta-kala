@@ -11,22 +11,23 @@ import Link from "next/link";
 import AddToCart from "@/components/Products/AddToCart";
 import TabsBox from "@/components/Products/TabsBox";
 import ProductType from "@/types/product";
-export function findCategoryPath(
-  nodes: CategoryNode[],
-  targetId: string | number,
-  acc: CategoryNode[] = []
-): CategoryNode[] | null {
-  for (const node of nodes) {
-    const currentPath = [...acc, node];
-    if (node.id === Number(targetId)) {
-      return currentPath;
+import { CiImageOff } from "react-icons/ci";
+function findCategory(
+  categories: CategoryNode[],
+  targetName: string
+): CategoryNode | undefined {
+  for (const category of categories) {
+    if (category.name === targetName) {
+      return category;
     }
-    if (node.children) {
-      const childPath = findCategoryPath(node.children, targetId, currentPath);
-      if (childPath) return childPath;
+    if (category.children) {
+      const foundInChildren = findCategory(category.children, targetName);
+      if (foundInChildren) {
+        return foundInChildren;
+      }
     }
   }
-  return null;
+  return undefined;
 }
 export default async function Page({
   params,
@@ -39,26 +40,37 @@ export default async function Page({
   const result = await GetShopCategoriesTreeList();
   const categories: CategoryNode[] = result?.data;
   const product = data;
-  const categoryFind = categories.find(
-    (category: CategoryNode) => category.name === product.category
-  );
-  let breadcrumb: CategoryNode[] = [];
-  if (data?.category && categoryFind) {
-    const path = findCategoryPath(categories, categoryFind.id);
-    if (path) breadcrumb = path;
-  }
+
+  const categoryFind = findCategory(categories, product.category);
   return (
     <div>
-      <BreadcrumbsBox name={data.name} breadcrumb={breadcrumb} />
+      <BreadcrumbsBox
+        title={data.name}
+        items={[
+          { label: "خانه", href: "/" },
+          { label: "محصولات", href: "/products" },
+          {
+            label: product.category,
+            href: `/products/?category_id=${categoryFind?.id}`,
+          },
+          { label: product.name },
+        ]}
+      />
       <div className="bg-white shadow-lg shadow-black/10 rounded-[5px] px-5 py-4 flex flex-col md:flex-row justify-between w-full mt-7 text-sm">
         <div className="w-full lg:w-1/3 h-full flex">
-          <Image
-            src={data.cover_image}
-            alt={data.name}
-            width={200}
-            height={200}
-            className="border-l-[1px] border-zinc-100 m-1 w-full h-full object-cover"
-          />
+          {product.cover_image ? (
+            <Image
+              src={data.cover_image}
+              alt={data.name}
+              width={200}
+              height={200}
+              className="border-l-[1px] border-zinc-100 m-1 w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-96 bg-zinc-200 rounded-md flex items-center justify-center border-l-[1px] border-zinc-100 m-1">
+              <CiImageOff className="size-15" />
+            </div>
+          )}
         </div>
         <div className="w-full h-full space-y-3 flex justify-between">
           <div className="w-full lg:w-2/3 p-2 flex flex-col items-start space-y-5 px-4">
