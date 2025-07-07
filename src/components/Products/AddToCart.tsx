@@ -13,6 +13,7 @@ import {
   useDisclosure,
 } from "@heroui/react";
 import { HiXMark } from "react-icons/hi2";
+import { IoIosNotifications } from "react-icons/io";
 
 type CartItem = {
   productId: string | number;
@@ -22,9 +23,11 @@ type CartItem = {
 function AddToCart({
   productId,
   stock,
+  is_available,
 }: {
   productId: string | number;
   stock: number;
+  is_available: boolean;
 }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [quantity, setQuantity] = useState(1);
@@ -110,7 +113,7 @@ function AddToCart({
     }
   };
 
-  return (
+  return is_available ? (
     <div className="flex bg-white border border-zinc-200 rounded-sm">
       <div className="relative w-2/3" ref={dropdownRef}>
         <button
@@ -272,6 +275,22 @@ function AddToCart({
           )}
         </ModalContent>
       </Modal>
+    </div>
+  ) : (
+    <div className="flex flex-col  sm:flex-row lg:flex-col items-center">
+      <div className="hidden lg:inline-flex items-center justify-center w-full relative text-zinc-400 text-base lg:mt-10">
+        <hr className="w-full h-px  my-0 bg-zinc-400 border-0 rounded-sm" />
+        <p className="absolute px-2 pb-0.5 -translate-x-1/2 bg-zinc-100 left-1/2 text-ellipsis text-nowrap font-semibold ">
+          در حال حاضر موجود نیست{" "}
+        </p>
+      </div>
+      <p className="text-sm text-right text-zinc-600 sm:text-base font-light pb-4 lg:pt-5 text-nowrap sm:ml-20 lg:ml-0 w-full">
+        متاسفانه این کالا در حال حاضر موجود نیست
+      </p>
+      <button className="btn-primary w-full relative font-semibold">
+        موجود شد به من اطلاع بده{" "}
+        <IoIosNotifications className="absolute left-4 top-2.5 size-6" />
+      </button>
     </div>
   );
 }

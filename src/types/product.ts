@@ -11,4 +11,5 @@ export default interface ProductType {
   slug: string;
   pdfs?: string[];
   images: string[];
+  is_available: boolean
 }

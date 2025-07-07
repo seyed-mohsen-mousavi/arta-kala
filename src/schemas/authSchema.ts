@@ -6,7 +6,7 @@ export type SignupFormValues = z.infer<typeof signupSchema>;
 export type OtpFormValues = z.infer<typeof otpSchema>;
 export const loginSchema = z.object({
     phone_number: z.string().min(8, "شماره تلفن معتبر نیست"),
-    password: z.string().min(6, "رمز عبور حداقل ۶ کاراکتر است"),
+    password: z.string().min(4, "رمز عبور حداقل ۶ کاراکتر است"),
 });
 
 export const otpSchema = z.object({

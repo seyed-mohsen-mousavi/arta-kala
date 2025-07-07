@@ -10,6 +10,7 @@ import sanitizeHtml from "sanitize-html";
 import Link from "next/link";
 import AddToCart from "@/components/Products/AddToCart";
 import TabsBox from "@/components/Products/TabsBox";
+import ProductType from "@/types/product";
 export function findCategoryPath(
   nodes: CategoryNode[],
   targetId: string | number,
@@ -34,7 +35,7 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
-  const { data } = await GetProductBySlug(decodedSlug);
+  const { data }: { data: ProductType } = await GetProductBySlug(decodedSlug);
   const result = await GetShopCategoriesTreeList();
   const categories: CategoryNode[] = result?.data;
   const product = data;
@@ -46,7 +47,6 @@ export default async function Page({
     const path = findCategoryPath(categories, categoryFind.id);
     if (path) breadcrumb = path;
   }
-  console.log(data);
   return (
     <div>
       <BreadcrumbsBox name={data.name} breadcrumb={breadcrumb} />
@@ -86,91 +86,121 @@ export default async function Page({
           </div>
           <div className="w-5/12 h-full space-y-3  lg:block hidden">
             <div className="bg-zinc-100 border border-zinc-200 p-5 text-center space-y-4">
-              <div className="flex items-center justify-center mb-2">
-                <span>
-                  <span className="line-through text-zinc-500 ml-2">
-                    {product.price.toLocaleString("fa-IR")}
-                  </span>
-                </span>
-                <p className="rounded-full text-sm bg-danger text-white px-4 py-2">
-                  %{Math.round(60).toLocaleString("fa-IR")}
-                </p>
-              </div>
-              <p className="font-dana font-bold text-2xl">
-                {data.price.toLocaleString("fa-IR")}
-                <span className="font-light">تومان</span>
-              </p>
-              <AddToCart productId={data.id} stock={data.stock} />
+              {product.is_available && (
+                <>
+                  <div className="flex items-center justify-center mb-2">
+                    <span>
+                      <span className="line-through text-zinc-500 ml-2">
+                        {product.price.toLocaleString("fa-IR")}
+                      </span>
+                    </span>
+                    <p className="rounded-full text-sm bg-danger text-white px-4 py-2">
+                      %{Math.round(60).toLocaleString("fa-IR")}
+                    </p>
+                  </div>
+                  <p className="font-dana font-bold text-2xl">
+                    {data.price.toLocaleString("fa-IR")}
+                    <span className="font-light">تومان</span>
+                  </p>
+                </>
+              )}
+              <AddToCart
+                is_available={data.is_available}
+                productId={data.id}
+                stock={data.stock}
+              />
             </div>
-            <Link href={""} className="text-cyan-400 spoiler-link relative">
-              آیا قیمت مناسب‌تری سراغ دارید؟
-            </Link>
-            <div className="bg-white border border-zinc-200 rounded-lg p-2 flex justify-between w-full mt-5 px-3 items-center">
-              <div>
-                <p className="text-zinc-800">ارسال رایگان سفارش</p>
-                <p className="font-light text-zinc-500 font-dana pt-1">
-                  سفارش‌های بالای 5 میلیون تومان
-                </p>
-              </div>
-              <div className="size-14 relative">
-                <Image fill src="/free-delivery-free.svg" alt="" />
-              </div>
-            </div>
+            {product.is_available && (
+              <>
+                <Link href={""} className="text-cyan-400 spoiler-link relative">
+                  آیا قیمت مناسب‌تری سراغ دارید؟
+                </Link>
+                <div className="bg-white border border-zinc-200 rounded-lg p-2 flex justify-between w-full mt-5 px-3 items-center">
+                  <div>
+                    <p className="text-zinc-800">ارسال رایگان سفارش</p>
+                    <p className="font-light text-zinc-500 font-dana pt-1">
+                      سفارش‌های بالای 5 میلیون تومان
+                    </p>
+                  </div>
+                  <div className="size-14 relative">
+                    <Image fill src="/free-delivery-free.svg" alt="" />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
       <div className="hidden sm:block lg:hidden bg-zinc-100 border border-zinc-200 p-5 my-5 text-center space-y-4">
-        <div className="flex items-center justify-center mb-2">
-          <span>
-            <span className="line-through text-zinc-500 ml-2">
-              {product.price.toLocaleString("fa-IR")}
-            </span>
-          </span>
-          <p className="rounded-full text-sm bg-danger text-white px-4 py-2">
-            %{Math.round(60).toLocaleString("fa-IR")}
-          </p>
-        </div>
-        <p className="font-dana font-bold text-2xl">
-          {data.price.toLocaleString("fa-IR")}
-          <span className="font-light">تومان</span>
-        </p>
-        <AddToCart productId={data.id} stock={data.stock} />
-      </div>
-      <div className="my-10 w-full h-full space-y-3  block lg:hidden">
-        <Link href={""} className="text-cyan-400 spoiler-link relative">
-          آیا قیمت مناسب‌تری سراغ دارید؟
-        </Link>
-        <div className="bg-white border border-zinc-200 rounded-lg p-2 flex justify-between w-full mt-5 px-3 items-center">
-          <div>
-            <p className="text-zinc-800">ارسال رایگان سفارش</p>
-            <p className="font-light text-zinc-500 font-dana pt-1">
-              سفارش‌های بالای 5 میلیون تومان
+        {product.is_available && (
+          <>
+            <div className="flex items-center justify-center mb-2">
+              <span>
+                <span className="line-through text-zinc-500 ml-2">
+                  {product.price.toLocaleString("fa-IR")}
+                </span>
+              </span>
+              <p className="rounded-full text-sm bg-danger text-white px-4 py-2">
+                %{Math.round(60).toLocaleString("fa-IR")}
+              </p>
+            </div>
+            <p className="font-dana font-bold text-2xl">
+              {data.price.toLocaleString("fa-IR")}
+              <span className="font-light">تومان</span>
             </p>
-          </div>
-          <div className="size-14 relative">
-            <Image fill src="/free-delivery-free.svg" alt="" />
+          </>
+        )}
+        <AddToCart
+          is_available={data.is_available}
+          productId={data.id}
+          stock={data.stock}
+        />
+      </div>
+      {product.is_available && (
+        <div className="my-10 w-full h-full space-y-3  block lg:hidden">
+          <Link href={""} className="text-cyan-400 spoiler-link relative">
+            آیا قیمت مناسب‌تری سراغ دارید؟
+          </Link>
+          <div className="bg-white border border-zinc-200 rounded-lg p-2 flex justify-between w-full mt-5 px-3 items-center">
+            <div>
+              <p className="text-zinc-800">ارسال رایگان سفارش</p>
+              <p className="font-light text-zinc-500 font-dana pt-1">
+                سفارش‌های بالای 5 میلیون تومان
+              </p>
+            </div>
+            <div className="size-14 relative">
+              <Image fill src="/free-delivery-free.svg" alt="" />
+            </div>
           </div>
         </div>
-      </div>
+      )}
       <div className="fixed bottom-0 z-30 right-0 w-full space-y-3  bg-white shadow-2xl sm:hidden">
         <div className="p-3 text-center space-y-4 shadow-2xl">
-          <div className="flex items-center justify-start mb-2">
-            <p className="text-sm">
-              <span className="line-through text-zinc-500 ml-2">
-                {product.price.toLocaleString("fa-IR")} تومان
-              </span>
-            </p>
-            <p className="rounded-full text-sm bg-danger text-white px-3 py-0.5">
-              %{Math.round(60).toLocaleString("fa-IR")}
-            </p>
-          </div>
-          <p className="font-dana font-bold text-base text-right">
-            <span className="font-bold font-iranyekan text-lg">
-              {data.price.toLocaleString("fa-IR")}
-            </span>
-            <span className="font-light">تومان</span>
-          </p>
-          <AddToCart productId={data.id} stock={data.stock} />
+          {product.is_available && (
+            <>
+              <div className="flex items-center justify-start mb-2">
+                <p className="text-sm">
+                  <span className="line-through text-zinc-500 ml-2">
+                    {product.price.toLocaleString("fa-IR")} تومان
+                  </span>
+                </p>
+                <p className="rounded-full text-sm bg-danger text-white px-3 py-0.5">
+                  %{Math.round(60).toLocaleString("fa-IR")}
+                </p>
+              </div>
+              <p className="font-dana font-bold text-base text-right">
+                <span className="font-bold font-iranyekan text-lg">
+                  {data.price.toLocaleString("fa-IR")}
+                </span>
+                <span className="font-light">تومان</span>
+              </p>
+            </>
+          )}
+          <AddToCart
+            is_available={data.is_available}
+            productId={data.id}
+            stock={data.stock}
+          />
         </div>
       </div>
       <div className="bg-white shadow-lg shadow-black/10 rounded-[5px]  flex flex-col lg:flex-row justify-between w-full mt-7 text-sm overflow-hidden mb-20 sm:mb-auto">

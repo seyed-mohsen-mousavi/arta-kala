@@ -105,6 +105,7 @@ export default function TabsBox({ description_2 }: { description_2: any }) {
 }
 
 function Comments({}) {
+
   return (
     <div className="w-full h-full  divide-y-1 divide-zinc-200">
       <div className="w-full flex flex-col items-start gap-5 pb-5">
@@ -116,7 +117,7 @@ function Comments({}) {
           را قبلا از ابزارمارکت خریده باشید، نظر شما به عنوان مالک محصول ثبت
           خواهد شد.
         </p>
-        <button className="bg-primary hover:bg-[#3d464d] text-black hover:text-white  px-4 py-3 rounded-xs flex items-center gap-3 transition-colors ease-in-out">
+        <button  className="bg-primary hover:bg-[#3d464d] text-black hover:text-white  px-4 py-3 rounded-xs flex items-center gap-3 transition-colors ease-in-out">
           <LiaCommentSolid className="size-6" /> افزودن نظر جدید
         </button>
       </div>

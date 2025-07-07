@@ -197,7 +197,6 @@ const blogs: { id: number; title: string; image: string }[] = [
 export default async function Home() {
   const { data } = await GetProducts();
   const products: ProductType[] = data.results;
-  console.log(products);
   return (
     <div className="w-full">
       {/* Header  */}

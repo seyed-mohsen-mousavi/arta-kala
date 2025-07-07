@@ -1,14 +1,24 @@
+
 import { addToast } from "@heroui/toast"
 import api from "./api"
 
 export const login = async (phone_number: string, password: string) => {
     try {
-        const result = await api.post("/login/password", { phone_number, password });
+        const result = await api.post("/users/login/password/", { phone_number, password });
+        console.log(result)
         return result
-    } catch (error) {
-        addToast({
-            title: "ورود ناموفق بود"
-        })
+    } catch (error: any) {
+        if (error?.response?.status === 401) {
+            addToast({
+                title: "شماره تلفن یا رمز عبور اشتباه است",
+                description: "لطفاً اطلاعات ورود خود را بررسی کرده و دوباره تلاش کنید."
+            })
+        } else {
+            addToast({
+                title: "ورود ناموفق بود"
+            })
+        }
+
     }
 }
 // otp
@@ -62,4 +72,19 @@ export const verifyOtp = async (phone_number: string, code: string, referral_cod
         }
 
     }
+}
+// dashboard
+export const GetUserDashboard = async (cookie: string) => {
+    try {
+        const result = await api.get("/users/dashboard/", {
+            headers: {
+                "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxODg0NzUxLCJpYXQiOjE3NTE4ODM1NTEsImp0aSI6ImVlNzhhMWVlYzA5MjQyZWVhOTNkNmQzMDg4MWQ2NjMwIiwidXNlcl9pZCI6MX0.wVcJ4tEgMw2Dg3zPrV4UGUskMy9A3RFDN0yEF7sX9cs`
+            }
+        })
+        return result.data
+    } catch (error: any) {
+        console.log(error?.response?.message || error);
+        // throw new Error(error.message || 'Unknown error');
+    }
+
 }

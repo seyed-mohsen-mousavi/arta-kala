@@ -1,15 +1,16 @@
 "use client";
+import ProductType from "@/types/product";
 import Image from "next/image";
 import Link from "next/link";
 import { BsCart3 } from "react-icons/bs";
 
-function Card({ item }: { item: any }) {
+function Card({ item }: { item: ProductType }) {
   // const discountPercent =
   //   ((item.originalPrice - item.currentPrice) / item.originalPrice) *
   //   100;
   return (
     <Link href={`/product/${item.slug}`} key={item.id} title={item.name}>
-      <div className="bg-white shadow rounded-lg p-5 hover:shadow-lg transition-shadow group/card w-full h-full">
+      <div className="bg-white shadow rounded-lg p-3.5 sm:p-5 hover:shadow-lg transition-shadow group/card w-full h-full">
         <div className="relative">
           <Image
             width={500}
@@ -31,33 +32,44 @@ function Card({ item }: { item: any }) {
         <h3 className="font-semibold mt-2 mb-10 text-zinc-700 line-clamp-2">
           {item.name}
         </h3>
-        <div className="flex w-full justify-between items-center">
-          <button className="group-hover/card:bg-danger group-hover/card:text-white text-zinc-400 rounded-full p-2.5 mt-1 hover:bg-red-600 flex items-center gap-2 transition-colors duration-300 ease-in-outoverflow-hidden">
-            <BsCart3 className="w-5 h-5" />
-            <p className="text-[10px] xl:text-xs font-semibold whitespace-nowrap max-w-0 opacity-0 group-hover/card:max-w-[120px] group-hover/card:opacity-100 transition-[max-width,opacity] duration-300 ease-in-outoverflow-hidden">
-              افزودن به سبد خرید
-            </p>
-          </button>
+        {item.is_available ? (
+          <div className="flex w-full justify-between items-center">
+            <button className="group-hover/card:bg-danger group-hover/card:text-white text-zinc-400 rounded-full p-2.5 mt-1 hover:bg-red-600 flex items-center gap-2 transition-colors duration-300 ease-in-outoverflow-hidden">
+              <BsCart3 className="w-5 h-5" />
+              <p className="text-[10px] xl:text-xs font-semibold whitespace-nowrap max-w-0 opacity-0 group-hover/card:max-w-[120px] group-hover/card:opacity-100 transition-[max-width,opacity] duration-300 ease-in-outoverflow-hidden">
+                افزودن به سبد خرید
+              </p>
+            </button>
 
-          <div className="flex flex-col items-end">
-            <p>
-              {/* <span className="rounded-full text-sm bg-danger text-white px-2 py-1">
+            <div className="flex flex-col items-end">
+              <p>
+                {/* <span className="rounded-full text-sm bg-danger text-white px-2 py-1">
               {Math.round(discountPercent).toLocaleString("fa-IR")}%
             </span> */}
-              {/* <span>
+                {/* <span>
               <span className="line-through text-zinc-500 ml-2">
                 {item.price.toLocaleString("fa-IR")}
               </span>
             </span> */}
-            </p>
-            <p className="font-bold mt-2">
-              <span className="text-xl">
-                {item.price.toLocaleString("fa-IR")}
-              </span>
-              <span className="text-sm">تومان</span>
-            </p>
+              </p>
+              <p className="font-bold mt-2">
+                <span className="text-xl">
+                  {item.price.toLocaleString("fa-IR")}
+                </span>
+                <span className="text-sm">تومان</span>
+              </p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="w-full">
+            <div className="inline-flex items-center justify-center w-full relative text-zinc-400">
+              <hr className="w-full h-px my-0 bg-zinc-400 border-0 rounded-sm" />
+              <p className="absolute px-2 pb-0.5 -translate-x-1/2 bg-white left-1/2 text-ellipsis text-nowrap whitespace-nowrap font-semibold">
+                در حال حاضر موجود نیست{" "}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </Link>
   );

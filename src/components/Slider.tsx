@@ -23,22 +23,22 @@ function ProductSlider({
     <div className="relative w-full h-full">
       <Swiper
         navigation={false}
-        loop={true}
         spaceBetween={spaceBetween}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
-        autoplay
+        loop={items.length > 2}
+        autoplay={items.length > 1}
         breakpoints={{
           0: {
-            slidesPerView: 1, 
+            slidesPerView: 1,
           },
           480: {
-            slidesPerView: 2, 
+            slidesPerView: 2,
           },
           768: {
             slidesPerView: 3,
           },
           1224: {
-            slidesPerView: slidesPerView, 
+            slidesPerView: slidesPerView,
           },
         }}
       >
