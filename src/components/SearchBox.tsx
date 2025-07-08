@@ -229,10 +229,10 @@ function SearchResults({
               <hr className="text-zinc-300" />
             </>
           )}
-          {data.products?.slice(0, 6).length > 0 && (
+          {data.products?.length > 0 && (
             <>
               <ul>
-                {data.products.map((product) => (
+                {data.products.slice(0, 6).map((product) => (
                   <li
                     key={product.id}
                     className="hover:text-black text-zinc-600 cursor-pointer"
@@ -311,6 +311,7 @@ export default function SearchBox() {
   const handleResultClick: any = () => {
     setSearchValue("");
   };
+  console.log(data);
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (searchValue.length > 2) {
@@ -322,16 +323,28 @@ export default function SearchBox() {
               SearchBlogs({ search: searchValue }),
               GetProducts({ search: searchValue }),
             ]);
-            const filteredCategories = categories?.filter((cat) =>
-              cat.name.toLowerCase().includes(searchValue.toLowerCase())
-            );
+            const filteredCategories = categories?.filter((cat) => {
+              const nameMatch = cat.name
+                ?.toLowerCase()
+                .includes(searchValue.toLowerCase());
+
+              const childMatch = Array.isArray(cat.children)
+                ? cat.children.some((child) =>
+                    child.name
+                      ?.toLowerCase()
+                      .includes(searchValue.toLowerCase())
+                  )
+                : false;
+
+              return nameMatch || childMatch;
+            });
             setData({
               articles: articlesRes.data,
-              products: productsRes.data,
+              products: productsRes.data.results,
               categories: filteredCategories || [],
             });
           } catch (err) {
-            console.log(err)
+            console.log(err);
             setError("مشکلی در دریافت نتایج پیش آمد");
           } finally {
             setLoading(false);
