@@ -49,7 +49,7 @@ function SearchInput({
   searchValue: string;
 }) {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const handleResultClick = () => {
+  const handleResultClick: any = () => {
     onChange("");
     onClose();
   };
@@ -173,8 +173,8 @@ function SearchResults({
     articles: BlogCategoryNode[];
     products: ProductType[];
     categories: CategoryNode[];
-    handleResultClick: any;
   };
+  handleResultClick: () => void;
 }) {
   const hasResults =
     !!data.articles?.length ||
@@ -308,41 +308,41 @@ export default function SearchBox() {
   const [error, setError] = useState<string | null>(null);
   const categories = useCategories();
   const isMobile = useIsMobile();
-  const handleResultClick = () => {
+  const handleResultClick: any = () => {
     setSearchValue("");
   };
   useEffect(() => {
-    if (searchValue.length > 2) {
-      const fetchData = async () => {
-        try {
-          setLoading(true);
-          setError(null);
-          const [articlesRes, productsRes] = await Promise.all([
-            SearchBlogs({ search: searchValue }),
-            GetProducts({ search: searchValue }),
-          ]);
+    const delayDebounce = setTimeout(() => {
+      if (searchValue.length > 2) {
+        const fetchData = async () => {
+          try {
+            setLoading(true);
+            setError(null);
+            const [articlesRes, productsRes] = await Promise.all([
+              SearchBlogs({ search: searchValue }),
+              GetProducts({ search: searchValue }),
+            ]);
+            const filteredCategories = categories?.filter((cat) =>
+              cat.name.toLowerCase().includes(searchValue.toLowerCase())
+            );
+            setData({
+              articles: articlesRes.data,
+              products: productsRes.data,
+              categories: filteredCategories || [],
+            });
+          } catch (err) {
+            setError("مشکلی در دریافت نتایج پیش آمد");
+          } finally {
+            setLoading(false);
+          }
+        };
+        fetchData();
+      } else {
+        setData(initialData);
+      }
+    }, 500); // ۰.۵ ثانیه دیلی
 
-          const filteredCategories = categories?.filter((cat) =>
-            cat.name.includes(searchValue)
-          );
-
-          setData({
-            articles: articlesRes?.data || [],
-            products: productsRes?.data?.results || [],
-            categories: filteredCategories || [],
-          });
-        } catch (err) {
-          console.error(err);
-          setError("خطا در گرفتن اطلاعات");
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchData();
-    } else {
-      setData(initialData);
-    }
+    return () => clearTimeout(delayDebounce);
   }, [searchValue, categories]);
 
   return (
