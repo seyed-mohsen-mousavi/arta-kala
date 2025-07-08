@@ -1,8 +1,8 @@
 // import { GetBlogBySlug } from "@/services/blogActions";
 // import Article from "@/types/blog";
 // import { notFound } from "next/navigation";
-
-async function page({ params }: { params: Promise<{ slug: string }> }) {
+// { params }: { params: Promise<{ slug: string }> }
+async function page() {
   // const { slug } = await params;
   // const decodedSlug = decodeURIComponent(slug);
   // const res = await GetBlogBySlug(decodedSlug);

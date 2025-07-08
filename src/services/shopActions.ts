@@ -49,6 +49,7 @@ export async function GetProductBySlug(slug: string): Promise<any> {
         const result = await api.get(`/shop/products/${slug}/`);
         return result
     } catch (error) {
+        console.log(error)
         return null
     }
 }
