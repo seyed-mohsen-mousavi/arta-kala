@@ -1,7 +1,7 @@
 import BlogCard from "@/components/BlogCard";
 import { GetBlogPosts } from "@/services/blogActions";
 
-export default async function page({ params }: { params: { page: string } }) {
+export default async function Page({ params }: any) {
   const currentPage = Number(params.page) || 1;
 
   const result = await GetBlogPosts(currentPage);
