@@ -331,6 +331,7 @@ export default function SearchBox() {
               categories: filteredCategories || [],
             });
           } catch (err) {
+            console.log(err)
             setError("مشکلی در دریافت نتایج پیش آمد");
           } finally {
             setLoading(false);

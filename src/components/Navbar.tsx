@@ -18,12 +18,11 @@ import {
   DrawerFooter,
 } from "@heroui/react";
 import { HiXMark } from "react-icons/hi2";
-import { useUser } from "@/context/UserContext";
+// import { useUser } from "@/context/UserContext";
 import { useDisclosure } from "@heroui/react";
 import { useAuthModal } from "@/context/AuthModalProvider";
 import { useCategories } from "@/context/CategoriesContext";
 import SearchBox from "./SearchBox";
-import { MdAddCall } from "react-icons/md";
 import { FiPhoneCall, FiTrendingUp, FiUser } from "react-icons/fi";
 
 function Navbar() {
@@ -37,7 +36,7 @@ function Navbar() {
     { href: "/about-us", label: "درباره ما" },
     { href: "/contact-info", label: "تماس با ما" },
   ];
-  const user = useUser();
+  // const user = useUser();
   // console.log(user);
   const [isOpen, setIsOpen] = useState(false);
   const renderCategories = (categories: CategoryNode[]) => {
