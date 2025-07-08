@@ -23,10 +23,11 @@ import { useDisclosure } from "@heroui/react";
 import { useAuthModal } from "@/context/AuthModalProvider";
 import { useCategories } from "@/context/CategoriesContext";
 import SearchBox from "./SearchBox";
+import { MdAddCall } from "react-icons/md";
+import { FiPhoneCall, FiTrendingUp, FiUser } from "react-icons/fi";
 
 function Navbar() {
   const categories = useCategories();
-  console.log("first :" + categories);
   const pathname = usePathname();
   const { onOpen }: any = useAuthModal();
   const links = [
@@ -37,7 +38,7 @@ function Navbar() {
     { href: "/contact-info", label: "تماس با ما" },
   ];
   const user = useUser();
-  console.log(user);
+  // console.log(user);
   const [isOpen, setIsOpen] = useState(false);
   const renderCategories = (categories: CategoryNode[]) => {
     return (
@@ -82,34 +83,36 @@ function Navbar() {
   };
   return (
     <>
-      <div className="h-20" />
+      <div className="flex justify-between py-5 px-3 items-center container">
+        <MobileDrawer links={links} categories={categories} />
+        <Link href={"/"} className="flex items-center gap-1">
+          <Image
+            alt="logo - تکنو صاف"
+            src={"/logo.png"}
+            width={50}
+            height={50}
+            priority
+            loading="eager"
+            className="object-contain h-full "
+          />
+          <span className="text-4xl font-bold font-noora">تکنو صاف</span>
+        </Link>
+        <div>
+          <p className="text-zinc-500 text-base font-medium hidden lg:block">
+            شماره تماس:{" "}
+            <Link href={"tel:09360381402"} className="text-lg text-black">
+              09360381402
+            </Link>
+          </p>
+          <Link href={"tel:09360381402"} className="lg:hidden">
+            <FiPhoneCall className="size-8 text-zinc-600" />
+          </Link>
+        </div>
+      </div>
       <div className="sticky top-0 z-50 h-[54px]  backdrop-blur bg-primary/90 transition-all duration-300 shadow-md">
-        <div className="container customSm:max-w-[566px] px-4 lg:px-0 mx-auto w-full h-full">
+        <div className="container customSm:max-w-[566px]  lg:px-0 mx-auto w-full h-full">
           <div className="flex items-center justify-between relative h-full">
             <div className="hidden lg:flex items-center h-full ">
-              <div className="w-22">
-                <motion.div
-                  animate={{
-                    y: [0, -3.5, 0],
-                    scale: [1, 1.05, 1],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatType: "loop",
-                    ease: "easeInOut",
-                  }}
-                  className="-ml-18 size-12 translate-y-1"
-                >
-                  <Image
-                    alt="logo"
-                    src={"/logo.png"}
-                    width={50}
-                    height={50}
-                    className="object-contain h-full "
-                  />
-                </motion.div>
-              </div>
               <div className="shrink-0">
                 <div
                   onMouseEnter={() => setIsOpen(true)}
@@ -143,7 +146,6 @@ function Navbar() {
                   </button>
                 </div>
               </div>
-
               <nav className="mr-4 flex gap-2">
                 {links.map(({ href, label }) => (
                   <Link
@@ -159,23 +161,25 @@ function Navbar() {
                 ))}
               </nav>
             </div>
-            <MobileDrawer links={links} categories={categories} />
-            <div className="bg-white absolute h-screen"></div>
-            <div className="space-x-2 flex items-center ">
-                            <SearchBox />
-
-              <button
-                onClick={onOpen}
-                className="py-1 px-3 rounded-2xl bg-white text-black font-semibold outline-none ring-0 border-none"
-              >
-                ورود / عضویت{" "}
-              </button>
-              <Link
-                className="py-1 px-3 rounded-2xl bg-white text-black font-semibold"
-                href={"/"}
-              >
-                بازاریاب شو
-              </Link>
+            <div className="lg:space-x-2 flex items-center w-full lg:w-auto">
+              <SearchBox />
+              <div className="flex justify-around  w-1/2 lg:w-auto gap-1">
+                <button
+                  onClick={onOpen}
+                  className="p-2.5 px-2.5 lg:px-5 w-full rounded-full bg-white hover:bg-zinc-50 active:bg-zinc-100 transition-colors ease-in-out text-black text-center text-xs md:text-sm flex text-nowrap items-center justify-center gap-1 sm:gap-3 font-bold"
+                  aria-label="ورود / عضویت"
+                >
+                  <FiUser className="size-5 md:size-6" />
+                  <span className="">حساب کاربری</span>
+                </button>
+                <Link
+                  href="/"
+                  className="p-2.5 px-2.5 lg:px-5 w-full rounded-full bg-white hover:bg-zinc-50 active:bg-zinc-100 transition-colors ease-in-out text-black text-center text-xs md:text-sm flex text-nowrap items-center justify-center gap-1 sm:gap-3 font-bold"
+                  aria-label="بازاریاب شو"
+                >
+                  <FiTrendingUp className="size-5 md:size-6" /> بازاریاب شو
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -365,7 +369,7 @@ export function MobileDrawer({
         onClick={onOpen}
         className="hover:bg-white/50 active:bg-white/50 p-2 rounded-sm lg:hidden text-zinc-600 transition-colors ease-in-out"
       >
-        <RiMenu3Fill className="size-7 sm:size-8 md:size-9" />
+        <RiMenu3Fill className="size-8 sm:size-9 md:size-10" />
       </button>
 
       <Drawer

@@ -1,44 +1,152 @@
 "use client";
 
 import { useCategories } from "@/context/CategoriesContext";
-import { SeachBlogs } from "@/services/blogActions";
+import { SearchBlogs } from "@/services/blogActions";
 import { GetProducts } from "@/services/shopActions";
 import { BlogCategoryNode, CategoryNode } from "@/types/categories";
 import ProductType from "@/types/product";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { RiSearch2Line } from "react-icons/ri";
-import { FaRegFileLines } from "react-icons/fa6";
+import { FaArrowRightLong, FaRegFileLines } from "react-icons/fa6";
 import { FiExternalLink } from "react-icons/fi";
 import Image from "next/image";
 import { CiImageOff } from "react-icons/ci";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { Modal, ModalContent, useDisclosure } from "@heroui/react";
+const initialData: {
+  articles: BlogCategoryNode[];
+  products: ProductType[];
+  categories: CategoryNode[];
+} = { articles: [], products: [], categories: [] };
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+  return isMobile;
+}
 function SearchInput({
   value,
   onChange,
+  loading,
+  error,
+  data,
+  searchValue,
 }: {
   value: string;
   onChange: (v: string) => void;
+  loading: boolean;
+  error: string | null;
+  data: {
+    articles: BlogCategoryNode[];
+    products: ProductType[];
+    categories: CategoryNode[];
+  };
+  searchValue: string;
 }) {
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const handleResultClick = () => {
+    onChange("");
+    onClose();
+  };
   return (
     <div className="z-10 flex items-center p-2">
       <RiSearch2Line className="size-6 absolute right-5 text-zinc-400" />
       <input
         type="search"
-        placeholder="نام محصول، مقاله یا دسته‌بندی را وارد کنید..."
+        placeholder="جستجو در تکنو صاف..."
         autoComplete="off"
-        className="input !bg-white !rounded-full !border-zinc-200 !pr-10 w-full"
+        name="search"
+        id="search"
+        className="hidden sm:block input !bg-white !rounded-full !border-zinc-200 !pr-10 w-full text-sm lg:text-base"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />
+      <button
+        onClick={onOpen}
+        className="block sm:hidden input !bg-white !rounded-full !border-zinc-200 !pr-10 w-full text-sm lg:text-base text-right"
+      >
+        جستجو در تکنو صاف...
+      </button>
+      <Modal
+        isDismissable={false}
+        isKeyboardDismissDisabled={true}
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        size="full"
+        motionProps={{
+          variants: {
+            enter: {
+              y: 0,
+              opacity: 1,
+              transition: {
+                duration: 0.3,
+                ease: "easeOut",
+              },
+            },
+            exit: {
+              y: -20,
+              opacity: 0,
+              transition: {
+                duration: 0.2,
+                ease: "easeIn",
+              },
+            },
+          },
+        }}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <div className="flex flex-col">
+              <div className="relative">
+                <input
+                  type="search"
+                  placeholder="جستجو در تکنو صاف..."
+                  autoComplete="off"
+                  name="search"
+                  id="search"
+                  className="input !bg-white !rounded-none !border-zinc-200 !pr-12 placeholder:pr-2 w-full text-xl lg:text-base"
+                  value={value}
+                  onChange={(e) => onChange(e.target.value)}
+                />
+                <button
+                  onClick={onClose}
+                  className="absolute top-3 right-3 text-zinc-500"
+                >
+                  <FaArrowRightLong className="size-8 " />
+                </button>
+              </div>
+              {/* نمایش نتایج در موبایل داخل مودال */}
+              {searchValue.length > 2 && (
+                <div className="relative z-10 mt-2">
+                  <SearchResults
+                    handleResultClick={handleResultClick}
+                    searchValue={searchValue}
+                    loading={loading}
+                    error={error}
+                    data={data}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 }
 
+function escapeRegExp(string: string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function highlightMatch(text: string, query: string) {
   if (!query) return text;
-  const regex = new RegExp(`(${query})`, "gi");
+  const regex = new RegExp(`(${escapeRegExp(query)})`, "gi");
   const parts = text.split(regex);
   return parts.map((part, i) =>
     regex.test(part) ? (
@@ -56,6 +164,7 @@ function SearchResults({
   error,
   data,
   searchValue,
+  handleResultClick,
 }: {
   loading: boolean;
   error: string | null;
@@ -64,6 +173,7 @@ function SearchResults({
     articles: BlogCategoryNode[];
     products: ProductType[];
     categories: CategoryNode[];
+    handleResultClick: any;
   };
 }) {
   const hasResults =
@@ -78,7 +188,7 @@ function SearchResults({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.2 }}
-      className="absolute top-full mt-2 w-full bg-white border border-zinc-200 rounded-xl shadow-lg z-20 text-sm font-semibold overflow-auto"
+      className="absolute top-full mt-2 w-full bg-white sm:border border-zinc-200 sm:rounded-xl sm:shadow-lg z-20 text-lg sm:text-sm font-semibold overflow-auto"
     >
       {loading ? (
         <div className="p-4 space-y-4">
@@ -102,11 +212,12 @@ function SearchResults({
                     className="hover:text-black text-zinc-600 cursor-pointer"
                   >
                     <Link
+                      onClick={handleResultClick}
                       href={`/products?category_id=${cat.id}`}
                       className="size-full flex items-center justify-between hover:bg-zinc-100 p-3"
                     >
                       <p className="flex items-center gap-1">
-                        همه ی کالا های دسته
+                        همه‌ی کالاهای دسته
                         <span className="text-blue-500">
                           {highlightMatch(cat.name, searchValue)}
                         </span>
@@ -127,6 +238,7 @@ function SearchResults({
                     className="hover:text-black text-zinc-600 cursor-pointer"
                   >
                     <Link
+                      onClick={handleResultClick}
                       href={`/product/${product.slug}`}
                       className="p-3 hover:bg-zinc-100 w-full flex items-center justify-between"
                     >
@@ -158,27 +270,26 @@ function SearchResults({
             </>
           )}
           {data.articles?.length > 0 && (
-            <>
-              <ul>
-                {data.articles.map((article) => (
-                  <li
-                    key={article.id}
-                    className="hover:text-black text-zinc-600 cursor-pointer"
+            <ul>
+              {data.articles.map((article) => (
+                <li
+                  key={article.id}
+                  className="hover:text-black text-zinc-600 cursor-pointer"
+                >
+                  <Link
+                    onClick={handleResultClick}
+                    href={`/article/${article.slug}`}
+                    className="size-full flex items-center justify-between hover:bg-zinc-100 p-4"
                   >
-                    <Link
-                      href={`/article/${article.slug}`}
-                      className="size-full flex items-center justify-between hover:bg-zinc-100 p-4"
-                    >
-                      <p className="flex items-center gap-1">
-                        <FaRegFileLines className="size-5" />
-                        {highlightMatch(article.title, searchValue)}
-                      </p>
-                      <FiExternalLink className="size-5" />
-                    </Link>{" "}
-                  </li>
-                ))}
-              </ul>
-            </>
+                    <p className="flex items-center gap-1">
+                      <FaRegFileLines className="size-5" />
+                      {highlightMatch(article.title, searchValue)}
+                    </p>
+                    <FiExternalLink className="size-5" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
           )}
         </>
       ) : (
@@ -192,16 +303,14 @@ function SearchResults({
 
 export default function SearchBox() {
   const [searchValue, setSearchValue] = useState("");
-  const initialData = { articles: [], products: [], categories: [] };
-  const [data, setData] = useState<{
-    articles: BlogCategoryNode[];
-    products: ProductType[];
-    categories: CategoryNode[];
-  }>(initialData);
+  const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const categories = useCategories();
-
+  const isMobile = useIsMobile();
+  const handleResultClick = () => {
+    setSearchValue("");
+  };
   useEffect(() => {
     if (searchValue.length > 2) {
       const fetchData = async () => {
@@ -209,7 +318,7 @@ export default function SearchBox() {
           setLoading(true);
           setError(null);
           const [articlesRes, productsRes] = await Promise.all([
-            SeachBlogs({ search: searchValue }),
+            SearchBlogs({ search: searchValue }),
             GetProducts({ search: searchValue }),
           ]);
 
@@ -237,11 +346,20 @@ export default function SearchBox() {
   }, [searchValue, categories]);
 
   return (
-    <div className="relative min-w-96 hidden md:block">
-      <SearchInput value={searchValue} onChange={setSearchValue} />
+    <div className="relative w-3/4 lg:w-auto lg:min-w-96 xl:min-w-[400px]">
+      <SearchInput
+        value={searchValue}
+        onChange={setSearchValue}
+        loading={loading}
+        error={error}
+        data={data}
+        searchValue={searchValue}
+      />
+      {/* فقط در دسکتاپ نمایش داده بشه */}
       <AnimatePresence>
-        {searchValue.length > 2 && (
+        {searchValue.length > 2 && !isMobile && (
           <SearchResults
+            handleResultClick={handleResultClick}
             searchValue={searchValue}
             loading={loading}
             error={error}

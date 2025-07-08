@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { useRef } from "react";
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
+import { Autoplay } from "swiper/modules";
 
 function ProductSlider({
   items,
@@ -26,6 +27,7 @@ function ProductSlider({
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         loop={items.length > 2}
         autoplay={items.length > 1}
+        modules={[Autoplay]}
         breakpoints={{
           0: {
             slidesPerView: 1,

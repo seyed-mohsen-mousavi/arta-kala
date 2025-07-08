@@ -42,7 +42,7 @@ interface Search {
     page?: number;
     category_id?: number;
 }
-export async function SeachBlogs(params: Search): Promise<any> {
+export async function SearchBlogs(params: Search): Promise<any> {
     const searchParams = await params || {};
     const query = new URLSearchParams();
     if (searchParams?.search) query.append("q", searchParams?.search);
