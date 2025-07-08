@@ -21,7 +21,7 @@ import { HiXMark } from "react-icons/hi2";
 import { useUser } from "@/context/UserContext";
 function Navbar() {
   const categories = useCategories();
-  console.log("first" : categories)
+  console.log("first :"  +  categories)
   const pathname = usePathname();
   const { onOpen }: any = useAuthModal();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
