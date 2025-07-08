@@ -210,7 +210,7 @@ export default async function Home() {
     <div className="w-full">
       {/* Header  */}
       <section className="flex flex-col md:flex-row gap-4 w-full h-full py-4">
-        <div className="w-full md:w-2/3 flex justify-center items-center sm:min-h-[250px] md:h-auto">
+        <div className="w-full md:w-2/3 flex justify-center items-center h-72 sm:min-h-[250px] md:h-auto">
           <HomeSlider images={images} />
         </div>
 
