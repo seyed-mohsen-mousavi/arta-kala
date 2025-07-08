@@ -1,4 +1,4 @@
-import BlogCard, { BlogCardSkeleton } from "@/components/BlogCard";
+import BlogCard from "@/components/BlogCard";
 import { GetBlogPosts } from "@/services/blogActions";
 
 async function page() {

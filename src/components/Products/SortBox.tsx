@@ -3,7 +3,6 @@
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { FaSlidersH, FaSortAmountUp } from "react-icons/fa";
 import FilterBox from "./FilterBox";
-import { CategoryNode } from "@/types/categories";
 import {
   Drawer,
   DrawerBody,
@@ -12,10 +11,8 @@ import {
   useDisclosure,
 } from "@heroui/react";
 import { HiXMark } from "react-icons/hi2";
-import { useCategories } from "@/context/CategoriesContext";
 
 function SortBox() {
-  const categories = useCategories();
   const sortOptions = [
     { label: "جدیدترین", value: "newest" },
     { label: "محبوب ترین", value: "popularity" },

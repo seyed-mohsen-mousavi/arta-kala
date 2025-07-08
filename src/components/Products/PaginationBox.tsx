@@ -25,7 +25,6 @@ export default function PaginationBox({
     onNext,
     onPrevious,
     setPage,
-    page,
     className,
   }: PaginationItemRenderProps) => {
     if (value === PaginationItemType.NEXT) {

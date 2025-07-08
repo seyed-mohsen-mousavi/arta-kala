@@ -7,6 +7,7 @@ type BlogPostsResponse = {
     total_pages: number;
 };
 export const GetBlogPosts = async (currentPage?: number): Promise<BlogPostsResponse | undefined> => {
+    console.log(currentPage)
     try {
         const result = await api.get<BlogPostsResponse>("/blog/posts/")
         return result.data
@@ -31,6 +32,7 @@ export async function GetBlogBySlug(slug: string): Promise<any> {
         console.log(result)
         return result
     } catch (error) {
+        console.log(error)
         return null
     }
 }
