@@ -9,7 +9,6 @@ function Card({ item }: { item: ProductType }) {
   // const discountPercent =
   //   ((item.originalPrice - item.currentPrice) / item.originalPrice) *
   //   100;
-  console.log(item.cover_image);
   return (
     <Link
       href={`/product/${item.slug}`}

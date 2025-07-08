@@ -37,7 +37,6 @@ function Navbar() {
   console.log(user);
   const [isOpen, setIsOpen] = useState(false);
   const navbarRef = useRef<HTMLDivElement>(null);
-
   const renderCategories = (categories: CategoryNode[]) => {
     return (
       <ul className="relative">

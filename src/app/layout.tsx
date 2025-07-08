@@ -87,6 +87,7 @@ export default async function RootLayout({
 }>) {
   const result = await GetShopCategoriesTreeList();
   let user = null;
+  console.log("result:" + result);
   const cookieStore = await cookies();
   const cookieHeader = cookieStore.toString();
   if (cookieHeader.includes("access_token")) {

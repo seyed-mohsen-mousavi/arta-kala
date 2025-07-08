@@ -205,7 +205,7 @@ export default async function Home() {
   const {
     data: { featured_products },
   } = await GetFeaturedProducts();
-  console.log(latest_products)
+  console.log(latest_products);
   return (
     <div className="w-full">
       {/* Header  */}
@@ -317,23 +317,25 @@ export default async function Home() {
           height={200}
           className="w-full rounded-xl lg:rounded-3xl mb-5"
         />
-        {/* Populer */}
-        <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white">
-          <div className="w-full flex justify-between px-4">
-            <h4 className="font-semibold text-2xl">پر فروش ترین ها</h4>{" "}
-            <Link href={"/products"} className="underline text-lg">
-              مشاهده بیشتر محصولات​​​​​​​
-            </Link>
+        {/* Feat */}
+        {featured_products.length > 0 && (
+          <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white">
+            <div className="w-full flex justify-between px-4">
+              <h4 className="font-semibold text-2xl">پر فروش ترین ها</h4>{" "}
+              <Link href={"/products"} className="underline text-lg">
+                مشاهده بیشتر محصولات​​​​​​​
+              </Link>
+            </div>
+            <div className="px-12 mt-5">
+              <Slider
+                spaceBetween={35}
+                className="!text-primary"
+                items={featured_products}
+                Card={Card}
+              />
+            </div>
           </div>
-          <div className="px-12 mt-5">
-            <Slider
-              spaceBetween={35}
-              className="!text-primary"
-              items={featured_products}
-              Card={Card}
-            />
-          </div>
-        </div>
+        )}
         {/* Blog */}
         <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white flex lg:flex-row flex-col">
           <div className="w-full flex lg:flex-col justify-between gap-5 px-4">

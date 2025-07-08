@@ -6,7 +6,7 @@ type BlogPostsResponse = {
     next_page: string | null;
     total_pages: number;
 };
-export const GetBlogPosts = async (currentPage?: string): Promise<BlogPostsResponse | undefined> => {
+export const GetBlogPosts = async (currentPage?: number): Promise<BlogPostsResponse | undefined> => {
     try {
         const result = await api.get<BlogPostsResponse>("/blog/posts/")
         return result.data
