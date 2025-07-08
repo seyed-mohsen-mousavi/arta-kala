@@ -5,7 +5,6 @@ import api from "./api"
 export const login = async (phone_number: string, password: string) => {
     try {
         const result = await api.post("/users/login/password/", { phone_number, password });
-        console.log(result)
         return result
     } catch (error: any) {
         if (error?.response?.status === 401) {

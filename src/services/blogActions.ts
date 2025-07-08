@@ -36,3 +36,25 @@ export async function GetBlogBySlug(slug: string): Promise<any> {
         return null
     }
 }
+interface Search {
+    search?: string;
+    sort?: string;
+    page?: number;
+    category_id?: number;
+}
+export async function SeachBlogs(params: Search): Promise<any> {
+    const searchParams = await params || {};
+    const query = new URLSearchParams();
+    if (searchParams?.search) query.append("q", searchParams?.search);
+    if (searchParams?.sort) query.append("sort", searchParams?.sort);
+    if (searchParams?.page !== undefined) query.append("page", searchParams?.page.toString());
+    if (searchParams?.category_id !== undefined) query.append("category", searchParams?.category_id.toString());
+
+    try {
+        const result = await api.get(`/blog/posts/search?${query.toString()}`);
+        return result.data
+    } catch (error) {
+        console.log(error)
+        return null
+    }
+}

@@ -20,8 +20,8 @@ function BlogCard({ item }: { item: Article }) {
       >
         {item.thumbnail ? (
           <Image
-            width={500}
-            height={500}
+            width={360}
+            height={220}
             src={item.thumbnail}
             alt={item.title}
             className="w-full h-56 object-cover rounded-t-lg group-hover/card:brightness-110 transition-all ease-linear duration-500"

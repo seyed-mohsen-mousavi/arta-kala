@@ -55,7 +55,7 @@ function Slider({ images }: { images: ImageType[] }) {
       </div>
 
       <button
-        onClick={() => swiperRef.current?.slidePrev()}
+        onClick={() => swiperRef.current?.slideNext()}
         className="hidden sm:block absolute top-1/2 left-1 md:left-2 -translate-y-1/2 text-[#a4a4a4] z-20 drop-shadow-xl hover:-translate-x-2 transition-transform ease-in-out"
         aria-label="Previous Slide"
       >
@@ -63,7 +63,7 @@ function Slider({ images }: { images: ImageType[] }) {
       </button>
 
       <button
-        onClick={() => swiperRef.current?.slideNext()}
+        onClick={() => swiperRef.current?.slidePrev()}
         className="hidden sm:block absolute top-1/2 right-1 md:right-2 -translate-y-1/2 text-[#a4a4a4] z-20 drop-shadow-xl hover:translate-x-2 transition-transform ease-in-out"
         aria-label="Next Slide"
       >

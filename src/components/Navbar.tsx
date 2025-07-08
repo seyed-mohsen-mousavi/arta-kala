@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { GoChevronLeft, GoChevronRight, GoChevronUp } from "react-icons/go";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { RiMenu3Fill } from "react-icons/ri";
@@ -19,13 +19,16 @@ import {
 } from "@heroui/react";
 import { HiXMark } from "react-icons/hi2";
 import { useUser } from "@/context/UserContext";
+import { useDisclosure } from "@heroui/react";
+import { useAuthModal } from "@/context/AuthModalProvider";
+import { useCategories } from "@/context/CategoriesContext";
+import SearchBox from "./SearchBox";
+
 function Navbar() {
   const categories = useCategories();
-  console.log("first :"  +  categories)
+  console.log("first :" + categories);
   const pathname = usePathname();
   const { onOpen }: any = useAuthModal();
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
   const links = [
     { href: "/", label: "صفحه اصلی" },
     { href: "/products", label: "محصولات" },
@@ -36,7 +39,6 @@ function Navbar() {
   const user = useUser();
   console.log(user);
   const [isOpen, setIsOpen] = useState(false);
-  const navbarRef = useRef<HTMLDivElement>(null);
   const renderCategories = (categories: CategoryNode[]) => {
     return (
       <ul className="relative">
@@ -81,10 +83,7 @@ function Navbar() {
   return (
     <>
       <div className="h-20" />
-      <div
-        ref={navbarRef}
-        className="sticky top-0 z-50 h-[54px]  backdrop-blur bg-primary/90 transition-all duration-300 shadow-md"
-      >
+      <div className="sticky top-0 z-50 h-[54px]  backdrop-blur bg-primary/90 transition-all duration-300 shadow-md">
         <div className="container customSm:max-w-[566px] px-4 lg:px-0 mx-auto w-full h-full">
           <div className="flex items-center justify-between relative h-full">
             <div className="hidden lg:flex items-center h-full ">
@@ -163,6 +162,8 @@ function Navbar() {
             <MobileDrawer links={links} categories={categories} />
             <div className="bg-white absolute h-screen"></div>
             <div className="space-x-2 flex items-center ">
+                            <SearchBox />
+
               <button
                 onClick={onOpen}
                 className="py-1 px-3 rounded-2xl bg-white text-black font-semibold outline-none ring-0 border-none"
@@ -175,30 +176,6 @@ function Navbar() {
               >
                 بازاریاب شو
               </Link>
-              <div className="relative">
-                <button onClick={() => setIsSearchOpen((prev) => !prev)}>
-                  <Image
-                    alt="دکمه سرچ"
-                    width={50}
-                    height={50}
-                    className="size-8 brightness-50 mr-2"
-                    src={"/search.png"}
-                  />
-                </button>
-
-                {/* اینپوت سرچ */}
-                {isSearchOpen && (
-                  <div className="absolute lg:text-base  top-14 right-0 w-66 sm:w-60 bg-white shadow-md">
-                    <input
-                      type="text"
-                      value={searchValue}
-                      onChange={(e) => setSearchValue(e.target.value)}
-                      placeholder="جستجو کنید..."
-                      className="w-full  p-2 rounded-b-xs outline-none  border border-zinc-200 text-black z-50 bg-white animate-fade-down animate-duration-200"
-                    />
-                  </div>
-                )}
-              </div>
             </div>
           </div>
         </div>
@@ -213,9 +190,6 @@ function Navbar() {
 }
 
 export default Navbar;
-import { useDisclosure } from "@heroui/react";
-import { useAuthModal } from "@/context/AuthModalProvider";
-import { useCategories } from "@/context/CategoriesContext";
 
 type MobileCategoryProps = {
   categories: CategoryNode[];
