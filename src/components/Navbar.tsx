@@ -21,7 +21,7 @@ import { HiXMark } from "react-icons/hi2";
 import { useUser } from "@/context/UserContext";
 function Navbar() {
   const categories = useCategories();
-
+  console.log("first" : categories)
   const pathname = usePathname();
   const { onOpen }: any = useAuthModal();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -118,13 +118,15 @@ function Navbar() {
                   className="relative sm:w-[190px] lg:w-[190px]  xl:w-[260px] 2xl:w-80 h-[35px]"
                 >
                   <div className="absolute bg-[#3d464d] top-0  size-full rounded-xs pt-10">
-                    <ul
-                      className={`bg-[#3d464d] text-white ransition-all duration-400 ease-in-out ${
-                        isOpen ? "max-h-[500px] visible" : "max-h-0 invisible"
-                      }`}
-                    >
-                      {renderCategories(categories)}
-                    </ul>
+                    {categories && (
+                      <ul
+                        className={`bg-[#3d464d] text-white ransition-all duration-400 ease-in-out ${
+                          isOpen ? "max-h-[500px] visible" : "max-h-0 invisible"
+                        }`}
+                      >
+                        {renderCategories(categories)}
+                      </ul>
+                    )}
                   </div>
                   <button
                     onClick={() => setIsOpen(!isOpen)}
