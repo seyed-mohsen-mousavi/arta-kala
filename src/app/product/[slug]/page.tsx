@@ -12,6 +12,7 @@ import AddToCart from "@/components/Products/AddToCart";
 import TabsBox from "@/components/Products/TabsBox";
 import ProductType from "@/types/product";
 import { CiImageOff } from "react-icons/ci";
+import { notFound } from "next/navigation";
 function findCategory(
   categories: CategoryNode[],
   targetName: string
@@ -36,7 +37,9 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
-  const { data }: { data: ProductType } = await GetProductBySlug(decodedSlug);
+  const res = await GetProductBySlug(decodedSlug);
+  if (!res) return notFound();
+  const { data }: { data: ProductType } = res;
   const result = await GetShopCategoriesTreeList();
   const categories: CategoryNode[] = result?.data;
   const product = data;

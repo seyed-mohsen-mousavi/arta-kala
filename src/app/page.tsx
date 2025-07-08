@@ -6,7 +6,11 @@ import ProductType from "@/types/product";
 import Image from "next/image";
 import Link from "next/link";
 import Card from "@/components/Products/Card";
-import { GetProducts } from "@/services/shopActions";
+import {
+  GetFeaturedProducts,
+  GetLatestProducts,
+  GetProducts,
+} from "@/services/shopActions";
 import FlipClock from "@/components/CountdownTimer";
 
 export type Image = {
@@ -195,10 +199,13 @@ const blogs: { id: number; title: string; image: string }[] = [
 export default async function Home() {
   const { data } = await GetProducts();
   const products: ProductType[] = data.results;
-  const { data: newData } = await GetProducts({ sort: "newest" });
-  const newestProducts: ProductType[] = newData.results;
-  const { data: populerData } = await GetProducts({ sort: "popularity" });
-  const popularProducts: ProductType[] = populerData.results;
+  const {
+    data: { latest_products },
+  } = await GetLatestProducts();
+  const {
+    data: { featured_products },
+  } = await GetFeaturedProducts();
+  console.log(latest_products)
   return (
     <div className="w-full">
       {/* Header  */}
@@ -298,7 +305,7 @@ export default async function Home() {
             <Slider
               spaceBetween={35}
               className="!text-primary"
-              items={newestProducts}
+              items={latest_products}
               Card={Card}
             />
           </div>
@@ -313,8 +320,8 @@ export default async function Home() {
         {/* Populer */}
         <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white">
           <div className="w-full flex justify-between px-4">
-            <h4 className="font-semibold text-2xl">محبوب ترین ها</h4>{" "}
-            <Link href={"/products?sort=popularity"} className="underline text-lg">
+            <h4 className="font-semibold text-2xl">پر فروش ترین ها</h4>{" "}
+            <Link href={"/products"} className="underline text-lg">
               مشاهده بیشتر محصولات​​​​​​​
             </Link>
           </div>
@@ -322,7 +329,7 @@ export default async function Home() {
             <Slider
               spaceBetween={35}
               className="!text-primary"
-              items={popularProducts}
+              items={featured_products}
               Card={Card}
             />
           </div>

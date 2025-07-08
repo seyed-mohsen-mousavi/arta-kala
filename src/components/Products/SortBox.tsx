@@ -19,8 +19,8 @@ function SortBox() {
   const sortOptions = [
     { label: "جدیدترین", value: "newest" },
     { label: "محبوب ترین", value: "popularity" },
-    { label: "ارزان ترین", value: "price_desc" },
-    { label: "گران ترین", value: "price_asc" },
+    { label: "ارزان ترین", value: "price_asc" },
+    { label: "گران ترین", value: "price_desc" },
   ];
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const searchParams = useSearchParams();

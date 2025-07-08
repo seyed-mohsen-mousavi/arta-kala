@@ -1,7 +1,7 @@
 import NotFound from "@/components/NotFound";
 
 function notFound() {
-  return <NotFound link="/products" linkText="برگشت به صفحه محصولات" />;
+  return <NotFound link="/articles" linkText="برگشت به صفحه مقالات" />;
 }
 
 export default notFound;

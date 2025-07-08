@@ -24,6 +24,8 @@ function Navbar() {
 
   const pathname = usePathname();
   const { onOpen }: any = useAuthModal();
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const links = [
     { href: "/", label: "صفحه اصلی" },
     { href: "/products", label: "محصولات" },
@@ -172,15 +174,30 @@ function Navbar() {
               >
                 بازاریاب شو
               </Link>
-              <button>
-                <Image
-                  alt="دکمه سرچ"
-                  width={50}
-                  height={50}
-                  className="size-6 brightness-50"
-                  src={"/search.png"}
-                />
-              </button>
+              <div className="relative">
+                <button onClick={() => setIsSearchOpen((prev) => !prev)}>
+                  <Image
+                    alt="دکمه سرچ"
+                    width={50}
+                    height={50}
+                    className="size-8 brightness-50 mr-2"
+                    src={"/search.png"}
+                  />
+                </button>
+
+                {/* اینپوت سرچ */}
+                {isSearchOpen && (
+                  <div className="absolute lg:text-base  top-14 right-0 w-66 sm:w-60 bg-white shadow-md">
+                    <input
+                      type="text"
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
+                      placeholder="جستجو کنید..."
+                      className="w-full  p-2 rounded-b-xs outline-none  border border-zinc-200 text-black z-50 bg-white animate-fade-down animate-duration-200"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -376,7 +393,12 @@ export function MobileDrawer({
         <RiMenu3Fill className="size-7 sm:size-8 md:size-9" />
       </button>
 
-      <Drawer hideCloseButton isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Drawer
+        hideCloseButton
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        className="transition-all ease-soft-spring "
+      >
         <DrawerContent>
           {(onClose) => (
             <>

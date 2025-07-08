@@ -4,3 +4,11 @@ export type CategoryNode = {
     slug: string;
     children?: CategoryNode[];
 };
+
+export type BlogCategoryNode = {
+    id: number,
+    title: string,
+    slug: string,
+    children: BlogCategoryNode[],
+    parent_slug: string
+}

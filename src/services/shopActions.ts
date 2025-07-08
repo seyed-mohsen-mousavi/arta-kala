@@ -40,8 +40,7 @@ export async function GetProducts(
         const result = await api.get(`/shop/products?${query.toString()}`);
         return result
     } catch (error) {
-        console.error(error);
-        throw error;
+        return null
     }
 }
 export async function GetProductBySlug(slug: string): Promise<any> {
@@ -49,8 +48,23 @@ export async function GetProductBySlug(slug: string): Promise<any> {
         const result = await api.get(`/shop/products/${slug}/`);
         return result
     } catch (error) {
-        console.error(error);
-        throw error;
+        return null
+    }
+}
+export async function GetLatestProducts(): Promise<any> {
+    try {
+        const result = await api.get(`/shop/latest-products `);
+        return result
+    } catch (error) {
+        return null
+    }
+}
+export async function GetFeaturedProducts(): Promise<any> {
+    try {
+        const result = await api.get(`/shop/featured-products `);
+        return result
+    } catch (error) {
+        return null
     }
 }
 // Cart ----
