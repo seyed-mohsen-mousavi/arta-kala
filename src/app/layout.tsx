@@ -12,6 +12,7 @@ import { AuthModalProvider } from "@/context/AuthModalProvider";
 import AuthModal from "@/components/AuthModal";
 import { CategoriesProvider } from "@/context/CategoriesContext";
 import { CartProvider } from "@/context/CartContextProvider";
+import Footer from "@/components/Footer";
 
 const iranyekan = localFont({
   variable: "--font-iranyekan",
@@ -106,6 +107,7 @@ export default async function RootLayout({
                   <main className="container customSm:max-w-[566px]  w-full mx-auto pb-20 px-2 lg:px-0 h-full">
                     {children}
                   </main>
+                  <Footer />
                 </Providers>
               </CategoriesProvider>
             </CartProvider>
