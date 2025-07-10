@@ -6,5 +6,5 @@ export type CartItem = {
     unit_price: number;
     quantity: number;
     total_price: number;
-    stock: number
+    stock: number;
 }

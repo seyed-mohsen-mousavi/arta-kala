@@ -47,16 +47,13 @@ export const sendOtp = async (phone_number: string) => {
 
 
 export const verifyOtp = async (phone_number: string, code: string, referral_code?: string) => {
-    console.log(code)
     try {
-        const result = await api.post("/users/otp/verify/", { phone_number, code, referral_code: referral_code || "" }, {
-            withCredentials: true
-        })
+        const result = await api.post("/users/otp/verify/", { phone_number, code, referral_code: referral_code || "" })
         addToast({
             title: result.data.message || "ثبت نام با موفقیت تکمیل شد"
         })
         console.log(result)
-        location.reload()
+        // location.reload()
     } catch (error: any) {
         console.log(error)
         if (error?.response?.status === 400) {

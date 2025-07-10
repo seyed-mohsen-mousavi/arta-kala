@@ -37,7 +37,6 @@ const links: NavLink[] = [
 ];
 async function Layout({ children }: { children: ReactNode }) {
   const user = await GetUserDashboard();
-  console.log(user);
   if (!user) redirect("/?authRequired=1");
   return (
     <section className="flex  gap-5 h-full p-5">

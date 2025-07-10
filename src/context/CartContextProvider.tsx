@@ -6,7 +6,7 @@ import { getLocalCart, setLocalCart } from "@/utils/localCart";
 import { addToast } from "@heroui/toast";
 import Link from "next/link";
 
-type CartFormat = {
+export type CartFormat = {
   total_items: number;
   total_quantity: number;
   total_price: number;
@@ -18,6 +18,7 @@ type CartFormat = {
     unit_price: number;
     quantity: number;
     total_price: number;
+    stock: number;
   }[];
 };
 
@@ -26,12 +27,15 @@ type CartContextType = {
   addToCart: (item: CartItem) => void;
   removeFromCart: (productId: number) => void;
   clearCart: () => void;
+  incrementQuantity: (productId: number) => void;
+  decrementQuantity: (productId: number) => void;
+  setQuantityToItem: (id: number, quantity: number) => void;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const user = null; // یا از useUser()
+  const user = null;
   const [cart, setCart] = useState<CartFormat>({
     total_items: 0,
     total_quantity: 0,
@@ -39,9 +43,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     items: [],
   });
 
-  const fetchServerCart = async () => {
-    // برای کاربران لاگین‌کرده
-  };
+  const fetchServerCart = async () => {};
 
   useEffect(() => {
     if (user) {
@@ -54,7 +56,32 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const updateLocalStorage = (newItems: CartItem[]) => {
     setLocalCart(newItems);
-    setCart(getLocalCart());
+
+    const total_items = newItems.length;
+    const total_quantity = newItems.reduce(
+      (acc, item) => acc + item.quantity,
+      0
+    );
+    const total_price = newItems.reduce(
+      (acc, item) => acc + item.quantity * item.unit_price,
+      0
+    );
+    console.log(newItems);
+    setCart({
+      total_items,
+      total_quantity,
+      total_price,
+      items: newItems.map((item) => ({
+        id: item.id,
+        product_id: item.product_id,
+        name_product: item.name_product,
+        product_cover_image: item.product_cover_image,
+        unit_price: item.unit_price,
+        quantity: item.quantity,
+        total_price: item.unit_price * item.quantity,
+        stock: item.stock,
+      })),
+    });
   };
 
   const addToCart = async (item: CartItem) => {
@@ -72,7 +99,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       if (existing) {
         const newQuantity = existing.quantity + item.quantity;
 
-        if (newQuantity > item.stock) {
+        if (item.stock && newQuantity > item.stock) {
           addToast({
             title: "موجودی کافی نیست",
             description: `تنها ${item.stock - existing.quantity} عدد دیگر موجود است.`,
@@ -91,7 +118,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
             : i
         );
       } else {
-        if (item.quantity > item.stock) {
+        if (item.stock && item.quantity > item.stock) {
           addToast({
             title: "موجودی کافی نیست",
             description: `تنها ${item.stock} عدد موجود است.`,
@@ -122,15 +149,73 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const removeFromCart = (productId: number) => {
     if (user) {
-      // مدیریت حذف برای کاربران لاگین‌کرده
     } else {
       const rawCart: CartItem[] = cart.items.map((i) => ({
         ...i,
         name: i.name_product,
       }));
-      const updatedItems = rawCart.filter((item) => item.product_id !== productId);
+      const updatedItems = rawCart.filter(
+        (item) => item.product_id !== productId
+      );
       updateLocalStorage(updatedItems);
     }
+  };
+
+  const incrementQuantity = (productId: number) => {
+    const rawCart: CartItem[] = cart.items.map((i) => ({
+      ...i,
+      name: i.name_product,
+    }));
+
+    const updatedItems = rawCart.map((item) => {
+      if (item.product_id === productId) {
+        const newQuantity = item.quantity + 1;
+
+        if (typeof item.stock === "number" && newQuantity > item.stock) {
+          addToast({
+            title: "موجودی کافی نیست",
+            description: `تنها ${item.stock} عدد موجود است.`,
+            color: "warning",
+          });
+          return item;
+        }
+
+        return {
+          ...item,
+          quantity: newQuantity,
+          total_price: newQuantity * item.unit_price,
+        };
+      }
+      return item;
+    });
+
+    updateLocalStorage(updatedItems);
+  };
+
+  const decrementQuantity = (productId: number) => {
+    const rawCart: CartItem[] = cart.items.map((i) => ({
+      ...i,
+      name: i.name_product,
+    }));
+
+    const updatedItems = rawCart
+      .map((item) => {
+        if (item.product_id === productId) {
+          const newQuantity = item.quantity - 1;
+          if (newQuantity <= 0) {
+            return null;
+          }
+          return {
+            ...item,
+            quantity: newQuantity,
+            total_price: newQuantity * item.unit_price,
+          };
+        }
+        return item;
+      })
+      .filter((item): item is CartItem => item !== null); // فیلتر حذف شده ها
+
+    updateLocalStorage(updatedItems);
   };
 
   const clearCart = () => {
@@ -141,8 +226,47 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const setQuantityToItem = (productId: number, quantity: number) => {
+    if (quantity <= 0) {
+      removeFromCart(productId);
+      return;
+    }
+
+    const updatedItems = cart.items.map((item) => {
+      if (item.product_id === productId) {
+        if (typeof item.stock === "number" && quantity > item.stock) {
+          addToast({
+            title: "موجودی کافی نیست",
+            description: `تنها ${item.stock} عدد موجود است.`,
+            color: "warning",
+          });
+          return item;
+        }
+
+        return {
+          ...item,
+          quantity,
+          total_price: quantity * item.unit_price,
+        };
+      }
+      return item;
+    });
+
+    updateLocalStorage(updatedItems);
+  };
+
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        clearCart,
+        incrementQuantity,
+        decrementQuantity,
+        setQuantityToItem,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

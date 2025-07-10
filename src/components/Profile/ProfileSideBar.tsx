@@ -6,16 +6,14 @@ import { usePathname } from "next/navigation";
 import { MdOutlineLogout } from "react-icons/md";
 
 function ProfileSideBar({ links }: { links: NavLink[] }) {
-  const user = useUser();
+  const { user } = useUser();
   const pathname = usePathname();
   if (!user) return <>کاربر پیدا نشد</>;
   return (
     <div className="flex flex-col rounded-tr-[60px] rounded-xl w-1/4 h-full overflow-hidden">
       <div className="bg-primary-400 text-zinc-700 py-10 px-7 space-y-2">
         <div className="flex gap-2">
-          <div className="size-20 rounded-full bg-white">
-            
-          </div>
+          <div className="size-20 rounded-full bg-white"></div>
           <div className="flex flex-col font-medium">
             <p className="font-semibold text-lg">
               {user.identity?.first_name} {user.identity?.last_name}

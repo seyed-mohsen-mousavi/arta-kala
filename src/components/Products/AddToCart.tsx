@@ -51,16 +51,24 @@ function AddToCart({
   }, [dropDownOpen]);
 
   const handleAddToCart = async () => {
-    addToCart({
-      id: 0,
-      product_id: product.id,
-      name_product: product.name,
-      product_cover_image: product.cover_image,
-      unit_price: product.price,
-      quantity: quantity,
-      total_price: product.price,
-      stock: product.stock,
-    });
+    try {
+      setIsLoading(true);
+
+      addToCart({
+        id: 0,
+        product_id: product.id,
+        name_product: product.name,
+        product_cover_image: product.cover_image,
+        unit_price: product.price,
+        quantity: quantity,
+        total_price: product.price,
+        stock: product.stock,
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
   const handleQuantityChange = (value: number) => {
     if (!isNaN(value) && value > 0) {

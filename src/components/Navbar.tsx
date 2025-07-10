@@ -25,9 +25,9 @@ import { useAuthModal } from "@/context/AuthModalProvider";
 import { useCategories } from "@/context/CategoriesContext";
 import SearchBox from "./SearchBox";
 import { FiPhoneCall, FiTrendingUp, FiUser } from "react-icons/fi";
-import { CiShoppingBasket } from "react-icons/ci";
+import { CiImageOff, CiShoppingBasket } from "react-icons/ci";
 import { FaBasketShopping } from "react-icons/fa6";
-import { useCart } from "@/context/CartContextProvider";
+import { CartFormat, useCart } from "@/context/CartContextProvider";
 import { convertNumberToPersian } from "@/utils/converNumbers";
 
 function Navbar() {
@@ -86,7 +86,6 @@ function Navbar() {
       </ul>
     );
   };
-  const [isHovered, setIsHovered] = useState(false);
   return (
     <>
       <div className="flex justify-between py-5 px-3 items-center container">
@@ -113,51 +112,7 @@ function Navbar() {
           <Link href={"tel:09360381402"} className="lg:hidden">
             <FiPhoneCall className="size-8 text-zinc-600" />
           </Link>
-          <div
-            className="relative inline-block group"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            <Badge
-              color="warning"
-              content={cart.items.length}
-              placement="bottom-right"
-              classNames={{ badge: "font-dana text-white bg-primary pt-0.5" }}
-            >
-              <button className={`group-hover:bg-primary/50 p-2 rounded-lg `}>
-                <FaBasketShopping className="size-8" />
-              </button>
-            </Badge>
-
-            {isHovered && cart.items.length > 0 && (
-              <div className="absolute z-[99999] top-12 left-0 min-w-96 bg-white  rounded-lg shadow-lg text-sm">
-                {/* محتویات سبد خرید نمونه */}
-                <div className="mb-2">🛒 سبد خرید شما</div>
-                <div className="space-y-2 overflow-auto max-h-[450px] h-full p-6 ">
-                  {cart.items.map((c) => (
-                    <div
-                      key={c.id}
-                      className="flex justify-between items-center"
-                    >
-                      <span>{c.name_product}</span>
-                      <span className="text-xs text-gray-500">
-                        {c.quantity} عدد
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between border-t border-zinc-300 p-4">
-                  <div>
-                    <p> مبلغ قابل پرداخت</p>
-                    <p>{convertNumberToPersian(cart.total_price)}</p>
-                  </div>
-                  <Link href="/profile/cart" className="btn-primary">
-                    ثبت سفارش
-                  </Link>
-                </div>
-              </div>
-            )}
-          </div>
+          <CartDrawer cart={cart} />
         </div>
       </div>
       <div className="sticky top-0 z-50 h-[54px]  backdrop-blur bg-primary/90 transition-all duration-300 shadow-md">
@@ -483,5 +438,126 @@ export function MobileDrawer({
         </DrawerContent>
       </Drawer>
     </>
+  );
+}
+
+function CartDrawer({ cart }: { cart: CartFormat }) {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { addToCart, removeFromCart, incrementQuantity, decrementQuantity } =
+    useCart();
+  return (
+    <div className="relative inline-block group">
+      <Badge
+        color="warning"
+        content={cart.items.length}
+        placement="bottom-right"
+        classNames={{ badge: "font-dana text-white bg-primary pt-1" }}
+      >
+        <button
+          onClick={onOpen}
+          className={`group-hover:bg-primary/50 p-2 rounded-lg `}
+        >
+          <FaBasketShopping className="size-8 " />
+        </button>
+      </Badge>
+      <Drawer
+        hideCloseButton
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        className="transition-all ease-soft-spring "
+        radius="none"
+      >
+        <DrawerContent className="bg-zinc-100">
+          {(onClose) => (
+            <>
+              <DrawerHeader className="flex flex-col gap-1 bg-primary-600 border-b border-b-zinc-300 text-white">
+                <div className="flex items-center justify-between gap-2 py-2">
+                  <div className="flex items-center gap-3">
+                    <p className="text-2xl font-bold">سبد خرید</p>
+                  </div>
+                  <button type="button" onClick={onClose}>
+                    <HiXMark className="size-8" />
+                  </button>
+                </div>
+              </DrawerHeader>
+
+              <DrawerBody className="relative px-10 flex flex-col gap-20 overflow-auto">
+                {cart.items.map((item, key) => {
+                  return (
+                    <div
+                      key={key}
+                      className="w-full flex items-start gap-1 h-22"
+                    >
+                      {item.product_cover_image?.length > 0 ? (
+                        <Image
+                          src={item.product_cover_image}
+                          alt={item?.name_product}
+                          width={100}
+                          height={100}
+                          className="size-22 object-cover"
+                        />
+                      ) : (
+                        <div className="size-22 bg-zinc-200 rounded-md flex items-center justify-center">
+                          <CiImageOff className="size-15" />
+                        </div>
+                      )}
+                      <div className="flex flex-col w-full  gap-2 text-lg pr-2">
+                        <p className="font-semibold text-zinc-500">
+                          {item.name_product}
+                        </p>
+                        <div className="flex items-center gap-2 mb-2">
+                          <p className="font-semibold">تعداد :</p>
+                          <div className="bg-white flex items-center">
+                            <button
+                              onClick={() => incrementQuantity(item.product_id)}
+                              className="px-3 py-2 border-l border-zinc-400"
+                            >
+                              +
+                            </button>
+                            <span className="px-4">{item.quantity}</span>
+                            <button
+                              onClick={() => decrementQuantity(item.product_id)}
+                              className="px-3 py-2 border-r border-zinc-400"
+                            >
+                              -
+                            </button>
+                          </div>
+                        </div>
+                        <p className="font-semibold text-lg">
+                          {item.unit_price.toLocaleString("fa-IR")} تومان
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => removeFromCart(item.product_id)}
+                        className="bg-white border border-zinc-400 text-zinc-600 p-1 rounded-full"
+                      >
+                        <HiXMark className="size-4" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </DrawerBody>
+
+              <DrawerFooter className="flex flex-col w-full px-0">
+                <div className="flex items-center justify-between w-full px-2 text-xl font-semibold">
+                  <p className="text-zinc-600">جمع کل :‌</p>
+                  <p>{cart.total_price.toLocaleString("fa-IR")} تومان</p>
+                </div>
+                <hr className="text-zinc-400 my-2" />
+                <div className="w-full px-2 h-full flex">
+                  <Link
+                    onClick={onClose}
+                    href="/profile/cart"
+                    className="btn-primary w-full rounded-xl text-center font-semibold"
+                  >
+                    مشاهده سبد خرید
+                  </Link>
+                </div>
+              </DrawerFooter>
+            </>
+          )}
+        </DrawerContent>
+      </Drawer>
+    </div>
   );
 }

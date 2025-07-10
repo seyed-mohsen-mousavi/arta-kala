@@ -25,77 +25,62 @@ import { convertPersianToEnglish } from "@/utils/converNumbers";
 import { login, sendOtp, verifyOtp } from "@/services/usersActions";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuthModal } from "@/context/AuthModalProvider";
+import api from "@/services/api";
 
 export default function AuthModal() {
-  const { isOpen, onOpenChange, onClose }: any = useAuthModal();
-  const [isLogin, setIsLogin] = useState(true);
-  const [isSendOtp, setIsSendOtp] = useState<boolean>(false);
+  const { isOpen, onOpenChange, onClose } = useAuthModal();
+  const [step, setStep] = useState<"PHONE" | "OTP" | "PASSWORD">("PHONE");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [resendTimer, setResendTimer] = useState(120);
   const [canResend, setCanResend] = useState(false);
+  const [resendTimer, setResendTimer] = useState(120);
   const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
-  const {
-    register: registerLogin,
-    handleSubmit: handleLoginSubmit,
-    formState: { errors: loginErrors },
-    reset: resetLogin,
-  } = useForm<LoginFormValues>({
+
+  const phoneForm = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
+  });
+  const otpForm = useForm<OtpFormValues>({
+    resolver: zodResolver(otpSchema),
+  });
+  const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
 
-  const {
-    register: registerSignup,
-    handleSubmit: handleSignupSubmit,
-    formState: { errors: signupErrors },
-    reset,
-  } = useForm<SignupFormValues>({
-    resolver: zodResolver(signupSchema),
-  });
-  const {
-    handleSubmit: handleOtpSubmit,
-    register: registerOtp,
-    formState: { errors: otpErrors },
-  } = useForm<OtpFormValues>({
-    resolver: zodResolver(otpSchema),
-  });
-  const onLoginSubmit = async ({ phone_number, password }: LoginFormValues) => {
-    const result = await login(convertPersianToEnglish(phone_number), password);
+  const checkPhoneNumber = async ({ phone_number }: SignupFormValues) => {
+    const converted = convertPersianToEnglish(phone_number);
+    setPhoneNumber(converted);
+
+    // فرضی: چک می‌کنیم آیا کاربر وجود دارد یا نه
+    const result = await sendOtp(converted);
 
     if (result?.status === 200) {
-      resetLogin();
-      onClose();
-      const params = new URLSearchParams(searchParams.toString());
-      if (params.has("AuthRequired")) {
-        params.delete("AuthRequired");
-      }
-      const newQuery = params.toString();
-      const newUrl = newQuery ? `${pathName}?${newQuery}` : pathName;
-      router.replace(newUrl, { scroll: false });
+      setStep(result?.data?.exists ? "PASSWORD" : "OTP");
     }
   };
 
-  const onSignupSubmit = async ({ phone_number }: SignupFormValues) => {
-    const result = await sendOtp(convertPersianToEnglish(phone_number));
+  const onPasswordLogin = async ({
+    phone_number,
+    password,
+  }: LoginFormValues) => {
+    const result = await login(convertPersianToEnglish(phone_number), password);
     if (result?.status === 200) {
-      setPhoneNumber(phone_number);
-      setIsSendOtp(true);
-      reset();
+      loginForm.reset();
+      onClose();
+      const params = new URLSearchParams(searchParams.toString());
+      if (params.has("AuthRequired")) params.delete("AuthRequired");
+      router.replace(params.toString() ? `${pathName}?${params}` : pathName);
     }
   };
 
   const onOtpSubmit = async (data: OtpFormValues) => {
-    await verifyOtp(
-      convertPersianToEnglish(phoneNumber),
-      data.code,
-      data.referral_code
-    );
+    await verifyOtp(phoneNumber, data.code, data.referral_code);
+    onClose();
   };
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
-
-    if (isSendOtp && !canResend) {
+    if (step === "OTP" && !canResend) {
       interval = setInterval(() => {
         setResendTimer((prev) => {
           if (prev <= 1) {
@@ -107,65 +92,83 @@ export default function AuthModal() {
         });
       }, 1000);
     }
-
     return () => clearInterval(interval);
-  }, [isSendOtp, canResend]);
-  const handleResendOtp = async () => {
-    const result = await sendOtp(convertPersianToEnglish(phoneNumber));
-    if (result?.status === 200) {
-      setResendTimer(120);
-      setCanResend(false);
-    }
-  };
+  }, [step, canResend]);
+
   return (
     <Modal
       hideCloseButton
       isOpen={isOpen}
-      placement="top-center"
       onOpenChange={onOpenChange}
-      className="max-w-full max-h-full h-full m-0 sm:max-w-lg sm:h-auto outline-none"
+      placement="top-center"
+      className="max-w-full max-h-full h-full m-0 sm:max-w-lg sm:h-auto"
     >
       <ModalContent className="text-sm rounded-sm overflow-auto h-full">
         {(onClose) => (
-          <div className="flex w-full h-full">
-            {isSendOtp ? (
-              <form
-                onSubmit={handleOtpSubmit(onOtpSubmit)}
-                className="w-full h-full flex justify-between flex-col"
-              >
-                <ModalHeader className="flex items-center justify-between">
-                  <p>ورود به حساب کاربری</p>
-                  <button type="button" onClick={onClose}>
-                    <HiXMark className="size-6" />
-                  </button>
-                </ModalHeader>
-                <ModalBody>
-                  <div className="bg-green-100 border border-green-200 p-4 text-zinc-600 rounded-sm">
-                    کد تایید برای شماره همراه {phoneNumber} ارسال گردید
-                  </div>
-                  <label htmlFor="referral_code">کد معرف (اختیاری)</label>
+          <form
+            onSubmit={
+              step === "PHONE"
+                ? phoneForm.handleSubmit(checkPhoneNumber)
+                : step === "OTP"
+                  ? otpForm.handleSubmit(onOtpSubmit)
+                  : loginForm.handleSubmit(onPasswordLogin)
+            }
+            className="w-full h-full flex flex-col justify-between"
+          >
+            <ModalHeader className="flex items-center justify-between">
+              <p>ورود | ثبت‌نام</p>
+              <button type="button" onClick={onClose}>
+                <HiXMark className="size-6" />
+              </button>
+            </ModalHeader>
 
+            <ModalBody>
+              {step === "PHONE" && (
+                <>
+                  <label htmlFor="phone_number">شماره تلفن</label>
                   <input
+                    {...phoneForm.register("phone_number")}
                     maxLength={11}
-                    {...registerOtp("referral_code")}
                     className="input"
-                    id="referral_code"
+                    id="phone_number"
+                    inputMode="numeric"
                   />
-                  {otpErrors.referral_code && (
+                  {phoneForm.formState.errors.phone_number && (
                     <p className="text-xs text-red-500">
-                      {otpErrors.referral_code.message}
+                      {phoneForm.formState.errors.phone_number.message}
                     </p>
                   )}
-                  <label htmlFor="otp_code" className="font-semibold">
-                    {" "}
-                    کد تایید
-                  </label>
+                </>
+              )}
+
+              {step === "PASSWORD" && (
+                <>
+                  <label>رمز عبور</label>
+                  <input
+                    {...loginForm.register("password")}
+                    type="password"
+                    className="input"
+                    id="password"
+                  />
+                  {loginForm.formState.errors.password && (
+                    <p className="text-xs text-red-500">
+                      {loginForm.formState.errors.password.message}
+                    </p>
+                  )}
+                </>
+              )}
+
+              {step === "OTP" && (
+                <>
+                  <div className="bg-green-100 border border-green-200 p-4 text-zinc-600 rounded-sm">
+                    کد تایید برای شماره {phoneNumber} ارسال شد
+                  </div>
+                  <label>کد تایید</label>
                   <InputOtp
-                    {...registerOtp("code")}
-                    errorMessage={otpErrors?.code?.message}
-                    isInvalid={!!otpErrors.code}
-                    variant="bordered"
-                    className="font-dana"
+                    {...otpForm.register("code")}
+                    errorMessage={otpForm.formState.errors?.code?.message}
+                    isInvalid={!!otpForm.formState.errors.code}
+                    length={6}
                     dir="ltr"
                     id="otp_code"
                     classNames={{
@@ -176,166 +179,37 @@ export default function AuthModal() {
                       segment: "input w-full !py-6",
                       errorMessage: "text-right",
                     }}
-                    length={6}
                   />
-                </ModalBody>
-                <ModalFooter className="mb-4">
-                  <button type="submit" className="w-full btn-primary ">
-                    تکمیل ثبت نام
-                  </button>
-                  <div className="w-full py-4 text-xs flex justify-start px-2">
-                    <button
-                      type="button"
-                      className="text-zinc-400 flex items-center gap-1 relative font-dona disabled:pointer-events-none"
-                      onClick={handleResendOtp}
-                      disabled={!canResend}
-                    >
-                      {canResend
-                        ? "ارسال مجدد کد تایید"
-                        : `ارسال مجدد کد تایید بعد از ${String(Math.floor(resendTimer / 60)).padStart(2, "0")}:${String(resendTimer % 60).padStart(2, "0")}`}
-                    </button>
-                  </div>
-                </ModalFooter>
-              </form>
-            ) : isLogin ? (
-              <form
-                onSubmit={handleLoginSubmit(onLoginSubmit)}
-                className="w-full h-full flex justify-between flex-col"
-              >
-                <ModalHeader className="flex items-center justify-between">
-                  <p>ورود به حساب کاربری</p>
-                  <button type="button" onClick={onClose}>
-                    <HiXMark className="size-6" />
-                  </button>
-                </ModalHeader>
-                <div>
-                  <ModalBody>
-                    <label htmlFor="phone_number">شماره تلفن</label>
-                    <input
-                      {...registerLogin("phone_number")}
-                      maxLength={11}
-                      className="input"
-                      id="phone_number"
-                    />
-                    {loginErrors.phone_number && (
-                      <p className="text-xs text-red-500">
-                        {loginErrors.phone_number.message}
-                      </p>
-                    )}
-
-                    <label htmlFor="password">رمز عبور</label>
-                    <input
-                      {...registerLogin("password")}
-                      type="password"
-                      className="input"
-                      id="password"
-                    />
-                    {loginErrors.password && (
-                      <p className="text-xs text-red-500">
-                        {loginErrors.password.message}
-                      </p>
-                    )}
-
-                    <div className="flex py-2 px-1 justify-between">
-                      <Checkbox classNames={{ label: "text-small" }}>
-                        مرا به خاطر داشته باش
-                      </Checkbox>
-                    </div>
-                  </ModalBody>
-                  <ModalFooter className="mb-4">
-                    <button type="submit" className="w-full btn-primary">
-                      ورود به حساب
-                    </button>
-                  </ModalFooter>
-                </div>
-                <div className="w-full bg-[#f9f9f9] border-t border-zinc-200 py-8 text-center text-xs">
-                  کاربر جدید هستید؟{" "}
-                  <button
-                    className="spoiler-link text-cyan-400 relative"
-                    type="button"
-                    onClick={() => setIsLogin(false)}
-                  >
-                    همین الان عضو بشید
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <form
-                onSubmit={handleSignupSubmit(onSignupSubmit)}
-                className="w-full h-full flex justify-between flex-col"
-              >
-                <ModalHeader className="flex items-center justify-between">
-                  <p>ثبت‌نام</p>
-                  <button type="button" onClick={onClose}>
-                    <HiXMark className="size-6" />
-                  </button>
-                </ModalHeader>
-                <div>
-                  <ModalBody>
-                    <label htmlFor="phone_number">شماره تلفن</label>
-                    <input
-                      maxLength={11}
-                      {...registerSignup("phone_number")}
-                      className="input"
-                      id="phone_number"
-                    />
-                    {signupErrors.phone_number && (
-                      <p className="text-xs text-red-500">
-                        {signupErrors.phone_number.message}
-                      </p>
-                    )}
-
-                    {/* <label htmlFor="password">رمز عبور</label>
+                  <label>کد معرف (اختیاری)</label>
                   <input
-                    {...registerSignup("password")}
-                    type="password"
-                    className="input"
-                    id="password"
-                  />
-                  {signupErrors.password && (
-                    <p className="text-xs text-red-500">
-                      {signupErrors.password.message}
-                    </p>
-                  )}
-
-                  <label htmlFor="confirm_password">تکرار رمز عبور</label>
-                  <input
-                    {...registerSignup("confirm_password")}
-                    id="confirm_password"
-                    type="password"
+                    {...otpForm.register("referral_code")}
+                    maxLength={11}
                     className="input"
                   />
-                  {signupErrors.confirm_password && (
-                    <p className="text-xs text-red-500">
-                      {signupErrors.confirm_password.message}
-                    </p>
-                  )}
+                </>
+              )}
+            </ModalBody>
 
-                  {signupErrors.confirm_password && (
-                    <p className="text-xs text-red-500">
-                      {signupErrors.confirm_password.message}
-                    </p>
-                  )} */}
-                  </ModalBody>
-                  <ModalFooter className="mb-4">
-                    <button type="submit" className="w-full btn-primary">
-                      ثبت‌نام
-                    </button>
-                  </ModalFooter>
-                </div>
-                <div className="w-full bg-[#f9f9f9] border-t border-zinc-200 py-8 text-xs flex justify-end px-2">
-                  <button
-                    type="button"
-                    className="spoiler-link text-zinc-400 flex items-center gap-1 relative"
-                    onClick={() => setIsLogin(true)}
-                  >
-                    ورود به حساب کاربری
-                    <MdChevronLeft className="size-5" />
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
+            <ModalFooter className="mb-4">
+              <button type="submit" className="w-full btn-primary">
+                {step === "PHONE" ? "ادامه" : step === "OTP" ? "تایید" : "ورود"}
+              </button>
+              {step === "OTP" && (
+                <button
+                  type="button"
+                  className="text-xs text-cyan-500 mt-2"
+                  onClick={() => sendOtp(phoneNumber)}
+                  disabled={!canResend}
+                >
+                  {canResend
+                    ? "ارسال مجدد کد"
+                    : `ارسال مجدد بعد از ${Math.floor(resendTimer / 60)}:${String(
+                        resendTimer % 60
+                      ).padStart(2, "0")}`}
+                </button>
+              )}
+            </ModalFooter>
+          </form>
         )}
       </ModalContent>
     </Modal>

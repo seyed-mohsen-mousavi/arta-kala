@@ -1,6 +1,13 @@
 "use client";
-import FilterBox from "@/components/Products/FilterBox";
-import SortBox from "@/components/Products/SortBox";
+import dynamic from "next/dynamic";
+
+const FilterBox = dynamic(() => import("@/components/Products/FilterBox"), {
+  ssr: false,
+});
+const SortBox = dynamic(() => import("@/components/Products/SortBox"), {
+  ssr: false,
+});
+
 import BreadcrumbsBox from "./BreadcrumbsBox";
 import { CategoryNode } from "@/types/categories";
 import ProductType from "@/types/product";

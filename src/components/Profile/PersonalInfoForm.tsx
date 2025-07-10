@@ -111,7 +111,7 @@ function InfoField({
 }
 
 function PersonalInfoForm() {
-  const user = useUser();
+  const { user } = useUser();
   if (!user) return <>کاربری پیدا نشد</>;
   const { identity } = user;
 
