@@ -64,7 +64,7 @@ export async function GetLatestProducts(): Promise<any> {
 }
 export async function GetFeaturedProducts(): Promise<any> {
     try {
-        const result = await api.get(`/shop/featured-products `);
+        const result = await api.get(`/shop/featured-products`);
         return result
     } catch (error) {
         console.log(error)

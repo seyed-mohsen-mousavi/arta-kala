@@ -35,7 +35,7 @@ export const sendOtp = async (phone_number: string) => {
             addToast({
                 title: "شماره تلفن باید ۱۱ رقم باشد",
                 description: phone_number,
-                color: "danger"
+                color: "danger" 
             })
         }
     } catch (error: any) {
@@ -47,6 +47,7 @@ export const sendOtp = async (phone_number: string) => {
 
 
 export const verifyOtp = async (phone_number: string, code: string, referral_code?: string) => {
+    console.log(code)
     try {
         const result = await api.post("/users/otp/verify/", { phone_number, code, referral_code: referral_code || "" }, {
             withCredentials: true
@@ -57,9 +58,10 @@ export const verifyOtp = async (phone_number: string, code: string, referral_cod
         console.log(result)
         location.reload()
     } catch (error: any) {
+        console.log(error)
         if (error?.response?.status === 400) {
             addToast({
-                title: "کد تایید نامعتبر یا منقضی است",
+                title: error?.response?.data.error || "کد تایید نامعتبر یا منقضی است",
                 description: "دوباره تلاش کنید",
                 classNames: { description: "text-xs" },
                 color: "danger"
@@ -71,21 +73,4 @@ export const verifyOtp = async (phone_number: string, code: string, referral_cod
         }
 
     }
-}
-// dashboard
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxOTAyODMyLCJpYXQiOjE3NTE5MDE2MzIsImp0aSI6IjRkM2QwY2VmOTAyNTQwMDE5NTEzNGJmYzA5NWZlZmIwIiwidXNlcl9pZCI6MX0.bDfvU9Du_cdnVZjMBnthnj97n9CUzRjEPrP0i_6djYQ"
-export const GetUserDashboard = async (cookieHeader: string) => {
-    console.log(cookieHeader)
-    try {
-        const result = await api.get("/users/dashboard/", {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        })
-        return result.data
-    } catch (error: any) {
-        console.log(error?.response?.message || error);
-        // throw new Error(error.message || 'Unknown error');
-    }
-
 }

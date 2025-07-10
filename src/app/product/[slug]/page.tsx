@@ -119,11 +119,7 @@ export default async function Page({
                   </p>
                 </>
               )}
-              <AddToCart
-                is_available={data.is_available}
-                productId={data.id}
-                stock={data.stock}
-              />
+              <AddToCart is_available={data.is_available} product={product} />
             </div>
             {product.is_available && (
               <>
@@ -165,11 +161,7 @@ export default async function Page({
             </p>
           </>
         )}
-        <AddToCart
-          is_available={data.is_available}
-          productId={data.id}
-          stock={data.stock}
-        />
+        <AddToCart is_available={data.is_available} product={product} />
       </div>
       {product.is_available && (
         <div className="my-10 w-full h-full space-y-3  block lg:hidden">
@@ -211,11 +203,7 @@ export default async function Page({
               </p>
             </>
           )}
-          <AddToCart
-            is_available={data.is_available}
-            productId={data.id}
-            stock={data.stock}
-          />
+          <AddToCart is_available={data.is_available} product={product} />
         </div>
       </div>
       <div className="bg-white shadow-lg shadow-black/10 rounded-[5px]  flex flex-col lg:flex-row justify-between w-full mt-7 text-sm overflow-hidden mb-20 sm:mb-auto">

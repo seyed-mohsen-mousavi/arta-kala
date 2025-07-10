@@ -8,7 +8,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@heroui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HiXMark } from "react-icons/hi2";
@@ -31,6 +31,8 @@ export default function AuthModal() {
   const [isLogin, setIsLogin] = useState(true);
   const [isSendOtp, setIsSendOtp] = useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [resendTimer, setResendTimer] = useState(120);
+  const [canResend, setCanResend] = useState(false);
   const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
@@ -90,6 +92,31 @@ export default function AuthModal() {
       data.referral_code
     );
   };
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (isSendOtp && !canResend) {
+      interval = setInterval(() => {
+        setResendTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setCanResend(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => clearInterval(interval);
+  }, [isSendOtp, canResend]);
+  const handleResendOtp = async () => {
+    const result = await sendOtp(convertPersianToEnglish(phoneNumber));
+    if (result?.status === 200) {
+      setResendTimer(120);
+      setCanResend(false);
+    }
+  };
   return (
     <Modal
       hideCloseButton
@@ -114,7 +141,7 @@ export default function AuthModal() {
                 </ModalHeader>
                 <ModalBody>
                   <div className="bg-green-100 border border-green-200 p-4 text-zinc-600 rounded-sm">
-                    کد تایید برای شماره همراه ۰۹۹۳۵۰۷۱۵۱۹ ارسال گردید
+                    کد تایید برای شماره همراه {phoneNumber} ارسال گردید
                   </div>
                   <label htmlFor="referral_code">کد معرف (اختیاری)</label>
 
@@ -160,10 +187,12 @@ export default function AuthModal() {
                     <button
                       type="button"
                       className="text-zinc-400 flex items-center gap-1 relative font-dona disabled:pointer-events-none"
-                      onClick={() => setIsLogin(true)}
-                      disabled
+                      onClick={handleResendOtp}
+                      disabled={!canResend}
                     >
-                      ارسال مجدد کد تایید بعد از 01:55{" "}
+                      {canResend
+                        ? "ارسال مجدد کد تایید"
+                        : `ارسال مجدد کد تایید بعد از ${String(Math.floor(resendTimer / 60)).padStart(2, "0")}:${String(resendTimer % 60).padStart(2, "0")}`}
                     </button>
                   </div>
                 </ModalFooter>

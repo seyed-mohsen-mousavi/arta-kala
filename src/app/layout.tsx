@@ -6,11 +6,12 @@ import { GetShopCategoriesTreeList } from "@/services/shopActions";
 import localFont from "next/font/local";
 import Providers from "./providers";
 import { UserProvider } from "@/context/UserContext";
-import { GetUserDashboard } from "@/services/usersActions";
+import { GetUserDashboard } from "@/services/authActions";
 import { cookies } from "next/headers";
 import { AuthModalProvider } from "@/context/AuthModalProvider";
 import AuthModal from "@/components/AuthModal";
 import { CategoriesProvider } from "@/context/CategoriesContext";
+import { CartProvider } from "@/context/CartContextProvider";
 
 const iranyekan = localFont({
   variable: "--font-iranyekan",
@@ -87,13 +88,8 @@ export default async function RootLayout({
 }>) {
   const result = await GetShopCategoriesTreeList();
   let user = null;
-  console.log("result:" + result);
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore.toString();
-  if (cookieHeader.includes("access_token")) {
-    user = await GetUserDashboard(cookieHeader);
-  }
-  // user = await GetUserDashboard();
+
+  user = await GetUserDashboard();
 
   return (
     <html lang="fa-IR" dir="rtl" className="scroll-smooth bg-[#f9f9f9]">
@@ -102,16 +98,17 @@ export default async function RootLayout({
       >
         <UserProvider initialUser={user}>
           <AuthModalProvider>
-            <AuthModal />
-
-            <CategoriesProvider categories={result?.data}>
-              <Navbar />
-              <Providers>
-                <main className="container customSm:max-w-[566px]  w-full mx-auto pb-20 px-2 lg:px-0 h-full">
-                  {children}
-                </main>
-              </Providers>
-            </CategoriesProvider>
+            <CartProvider>
+              <AuthModal />
+              <CategoriesProvider categories={result?.data}>
+                <Navbar />
+                <Providers>
+                  <main className="container customSm:max-w-[566px]  w-full mx-auto pb-20 px-2 lg:px-0 h-full">
+                    {children}
+                  </main>
+                </Providers>
+              </CategoriesProvider>
+            </CartProvider>
           </AuthModalProvider>
         </UserProvider>
       </body>

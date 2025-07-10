@@ -16,6 +16,7 @@ import {
   DrawerHeader,
   DrawerBody,
   DrawerFooter,
+  Badge,
 } from "@heroui/react";
 import { HiXMark } from "react-icons/hi2";
 // import { useUser } from "@/context/UserContext";
@@ -24,6 +25,10 @@ import { useAuthModal } from "@/context/AuthModalProvider";
 import { useCategories } from "@/context/CategoriesContext";
 import SearchBox from "./SearchBox";
 import { FiPhoneCall, FiTrendingUp, FiUser } from "react-icons/fi";
+import { CiShoppingBasket } from "react-icons/ci";
+import { FaBasketShopping } from "react-icons/fa6";
+import { useCart } from "@/context/CartContextProvider";
+import { convertNumberToPersian } from "@/utils/converNumbers";
 
 function Navbar() {
   const categories = useCategories();
@@ -39,6 +44,7 @@ function Navbar() {
   // const user = useUser();
   // console.log(user);
   const [isOpen, setIsOpen] = useState(false);
+  const { cart } = useCart();
   const renderCategories = (categories: CategoryNode[]) => {
     return (
       <ul className="relative">
@@ -80,6 +86,7 @@ function Navbar() {
       </ul>
     );
   };
+  const [isHovered, setIsHovered] = useState(false);
   return (
     <>
       <div className="flex justify-between py-5 px-3 items-center container">
@@ -96,7 +103,7 @@ function Navbar() {
           />
           <span className="text-4xl font-bold font-noora">تکنو صاف</span>
         </Link>
-        <div>
+        <div className="flex items-center gap-10">
           <p className="text-zinc-500 text-base font-medium hidden lg:block">
             شماره تماس:{" "}
             <Link href={"tel:09360381402"} className="text-lg text-black">
@@ -106,6 +113,51 @@ function Navbar() {
           <Link href={"tel:09360381402"} className="lg:hidden">
             <FiPhoneCall className="size-8 text-zinc-600" />
           </Link>
+          <div
+            className="relative inline-block group"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <Badge
+              color="warning"
+              content={cart.items.length}
+              placement="bottom-right"
+              classNames={{ badge: "font-dana text-white bg-primary pt-0.5" }}
+            >
+              <button className={`group-hover:bg-primary/50 p-2 rounded-lg `}>
+                <FaBasketShopping className="size-8" />
+              </button>
+            </Badge>
+
+            {isHovered && cart.items.length > 0 && (
+              <div className="absolute z-[99999] top-12 left-0 min-w-96 bg-white  rounded-lg shadow-lg text-sm">
+                {/* محتویات سبد خرید نمونه */}
+                <div className="mb-2">🛒 سبد خرید شما</div>
+                <div className="space-y-2 overflow-auto max-h-[450px] h-full p-6 ">
+                  {cart.items.map((c) => (
+                    <div
+                      key={c.id}
+                      className="flex justify-between items-center"
+                    >
+                      <span>{c.name_product}</span>
+                      <span className="text-xs text-gray-500">
+                        {c.quantity} عدد
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex items-center justify-between border-t border-zinc-300 p-4">
+                  <div>
+                    <p> مبلغ قابل پرداخت</p>
+                    <p>{convertNumberToPersian(cart.total_price)}</p>
+                  </div>
+                  <Link href="/profile/cart" className="btn-primary">
+                    ثبت سفارش
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <div className="sticky top-0 z-50 h-[54px]  backdrop-blur bg-primary/90 transition-all duration-300 shadow-md">

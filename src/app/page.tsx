@@ -12,6 +12,7 @@ import {
   GetProducts,
 } from "@/services/shopActions";
 import FlipClock from "@/components/CountdownTimer";
+import { GetLatestArticles } from "@/services/blogActions";
 
 export type Image = {
   id: number;
@@ -164,38 +165,7 @@ const brands: { link: string; name: string; image: string }[] = [
     image: "/brands/3.jpg",
   },
 ];
-const blogs: { id: number; title: string; image: string }[] = [
-  {
-    id: 1,
-    image: "/blog.jpg",
-    title: "آشنایی با انواع فرز و کاربرد آنها",
-  },
-  {
-    id: 2,
-    image: "/blog.jpg",
-    title: "آشنایی با انواع فرز و کاربرد آنها",
-  },
-  {
-    id: 3,
-    image: "/blog.jpg",
-    title: "آشنایی با انواع فرز و کاربرد آنها",
-  },
-  {
-    id: 4,
-    image: "/blog.jpg",
-    title: "آشنایی با انواع فرز و کاربرد آنها",
-  },
-  {
-    id: 5,
-    image: "/blog.jpg",
-    title: "آشنایی با انواع فرز و کاربرد آنها",
-  },
-  {
-    id: 6,
-    image: "/blog.jpg",
-    title: "آشنایی با انواع فرز و کاربرد آنها",
-  },
-];
+
 export default async function Home() {
   const { data } = await GetProducts();
   const products: ProductType[] = data.results;
@@ -205,7 +175,7 @@ export default async function Home() {
   const {
     data: { featured_products },
   } = await GetFeaturedProducts();
-  console.log(latest_products);
+  const { data: latest_articles } = await GetLatestArticles();
   return (
     <div className="w-full">
       {/* Header  */}
@@ -338,7 +308,7 @@ export default async function Home() {
         )}
         {/* Blog */}
         <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white flex lg:flex-row flex-col">
-          <div className="w-full flex lg:flex-col justify-between gap-5 px-4">
+          <div className="flex lg:flex-col justify-between gap-5 px-4 text-nowrap">
             <h4 className="font-semibold text-2xl">بلاگ</h4>
             <div className="hidden  gap-0.5 lg:flex flex-col">
               <Link href={"/"}>دانستنی‌های ابزار دستی(۲۲)</Link>
@@ -346,15 +316,15 @@ export default async function Home() {
               <Link href={"/"}>دانستنی‌های ابزار بادی و بنزینی(۱)</Link>
               <Link href={"/"}>دانستنی های ابزار الکتریک و روشنایی(۱)</Link>
             </div>
-            <Link href={"/"} className="underline text-lg">
+            <Link href={"/articles"} className="underline text-lg">
               مشاهده مطالب بیشتر
             </Link>
           </div>
-          <div className="px-12 mt-5 lg:max-w-3/4">
+          <div className="px-12 mt-5 lg:max-w-full w-full">
             <Slider
               spaceBetween={10}
               className="!text-primary"
-              items={blogs}
+              items={latest_articles}
               Card={QuickBlogCard}
               slidesPerView={3}
             />

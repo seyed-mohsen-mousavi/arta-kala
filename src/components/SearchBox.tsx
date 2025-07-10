@@ -311,7 +311,6 @@ export default function SearchBox() {
   const handleResultClick: any = () => {
     setSearchValue("");
   };
-  console.log(data);
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (searchValue.length > 2) {

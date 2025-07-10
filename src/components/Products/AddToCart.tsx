@@ -1,7 +1,5 @@
 "use client";
 import { NumberInput, Spinner } from "@heroui/react";
-import { addToast } from "@heroui/toast";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import {
@@ -14,28 +12,23 @@ import {
 } from "@heroui/react";
 import { HiXMark } from "react-icons/hi2";
 import { IoIosNotifications } from "react-icons/io";
-
-type CartItem = {
-  productId: string | number;
-  quantity: number;
-};
+import { useCart } from "@/context/CartContextProvider";
+import ProductType from "@/types/product";
 
 function AddToCart({
-  productId,
-  stock,
+  product,
   is_available,
 }: {
-  productId: string | number;
-  stock: number;
+  product: ProductType;
   is_available: boolean;
 }) {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [quantity, setQuantity] = useState(1);
   const [newQuantity, setNewQuantity] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [dropDownOpen, setDropDownOpen] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [customQuantities, setCustomQuantities] = useState<number[]>([]);
+  const { addToCart } = useCart();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -58,50 +51,16 @@ function AddToCart({
   }, [dropDownOpen]);
 
   const handleAddToCart = async () => {
-    setIsLoading(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const existingItem = cartItems.find(
-        (item) => item.productId === productId
-      );
-      const currentQuantity = existingItem?.quantity || 0;
-      const totalQuantity = currentQuantity + quantity;
-
-      if (totalQuantity > stock) {
-        addToast({
-          title: "تعداد انتخاب‌شده بیشتر از موجودی کالا است.",
-          color: "danger",
-        });
-        return;
-      }
-      if (existingItem) {
-        setCartItems((prevItems) =>
-          prevItems.map((item) =>
-            item.productId === productId
-              ? { ...item, quantity: item.quantity + quantity }
-              : item
-          )
-        );
-      } else {
-        setCartItems((prevItems) => [...prevItems, { productId, quantity }]);
-      }
-      addToast({
-        hideIcon: true,
-        title: "کالا با موفقیت به سبد خرید اضافه شد",
-        endContent: (
-          <Link
-            href={"/cart"}
-            className="bg-danger  text-white px-3 py-2 rounded-xs hover:brightness-90 transition-colors duration-300 ease-in-out text-[10px]"
-          >
-            رفتن به سبد خرید
-          </Link>
-        ),
-      });
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
+    addToCart({
+      id: 0,
+      product_id: product.id,
+      name_product: product.name,
+      product_cover_image: product.cover_image,
+      unit_price: product.price,
+      quantity: quantity,
+      total_price: product.price,
+      stock: product.stock,
+    });
   };
   const handleQuantityChange = (value: number) => {
     if (!isNaN(value) && value > 0) {

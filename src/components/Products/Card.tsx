@@ -1,8 +1,7 @@
 "use client";
-import ProductType from "@/types/product";
+  import ProductType from "@/types/product";
 import Image from "next/image";
 import Link from "next/link";
-import { BsCart3 } from "react-icons/bs";
 import { CiImageOff } from "react-icons/ci";
 
 function Card({ item }: { item: ProductType }) {
@@ -40,12 +39,6 @@ function Card({ item }: { item: ProductType }) {
         {item.is_available ? (
           <div className="relative mt-auto pt-3">
             {/* دکمه افزودن به سبد خرید */}
-            <button className="absolute bottom-0 right-0 group-hover/card:bg-danger group-hover/card:text-white text-zinc-400 rounded-full p-2.5 hover:bg-red-600 flex items-center gap-2 transition-colors duration-300 ease-in-out overflow-hidden">
-              <BsCart3 className="w-5 h-5" />
-              <p className="text-[10px] xl:text-xs font-semibold whitespace-nowrap max-w-0 opacity-0 group-hover/card:max-w-[120px] group-hover/card:opacity-100 transition-[max-width,opacity] duration-300 ease-in-out overflow-hidden">
-                افزودن به سبد خرید
-              </p>
-            </button>
 
             {/* قیمت */}
             <div className="flex justify-end">

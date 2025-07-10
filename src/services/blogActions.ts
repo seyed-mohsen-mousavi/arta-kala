@@ -58,3 +58,12 @@ export async function SearchBlogs(params: Search): Promise<any> {
         return null
     }
 }
+export async function GetLatestArticles() : Promise<any>  {
+    try {
+        const result = await api.get("/blog/posts/latest");
+        return result
+    } catch (error) {
+        console.log(error)
+        return null
+    }
+}

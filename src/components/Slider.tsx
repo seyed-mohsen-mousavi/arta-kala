@@ -19,14 +19,14 @@ function ProductSlider({
   className?: string;
 }) {
   const swiperRef: any = useRef(null);
-  return (
+  return items?.length > 0 ? (
     <div className="relative w-full h-full">
       <Swiper
         navigation={false}
         spaceBetween={spaceBetween}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
-        loop={items.length > 2}
-        autoplay={items.length > 1}
+        loop={items?.length > 2}
+        autoplay={items?.length > 1}
         modules={[Autoplay]}
         breakpoints={{
           0: {
@@ -66,6 +66,8 @@ function ProductSlider({
         <GoChevronRight className="size-8 md:size-12" />
       </button>
     </div>
+  ) : (
+    "خطا در دریافت اطلاعات"
   );
 }
 
