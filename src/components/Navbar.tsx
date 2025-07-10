@@ -382,7 +382,7 @@ export function MobileDrawer({
         hideCloseButton
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        className="transition-all ease-soft-spring "
+        className="!transition-all !ease-linear !duration-500"
       >
         <DrawerContent>
           {(onClose) => (
@@ -446,7 +446,7 @@ function CartDrawer({ cart }: { cart: CartFormat }) {
   const { addToCart, removeFromCart, incrementQuantity, decrementQuantity } =
     useCart();
   return (
-    <div className="relative inline-block group">
+    <div className="relative inline-block group mt-1">
       <Badge
         color="warning"
         content={cart.items.length}
@@ -455,16 +455,16 @@ function CartDrawer({ cart }: { cart: CartFormat }) {
       >
         <button
           onClick={onOpen}
-          className={`group-hover:bg-primary/50 p-2 rounded-lg `}
+          className={`group-hover:bg-primary/50 group-active:bg-primary/50 p-2 rounded-lg `}
         >
-          <FaBasketShopping className="size-8 " />
+          <FaBasketShopping className="size-8 text-zinc-700" />
         </button>
       </Badge>
       <Drawer
         hideCloseButton
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        className="transition-all ease-soft-spring "
+        className="transition-all ease-linear"
         radius="none"
       >
         <DrawerContent className="bg-zinc-100">

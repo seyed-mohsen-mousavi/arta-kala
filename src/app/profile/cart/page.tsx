@@ -24,7 +24,7 @@ function Page() {
 
   return (
     <div className="grid md:grid-cols-5 items-start gap-5 p-4 ">
-      <ul className="col-span-3  rounded-sm p-5 flex flex-col gap-4  shadow divide-y-1 divide-zinc-500 border border-zinc-300 max-h-[650px] overflow-auto">
+      <ul className="col-span-3  rounded-sm p-5 flex flex-col gap-4  shadow divide-y-1 divide-zinc-200 border border-zinc-300 max-h-[650px] overflow-auto">
         {cart.items.map((item: CartItem, key) => (
           <CartLi item={item} key={key} />
         ))}
