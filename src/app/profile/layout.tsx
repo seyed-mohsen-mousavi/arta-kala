@@ -39,9 +39,9 @@ async function Layout({ children }: { children: ReactNode }) {
   const user = await GetUserDashboard();
   if (!user) redirect("/?authRequired=1");
   return (
-    <section className="flex  gap-5 h-full p-5">
+    <section className="flex flex-col md:flex-row gap-5 h-full p-5">
       <ProfileSideBar links={links} />
-      <div className="w-3/4 bg-white h-full p-5 rounded-2xl shadow border border-zinc-200">
+      <div className="md:w-3/4 bg-white h-full p-5 rounded-2xl shadow border border-zinc-200">
         {children}
       </div>
     </section>

@@ -10,8 +10,8 @@ function ProfileSideBar({ links }: { links: NavLink[] }) {
   const pathname = usePathname();
   if (!user) return <>کاربر پیدا نشد</>;
   return (
-    <div className="flex flex-col rounded-tr-[60px] rounded-xl w-1/4 h-full overflow-hidden">
-      <div className="bg-primary-400 text-zinc-700 py-10 px-7 space-y-2">
+    <div className="flex flex-col rounded-tl-[60px] md:rounded-tl-xl rounded-tr-[60px] rounded-xl md:w-1/4 h-full overflow-hidden">
+      <div className="bg-primary text-zinc-700 py-10 px-7 space-y-2">
         <div className="flex gap-2">
           <div className="size-20 rounded-full bg-white"></div>
           <div className="flex flex-col font-medium">

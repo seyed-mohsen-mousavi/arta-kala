@@ -4,7 +4,7 @@ import { CartItem } from "@/types/cartItem";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
-import { FaRegTrashAlt } from "react-icons/fa";
+import { FaRegFileAlt, FaRegTrashAlt } from "react-icons/fa";
 import { HiXMark } from "react-icons/hi2";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import {
@@ -18,17 +18,63 @@ import {
 } from "@heroui/react";
 import { CiImageOff } from "react-icons/ci";
 import { addToast } from "@heroui/toast";
+import { IoCartOutline } from "react-icons/io5";
 function Page() {
   const { cart } = useCart();
 
   return (
-    <div className="grid grid-cols-4 items-start gap-5 p-4">
-      <div className="col-span-3  rounded-sm p-5 flex flex-col gap-4  shadow divide-y-1 divide-zinc-500">
+    <div className="grid md:grid-cols-5 items-start gap-5 p-4 ">
+      <ul className="col-span-3  rounded-sm p-5 flex flex-col gap-4  shadow divide-y-1 divide-zinc-500 border border-zinc-300 max-h-[650px] overflow-auto">
         {cart.items.map((item: CartItem, key) => (
           <CartLi item={item} key={key} />
         ))}
+      </ul>
+      <div className="col-span-3 md:col-span-2 shadow rounded-lg h-auto p-5 space-y-2 border border-zinc-300 sticky">
+        <div className="flex items-center justify-between ">
+          <p>قیمت کالاها ({cart.total_items.toLocaleString("fa-IR")} کالا)</p>
+          <p className="font-semibold">
+            {cart.total_price.toLocaleString("fa-IR")}
+            <span className="pr-1 text-xs">تومان</span>
+          </p>
+        </div>
+        <div className="flex items-center justify-between ">
+          <p>قیمت کالاها ({cart.total_items.toLocaleString("fa-IR")} کالا)</p>
+          <p className="font-semibold">
+            {cart.total_price.toLocaleString("fa-IR")}
+            <span className="pr-1 text-xs">تومان</span>
+          </p>
+        </div>
+        <div className="flex items-center justify-between ">
+          <p>جمع خرید</p>
+          <p className="font-semibold">
+            {cart.total_price.toLocaleString("fa-IR")}
+            <span className="pr-1 text-xs">تومان</span>
+          </p>
+        </div>
+        <div className="flex items-center justify-between ">
+          <p>مالیات بر ارزش افزوده</p>
+          <p className="font-semibold">
+            ۰ <span className="pr-1 text-xs">تومان</span>
+          </p>
+        </div>
+        <hr className="text-zinc-300 my-3" />
+        <div className="flex items-center justify-between text-lg font-semibold">
+          <p>مبلغ قابل پرداخت</p>
+          <p className="font-semibold">
+            {cart.total_price.toLocaleString("fa-IR")}
+            <span className="text-sm pr-1">تومان</span>
+          </p>
+        </div>
+        <hr className="text-zinc-300 my-3" />
+        <button className="btn-primary w-full relative font-semibold">
+          ادامه ثبت سفارش{" "}
+          <IoCartOutline className="size-8 absolute right-5 top-2.5" />
+        </button>
+        <button className="btn-primary w-full relative font-semibold">
+          ایجاد پیش فاکتور
+          <FaRegFileAlt className="size-7 absolute right-5 top-3" />
+        </button>
       </div>
-      <div className="col-span-1 shadow rounded-sm h-auto p-5"></div>
     </div>
   );
 }
@@ -66,9 +112,12 @@ function CartLi({ item }: { item: CartItem }) {
   }, [dropDownOpen]);
   return (
     <>
-      <div className="flex items-center justify-between p-4">
-        <div className="flex flex-col min-w-[124px] w-auto text-center">
-          <Link href={""} className="min-h-28 relative w-full mb-2">
+      <li className="flex items-center justify-between p-4">
+        <div className="flex flex-col  justify-center text-center w-28">
+          <Link
+            href={""}
+            className="min-h-28 flex items-center justify-center relative"
+          >
             {item.product_cover_image ? (
               <Image
                 src={item.product_cover_image}
@@ -78,12 +127,12 @@ function CartLi({ item }: { item: CartItem }) {
                 className="object-cover w-28 min-h-28 max-w-full overflow-hidden"
               />
             ) : (
-              <div className="w-28 min-h-28 h-full max-w-full bg-zinc-200 rounded-md flex items-center justify-center">
+              <div className="w-28 min-h-28 h-full max-w-full bg-zinc-200 rounded-md flex items-center justify-center mb-2">
                 <CiImageOff className="size-15" />
               </div>
             )}
           </Link>
-          <div className="relative w-2/3" ref={dropdownRef}>
+          <div className="relative mx-auto" ref={dropdownRef}>
             <button
               onClick={() => setDropDownOpen(!dropDownOpen)}
               className={`w-full p-3 flex items-center justify-between font-bold border border-zinc-300 z-20 font-dana`}
@@ -94,7 +143,7 @@ function CartLi({ item }: { item: CartItem }) {
               </span>
             </button>
             {dropDownOpen && (
-              <div className="animate-fade-up animate-duration-300 animate-ease-linear animate-normal bottom-0 sm:bottom-auto right-0 sm:top-11 fixed sm:absolute bg-white w-full z-10 border-t border-zinc-300 text-zinc-700 sm:shadow-lg shadow-2xl rounded-t-2xl sm:rounded-none transition-all ease-linear">
+              <div className="animate-fade-up animate-duration-300 animate-ease-linear animate-normal bottom-0 sm:bottom-auto right-0 sm:top-11 fixed sm:absolute bg-white w-full sm:w-44 z-10 border-t border-zinc-300 text-zinc-700 sm:shadow-lg shadow-2xl rounded-t-2xl sm:rounded-none transition-all ease-linear">
                 <div className="sm:hidden flex items-center justify-between p-5">
                   <p className="font-semibold">انتخاب مقدار</p>
                   <button type="button" onClick={() => setDropDownOpen(false)}>
@@ -131,7 +180,7 @@ function CartLi({ item }: { item: CartItem }) {
                     onOpen();
                     setDropDownOpen(false);
                   }}
-                  className="w-full p-3 flex items-center justify-between font-bold hover:bg-primary-200"
+                  className="w-full p-3 flex items-center justify-between font-bold hover:bg-primary-200 text-nowrap text-ellipsis"
                 >
                   وارد کردن مقدار دلخواه
                 </button>
@@ -139,7 +188,7 @@ function CartLi({ item }: { item: CartItem }) {
             )}
           </div>
         </div>
-        <div className="flex justify-between w-[80%] h-full items-start">
+        <div className="flex justify-between w-[80%] h-full items-start pr-2">
           <div className="flex flex-col justify-between h-full">
             <p className="font-semibold text-lg">{item.name_product}</p>
             <div>
@@ -160,7 +209,7 @@ function CartLi({ item }: { item: CartItem }) {
             <FaRegTrashAlt className="size-5" />
           </button>
         </div>
-      </div>
+      </li>
       <Modal
         backdrop="opaque"
         isOpen={isOpen}
