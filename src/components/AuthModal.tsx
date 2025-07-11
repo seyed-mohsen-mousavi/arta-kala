@@ -1,6 +1,5 @@
 "use client";
 import {
-  Checkbox,
   InputOtp,
   Modal,
   ModalBody,
@@ -12,7 +11,6 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HiXMark } from "react-icons/hi2";
-import { MdChevronLeft } from "react-icons/md";
 import {
   LoginFormValues,
   loginSchema,
@@ -25,7 +23,6 @@ import { convertPersianToEnglish } from "@/utils/converNumbers";
 import { login, sendOtp, verifyOtp } from "@/services/usersActions";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuthModal } from "@/context/AuthModalProvider";
-import api from "@/services/api";
 
 export default function AuthModal() {
   const { isOpen, onOpenChange, onClose } = useAuthModal();

@@ -83,7 +83,6 @@ function CartLi({ item }: { item: CartItem }) {
   const { removeFromCart, setQuantityToItem } = useCart();
   const [quantity, setQuantity] = useState(item.quantity);
 
-  const [customQuantities, setCustomQuantities] = useState<number[]>([]);
   const [newQuantity, setNewQuantity] = useState<number | null>(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -91,7 +90,7 @@ function CartLi({ item }: { item: CartItem }) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     setQuantityToItem(item.product_id, quantity);
-  }, [quantity]);
+  }, [item.product_id, quantity, setQuantityToItem]);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -150,8 +149,9 @@ function CartLi({ item }: { item: CartItem }) {
                     <HiXMark className="size-6" />
                   </button>
                 </div>
-                {[1, 2, 3, ...customQuantities.filter((q) => q > 3)].map(
-                  (num) => (
+                {[1, 2, 3]
+                  .filter((q) => q > 3)
+                  .map((num) => (
                     <button
                       key={num}
                       className={`w-full p-3 flex items-center justify-between font-bold hover:bg-primary-200 font-dana ${
@@ -172,8 +172,7 @@ function CartLi({ item }: { item: CartItem }) {
                     >
                       {num} عدد
                     </button>
-                  )
-                )}
+                  ))}
 
                 <button
                   onClick={() => {

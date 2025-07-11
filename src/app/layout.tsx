@@ -2,12 +2,10 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import Navbar from "@/components/Navbar";
 import { GetShopCategoriesTreeList } from "@/services/shopActions";
-// import Providers from "./providers";
 import localFont from "next/font/local";
 import Providers from "./providers";
 import { UserProvider } from "@/context/UserContext";
 import { GetUserDashboard } from "@/services/authActions";
-import { cookies } from "next/headers";
 import { AuthModalProvider } from "@/context/AuthModalProvider";
 import AuthModal from "@/components/AuthModal";
 import { CategoriesProvider } from "@/context/CategoriesContext";
@@ -88,9 +86,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const result = await GetShopCategoriesTreeList();
-  let user = null;
-
-  user = await GetUserDashboard();
+  const user = (await GetUserDashboard()) || undefined;
 
   return (
     <html lang="fa-IR" dir="rtl" className="scroll-smooth bg-[#f9f9f9]">

@@ -1,24 +1,26 @@
-  import LayoutShell from "@/components/Products/LayoutShell";
-  import { GetProducts, GetShopCategoriesTreeList } from "@/services/shopActions";
+export const dynamic = "force-dynamic";
 
-  // type Props = {
-  //   searchParams: Record<string, string | string[]>;
-  // };
+import LayoutShell from "@/components/Products/LayoutShell";
+import { GetProducts, GetShopCategoriesTreeList } from "@/services/shopActions";
 
-  export default async function ProductsPage({ searchParams }: any) {
-    const { data } = await GetProducts(searchParams);
-    const categoryRes = await GetShopCategoriesTreeList();
-    const categories = categoryRes?.data || [];
-    return (
-      <LayoutShell
-        categories={categories}
-        products={data.results || []}
-        pagination={{ count: data?.count || 0, page: data?.page || 1 }}
-        searchParams={await searchParams}
-      />
-    );
-  }
+// type Props = {
+//   searchParams: Record<string, string | string[]>;
+// };
 
-  export async function generateMetadata() {
-    return { title: "محصولات - صفحه اول" };
-  }
+export default async function ProductsPage({ searchParams }: any) {
+  const { data } = await GetProducts(searchParams);
+  const categoryRes = await GetShopCategoriesTreeList();
+  const categories = categoryRes?.data || [];
+  return (
+    <LayoutShell
+      categories={categories}
+      products={data.results || []}
+      pagination={{ count: data?.count || 0, page: data?.page || 1 }}
+      searchParams={await searchParams}
+    />
+  );
+}
+
+export async function generateMetadata() {
+  return { title: "محصولات - صفحه اول" };
+}

@@ -1,12 +1,7 @@
+export const dynamic = "force-dynamic";
+
 import LayoutShell from "@/components/Products/LayoutShell";
 import { GetProducts, GetShopCategoriesTreeList } from "@/services/shopActions";
-// import { CategoryNode } from "@/types/categories";
-
-// type Props = {
-//   categories: CategoryNode[];
-//   params: { page: string };
-//   searchParams: Record<string, string | string[]>;
-// };
 
 export default async function ProductsPage({ params, searchParams }: any) {
   const currentPage = Number(params.page) || 1;
@@ -23,11 +18,3 @@ export default async function ProductsPage({ params, searchParams }: any) {
     />
   );
 }
-
-// export default async function generateMetadata({
-//   params,
-// }: {
-//   params: { page: string };
-// }) {
-//   return { title: `محصولات - صفحه ${params.page}` };
-// }

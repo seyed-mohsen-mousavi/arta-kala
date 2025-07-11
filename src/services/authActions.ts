@@ -1,6 +1,5 @@
 "use server"
 import { cookies } from 'next/headers';
-import api from './api';
 import { User } from '@/types/user';
 export async function refreshAccessToken() {
     const { refreshCookie } = await getAuthTokens();

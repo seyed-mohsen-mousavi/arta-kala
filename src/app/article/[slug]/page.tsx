@@ -62,8 +62,8 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
             دسته بندی ها
           </h2>
           <ul className="font-pelak">
-            {categories?.map((cat) => (
-              <li className="text-lg">
+            {categories?.map((cat , key) => (
+              <li key={key} className="text-lg">
                 <Link href={`/articles/${cat.id}`}>{cat.title}</Link>
               </li>
             ))}
@@ -77,7 +77,7 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
 
           <ul className="font-pelak">
             {latestPosts?.map((post: Article) => (
-              <li className="text-lg flex items-start gap-4">
+              <li key={post.id} className="text-lg flex items-start gap-4">
                 <Link href={`/article/${post.slug}`}>
                   <Image
                     src={`https://mpttools.co${post.thumbnail}`}

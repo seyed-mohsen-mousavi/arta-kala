@@ -5,7 +5,6 @@ import { FaRegEdit } from "react-icons/fa";
 import { PiHandCoinsDuotone } from "react-icons/pi";
 import { useState } from "react";
 import { addToast } from "@heroui/toast";
-import { title } from "process";
 import provincesWithCities from "@/data/iran.json";
 
 type FieldKey = keyof typeof initialState;
@@ -112,10 +111,8 @@ function InfoField({
 
 function PersonalInfoForm() {
   const { user } = useUser();
-  if (!user) return <>کاربری پیدا نشد</>;
-  const { identity } = user;
 
-  const [formData, setFormData] = useState({ ...identity });
+  const [formData, setFormData] = useState({ ...user?.identity });
   const [editableFields, setEditableFields] = useState<
     Record<FieldKey, boolean>
   >(
@@ -127,16 +124,18 @@ function PersonalInfoForm() {
       {} as Record<FieldKey, boolean>
     )
   );
+  const [isChanged, setIsChanged] = useState(false);
+
+  const identity = user?.identity;
   const cities =
     provincesWithCities[
-      formData.province as keyof typeof provincesWithCities
+      formData?.province as keyof typeof provincesWithCities
     ] || [];
-  const [isChanged, setIsChanged] = useState(false);
 
   const handleFieldChange = (name: FieldKey, value: string) => {
     setFormData((prev) => {
       const updated = { ...prev, [name]: value };
-      if (value !== identity[name]) {
+      if (identity && value !== identity[name]) {
         setIsChanged(true);
       }
       return updated;
@@ -147,6 +146,7 @@ function PersonalInfoForm() {
     if (name === "phone_number" || name === "referral_code") return;
     setEditableFields((prev) => ({ ...prev, [name]: true }));
   };
+
   const isValidEmail = (email: string) => /^[\w.-]+@[\w.-]+\.\w+$/.test(email);
   const isValidNationalCode = (code: string) => /^\d{10}$/.test(code);
 
@@ -176,6 +176,10 @@ function PersonalInfoForm() {
       )
     );
   };
+
+  if (!user) {
+    return <p>کاربری پیدا نشد</p>;
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
@@ -225,7 +229,7 @@ function PersonalInfoForm() {
           <p className="text-sm font-semibold">امتیاز</p>
         </div>
         <span className="text-lg font-medium">
-          {convertNumberToPersian(identity.points)}
+          {convertNumberToPersian(identity?.points || "")}
         </span>
       </div>
     </div>

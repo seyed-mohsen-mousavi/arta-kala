@@ -25,10 +25,9 @@ import { useAuthModal } from "@/context/AuthModalProvider";
 import { useCategories } from "@/context/CategoriesContext";
 import SearchBox from "./SearchBox";
 import { FiPhoneCall, FiTrendingUp, FiUser } from "react-icons/fi";
-import { CiImageOff, CiShoppingBasket } from "react-icons/ci";
+import { CiImageOff } from "react-icons/ci";
 import { FaBasketShopping } from "react-icons/fa6";
 import { CartFormat, useCart } from "@/context/CartContextProvider";
-import { convertNumberToPersian } from "@/utils/converNumbers";
 
 function Navbar() {
   const categories = useCategories();
@@ -443,8 +442,7 @@ export function MobileDrawer({
 
 function CartDrawer({ cart }: { cart: CartFormat }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const { addToCart, removeFromCart, incrementQuantity, decrementQuantity } =
-    useCart();
+  const { removeFromCart, incrementQuantity, decrementQuantity } = useCart();
   return (
     <div className="relative inline-block group mt-1">
       <Badge
