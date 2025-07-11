@@ -1,5 +1,4 @@
 import React from "react";
-import { PiHandCoinsDuotone } from "react-icons/pi";
 const fields = [
   "نام",
   "نام خانوادگی",
