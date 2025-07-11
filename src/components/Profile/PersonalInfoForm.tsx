@@ -223,7 +223,7 @@ function PersonalInfoForm() {
       </div>
 
       {/* Badge امتیاز */}
-      <div className="flex items-center justify-between gap-3 absolute -top-4 left-0 bg-primary-100 border-primary text-zinc-600 animate-fade border px-4 py-1 rounded-full">
+      <div className="flex items-center justify-between gap-3 disabled:pointer-events-none absolute -top-4 left-0 bg-primary-100 border-primary text-zinc-600 animate-fade border px-4 py-1 rounded-full">
         <div className="flex items-center gap-1">
           <PiHandCoinsDuotone />
           <p className="text-sm font-semibold">امتیاز</p>

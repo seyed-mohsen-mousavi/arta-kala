@@ -1,5 +1,7 @@
 import PersonalInfoForm from "@/components/Profile/PersonalInfoForm";
+import { Suspense } from "react";
 import { CiUser } from "react-icons/ci";
+import Loading from "./loading";
 
 function page() {
   return (
@@ -8,7 +10,9 @@ function page() {
         <CiUser className="size-8 stroke-1 text-primary" />
         اطلاعات شخصی
       </p>
-      <PersonalInfoForm />
+      <Suspense fallback={<Loading />}>
+        <PersonalInfoForm />
+      </Suspense>
     </div>
   );
 }
