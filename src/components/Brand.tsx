@@ -8,11 +8,13 @@ export default function Brand({ item }: { item: any }) {
     <Link href={item?.link} className="size-full">
       <Image
         className="h-full block mx-auto object-contain w-full max-h-32"
-        width={200}
+        width={150}
         src={item.image}
         alt={item.name}
         title={item.name}
-        height={200}
+        height={150}
+        loading="lazy"
+        fetchPriority="low"
       />
     </Link>
   );

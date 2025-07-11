@@ -19,9 +19,9 @@ function Card({ item }: { item: ProductType }) {
         <div className="relative">
           {item.cover_image ? (
             <Image
-              width={500}
-              height={500}
-              src={item.cover_image}
+              width={380}
+              height={180}
+              src={item.cover_image.startsWith("/media") ? `${process.env.NEXT_PUBLIC_BACK_END}${item.cover_image}`: item.cover_image}
               alt={item.name}
               className="w-full h-56 object-cover rounded-t-lg"
               loading="lazy"
@@ -55,8 +55,8 @@ function Card({ item }: { item: ProductType }) {
         ) : (
           // حالت ناموجود بدون تغییر
           <div className="w-full pt-[7.5px] pb-[7.5px]">
-            <div className="inline-flex items-center justify-center w-full relative text-zinc-400">
-              <hr className="w-full h-px my-0 bg-zinc-400 border-0 rounded-sm" />
+            <div className="inline-flex items-center justify-center w-full relative text-zinc-500">
+              <hr className="w-full h-px my-0 bg-zinc-600 border-0 rounded-sm" />
               <p className="absolute px-2 pb-0.5 -translate-x-1/2 bg-white left-1/2 text-ellipsis text-nowrap whitespace-nowrap font-semibold">
                 در حال حاضر موجود نیست
               </p>

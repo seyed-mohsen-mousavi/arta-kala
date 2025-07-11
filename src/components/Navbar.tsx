@@ -91,13 +91,13 @@ function Navbar() {
         <MobileDrawer links={links} categories={categories} />
         <Link href={"/"} className="flex items-center gap-1">
           <Image
-            alt="logo - تکنو صاف"
+            alt="لوگوی تکنو صاف"
             src={"/logo.png"}
             width={50}
             height={50}
             priority
-            loading="eager"
             className="object-contain h-full "
+            sizes="(max-width: 768px) 40px, 50px"
           />
           <span className="text-4xl font-bold font-noora">تکنو صاف</span>
         </Link>
@@ -381,7 +381,7 @@ export function MobileDrawer({
         hideCloseButton
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        className="!transition-all !ease-linear !duration-500"
+        className="transition-transform duration-500 ease-in-out"
       >
         <DrawerContent>
           {(onClose) => (
@@ -452,6 +452,8 @@ function CartDrawer({ cart }: { cart: CartFormat }) {
         classNames={{ badge: "font-dana text-white bg-primary pt-1" }}
       >
         <button
+          aria-label="cart"
+          title="سبد خرید"
           onClick={onOpen}
           className={`group-hover:bg-primary/50 group-active:bg-primary/50 p-2 rounded-lg `}
         >

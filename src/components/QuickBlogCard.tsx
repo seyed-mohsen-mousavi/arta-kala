@@ -4,7 +4,6 @@ import Article from "@/types/blog";
 import Image from "next/image";
 
 function QuickBlogCard({ item }: { item: Article }) {
-  console.log(item)
   return (
     <article className="relative size-full">
       <Image

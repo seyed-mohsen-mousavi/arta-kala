@@ -19,14 +19,16 @@ function ProductSlider({
   className?: string;
 }) {
   const swiperRef: any = useRef(null);
+  const enableLoop = items.length > slidesPerView + 1;
+  const enableAutoplay = items.length > 1;
   return items?.length > 0 ? (
     <div className="relative w-full h-full">
       <Swiper
         navigation={false}
         spaceBetween={spaceBetween}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
-        loop={items?.length > 2}
-        autoplay={items?.length > 1}
+        loop={enableLoop}
+        autoplay={enableAutoplay}
         modules={[Autoplay]}
         breakpoints={{
           0: {

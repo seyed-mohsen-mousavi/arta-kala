@@ -1,5 +1,4 @@
 import Brand from "@/components/Brand";
-import HomeSlider from "@/components/HomeSlider";
 import QuickBlogCard from "@/components/QuickBlogCard";
 import Slider from "@/components/Slider";
 import ProductType from "@/types/product";
@@ -11,8 +10,9 @@ import {
   GetLatestProducts,
   GetProducts,
 } from "@/services/shopActions";
-import FlipClock from "@/components/CountdownTimer";
 import { GetLatestArticles } from "@/services/blogActions";
+import HomeHeroSection from "@/components/HomeHeroSection";
+import FlipClock from "@/components/FlipClockWrapper";
 
 export type Image = {
   id: number;
@@ -20,32 +20,6 @@ export type Image = {
   alt: string;
   link: string;
 };
-const images = [
-  {
-    id: 1,
-    src: "/slider/1.webp",
-    alt: "عکس ۱",
-    link: "",
-  },
-  {
-    id: 2,
-    src: "/slider/2.webp",
-    alt: "عکس ۲",
-    link: "",
-  },
-  {
-    id: 3,
-    src: "/slider/3.webp",
-    alt: "عکس ۳",
-    link: "",
-  },
-  {
-    id: 4,
-    src: "/slider/4.webp",
-    alt: "عکس ۴",
-    link: "",
-  },
-];
 
 const quickCategories: { label: string; image: string }[] = [
   {
@@ -167,43 +141,34 @@ const brands: { link: string; name: string; image: string }[] = [
 ];
 
 export default async function Home() {
-  const { data } = await GetProducts();
-  const products: ProductType[] = data.results;
-  const {
-    data: { latest_products },
-  } = await GetLatestProducts();
-  const {
-    data: { featured_products },
-  } = await GetFeaturedProducts();
-  const { data: latest_articles } = await GetLatestArticles();
+  let products: ProductType[] = [];
+  let latest_products: ProductType[] = [];
+  let featured_products: ProductType[] = [];
+  let latest_articles = [];
+
+  try {
+    const [
+      { data },
+      { data: latestData },
+      { data: featuredData },
+      { data: articles },
+    ] = await Promise.all([
+      GetProducts(),
+      GetLatestProducts(),
+      GetFeaturedProducts(),
+      GetLatestArticles(),
+    ]);
+    products = data.results || [];
+    latest_products = latestData.latest_products || [];
+    featured_products = featuredData.featured_products || [];
+    latest_articles = articles || [];
+  } catch (error) {
+    console.error("Fetch Faild : ", error);
+  }
+
   return (
     <div className="w-full">
-      <header className="flex flex-col md:flex-row gap-4 w-full h-full py-4">
-        <div className="w-full md:w-2/3 flex justify-center items-center h-72 sm:min-h-[250px] md:h-auto">
-          <HomeSlider images={images} />
-        </div>
-
-        <div className="flex flex-col space-y-4 w-full md:w-1/3">
-          <Link href={""}>
-            <Image
-              src={"/dep.jpg"}
-              alt=""
-              width={200}
-              height={200}
-              className="object-cover w-full  h-full rounded-md"
-            />
-          </Link>
-          <Link href={""}>
-            <Image
-              src={"/dep2.webp"}
-              alt=""
-              width={200}
-              height={200}
-              className="object-cover w-full  h-full rounded-md"
-            />
-          </Link>
-        </div>
-      </header>
+      <HomeHeroSection />
       <section className="max-w-[1270px] mx-auto space-y-2">
         <div className="flex flex-row-reverse flex-wrap md:gap-5 items-center w-full justify-around py-5">
           {quickCategories.map((qc, index) => (
@@ -214,7 +179,7 @@ export default async function Home() {
             >
               <Image
                 src={qc.image}
-                alt={qc.label}
+                alt={qc.label || ""}
                 width={200}
                 height={200}
                 loading="lazy"
@@ -227,7 +192,7 @@ export default async function Home() {
         <div className="bg-primary-500 rounded-3xl p-4 shadow-[0px_9px_14px_0px_rgba(254,192,1,0.2)] grid grid-cols-1 lg:grid-cols-5 gap-10">
           <div className="w-full col col-span-1 flex flex-col items-center gap-6 justify-between pr-10 py-10">
             <div className="flex flex-row lg:flex-col w-full h-full justify-between font-dana">
-              <h2 className="text-red-600 text-4xl lg:text-[42px] font-bold w-full font-pelak text-center">
+              <h2 className="text-red-600 text-6xl lg:text-5xl font-bold w-full font-pelak text-center flex items-center justify-center">
                 آف صاف
               </h2>
               <FlipClock targetDate={new Date("9999-12-31T23:59:59")} />
@@ -249,6 +214,8 @@ export default async function Home() {
             alt="تبلیغ"
             width={480}
             height={180}
+            loading="lazy"
+            fetchPriority="low"
             className="w-full rounded-3xl object-cover h-full"
           />
           <Image
@@ -256,6 +223,8 @@ export default async function Home() {
             alt="تبلیغ"
             width={480}
             height={180}
+            loading="lazy"
+            fetchPriority="low"
             className="w-full rounded-3xl object-cover h-full"
           />
         </div>
@@ -278,8 +247,10 @@ export default async function Home() {
         <Image
           src={"/ads.jpg"}
           alt="تبلیغ"
-          width={1160}
+          width={1000}
           height={200}
+          fetchPriority="low"
+          loading="lazy"
           className="w-full rounded-xl lg:rounded-3xl mb-5"
         />
         {featured_products.length > 0 && (
