@@ -178,8 +178,7 @@ export default async function Home() {
   const { data: latest_articles } = await GetLatestArticles();
   return (
     <div className="w-full">
-      {/* Header  */}
-      <section className="flex flex-col md:flex-row gap-4 w-full h-full py-4">
+      <header className="flex flex-col md:flex-row gap-4 w-full h-full py-4">
         <div className="w-full md:w-2/3 flex justify-center items-center h-72 sm:min-h-[250px] md:h-auto">
           <HomeSlider images={images} />
         </div>
@@ -204,16 +203,14 @@ export default async function Home() {
             />
           </Link>
         </div>
-      </section>
-      {/* Main */}
+      </header>
       <section className="max-w-[1270px] mx-auto space-y-2">
-        {/* Quick Categories */}
         <div className="flex flex-row-reverse flex-wrap md:gap-5 items-center w-full justify-around py-5">
           {quickCategories.map((qc, index) => (
             <Link
               key={index}
               href={"/"}
-              className="flex flex-col items-center gap-1 "
+              className="flex flex-col items-center gap-2 "
             >
               <Image
                 src={qc.image}
@@ -223,18 +220,17 @@ export default async function Home() {
                 loading="lazy"
                 className="object-fill size-24 md:size-32"
               />
-              <p className="font-bold text-xs">{qc.label}</p>
+              <p className="font-bold text-base font-pelak ">{qc.label}</p>
             </Link>
           ))}
         </div>
-        {/* OFF Mart */}
         <div className="bg-primary-500 rounded-3xl p-4 shadow-[0px_9px_14px_0px_rgba(254,192,1,0.2)] grid grid-cols-1 lg:grid-cols-5 gap-10">
-          <div className="w-full col col-span-1 flex flex-col items-center gap-6 justify-between pr-10">
+          <div className="w-full col col-span-1 flex flex-col items-center gap-6 justify-between pr-10 py-10">
             <div className="flex flex-row lg:flex-col w-full h-full justify-between font-dana">
-              <h2 className="text-red-600 text-4xl lg:text-[42px] font-bold w-full font-dana">
-                آف مارت
+              <h2 className="text-red-600 text-4xl lg:text-[42px] font-bold w-full font-pelak text-center">
+                آف صاف
               </h2>
-              <FlipClock targetDate={new Date("2025-07-07T00:00:00")} />
+              <FlipClock targetDate={new Date("9999-12-31T23:59:59")} />
             </div>
             <button className="hidden lg:block bg-red-600 text-white px-7 py-1.5 rounded-full border-2 border-red-700 hover:bg-red-700 transition-colors ease-in-out">
               مشاهده همه آف ها
@@ -243,7 +239,7 @@ export default async function Home() {
           <div className="w-full lg:col-span-4 px-4 rounded-2xl">
             <Slider items={products} Card={Card} />
           </div>
-          <button className="lg:hidden block mx-auto bg-red-600 text-white px-7 py-1.5 rounded-full border-2 border-red-700 hover:bg-red-700 transition-colors ease-in-out">
+          <button className="font-pelak lg:hidden block mx-auto bg-red-600 text-white px-7 py-1.5 rounded-full border-2 border-red-700 hover:bg-red-700 transition-colors ease-in-out">
             مشاهده همه آف ها
           </button>
         </div>
@@ -263,7 +259,6 @@ export default async function Home() {
             className="w-full rounded-3xl object-cover h-full"
           />
         </div>
-        {/* New  */}
         <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white">
           <div className="w-full flex justify-between px-4">
             <h4 className="font-semibold text-2xl">جدیدترین</h4>{" "}
@@ -287,7 +282,6 @@ export default async function Home() {
           height={200}
           className="w-full rounded-xl lg:rounded-3xl mb-5"
         />
-        {/* Feat */}
         {featured_products.length > 0 && (
           <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white">
             <div className="w-full flex justify-between px-4">
@@ -306,7 +300,6 @@ export default async function Home() {
             </div>
           </div>
         )}
-        {/* Blog */}
         <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white flex lg:flex-row flex-col">
           <div className="flex lg:flex-col justify-between gap-5 px-4 text-nowrap">
             <h4 className="font-semibold text-2xl">بلاگ</h4>
@@ -330,7 +323,6 @@ export default async function Home() {
             />
           </div>
         </div>
-        {/* Brands */}
         <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white mt-10">
           <div className="px-12  h-full">
             <Slider

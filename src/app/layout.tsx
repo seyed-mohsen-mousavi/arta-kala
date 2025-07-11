@@ -95,7 +95,7 @@ export default async function RootLayout({
   return (
     <html lang="fa-IR" dir="rtl" className="scroll-smooth bg-[#f9f9f9]">
       <body
-        className={`${iranyekan.variable} ${pelak.variable} ${noora.variable} ${dana.variable} ${iranyekan.className} w-full min-h-screen relative antialiased text-[#212529]`}
+        className={`${iranyekan.variable} ${pelak.variable} ${noora.variable} ${dana.variable} ${iranyekan.className} w-full min-h-screen relative antialiased text-[#212529] flex flex-col`}
       >
         <UserProvider initialUser={user}>
           <AuthModalProvider>
@@ -104,7 +104,7 @@ export default async function RootLayout({
               <CategoriesProvider categories={result?.data}>
                 <Navbar />
                 <Providers>
-                  <main className="container customSm:max-w-[566px]  w-full mx-auto pb-20 px-2 lg:px-0 h-full">
+                  <main className="container customSm:max-w-[566px] flex-1 w-full mx-auto pb-20 px-2 lg:px-0 h-full">
                     {children}
                   </main>
                   <Footer />

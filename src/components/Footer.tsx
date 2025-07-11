@@ -93,7 +93,7 @@ const footerData = [
 
 function Footer() {
   return (
-    <footer className="w-full bg-[#fed75c] block font-pelak font-medium py-7">
+    <footer className="w-full bg-[#fed75c] block font-pelak font-medium py-7 shrink-0">
       <div className="flex flex-col md:flex-row justify-center">
         <div className="p-4 rounded-lg ">
           <h4 className="text-2xl font-semibold text-[#666666] text-right flex items-center gap-2">

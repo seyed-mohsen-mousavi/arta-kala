@@ -5,7 +5,7 @@ import { ToastProvider } from "@heroui/toast";
 
 export default function Providers({ children } : { children: React.ReactNode }) {
   return (
-    <HeroUIProvider>
+    <HeroUIProvider className="flex flex-col h-full flex-1">
       <ToastProvider placement="top-center" />
       {children}
     </HeroUIProvider>

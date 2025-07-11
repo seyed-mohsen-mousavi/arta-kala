@@ -16,9 +16,18 @@ export const GetBlogPosts = async (currentPage?: number): Promise<BlogPostsRespo
         return undefined
     }
 }
-export const GetBlogCategoriesMenuStructure = async (): Promise<BlogCategoryNode | undefined> => {
+export const GetLatestBlogPosts = async (): Promise<any | undefined> => {
     try {
-        const result = await api.get<BlogCategoryNode>("/blog/categories/menu_structure/")
+        const result = await api.get<any>("/blog/posts/latest")
+        return result.data
+    } catch (error) {
+        console.error(error)
+        return undefined
+    }
+}
+export const GetBlogCategoriesMenuStructure = async (): Promise<BlogCategoryNode[] | undefined> => {
+    try {
+        const result = await api.get<BlogCategoryNode[]>("/blog/categories/menu_structure/")
         return result.data
     } catch (error) {
         console.error(error)
@@ -29,8 +38,7 @@ export const GetBlogCategoriesMenuStructure = async (): Promise<BlogCategoryNode
 export async function GetBlogBySlug(slug: string): Promise<any> {
     try {
         const result = await api.get(`/blog/posts/${slug}/`);
-        console.log(result)
-        return result
+        return result.data
     } catch (error) {
         console.log(error)
         return null
@@ -58,7 +66,7 @@ export async function SearchBlogs(params: Search): Promise<any> {
         return null
     }
 }
-export async function GetLatestArticles() : Promise<any>  {
+export async function GetLatestArticles(): Promise<any> {
     try {
         const result = await api.get("/blog/posts/latest");
         return result
