@@ -71,29 +71,101 @@ export async function GetFeaturedProducts(): Promise<any> {
         return null
     }
 }
-// Cart ----
 export async function GetShopCartList() {
     try {
-        const result = await api.get("/shop/cart/")
-        return result
+        const res = await fetch("/api/shop/cart", {
+            method: "GET",
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch cart");
+
+        return await res.json();
     } catch (error) {
-        console.log(error)
+        console.log("GetShopCartList error:", error);
+        return null;
     }
 }
-export async function PostShopCart() {
+
+export async function PostShopCart(data: any) {
     try {
-        const result = await api.post("/shop/cart/")
-        return result
+        const res = await fetch("/api/shop/cart", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+        const result = await res.json();
+        if (!res.ok) {
+            if (res.status === 400 || res.status === 409) {
+                return { error: result?.error || "خطا در بروزرسانی کالا" };
+            }
+            throw new Error("Failed to add item to cart");
+        }
+
+        return await result
     } catch (error) {
-        console.log(error)
+        console.log("PostShopCart error:", error);
+        return null;
     }
 }
-export async function DeleteShopCart() {
+export async function PatchShopCart(id: number, data: { quantity: number }) {
     try {
-        const result = await api.delete("/shop/cart/delete")
-        return result
+        const res = await fetch("/api/shop/cart", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id,
+                ...data,
+            }),
+        });
+
+        const result = await res.json();
+        console.log(result.status)
+        if (!res.ok) {
+            if (res.status === 400 || res.status === 409) {
+                return { error: result?.error || "خطا در بروزرسانی کالا" };
+            }
+            throw new Error(result?.error || "Failed to update cart item");
+        }
+
+        return result;
+    } catch (error: any) {
+        console.error("PatchShopCart error:", error.message);
+        return { error: error.message };
+    }
+}
+
+
+
+export async function DeleteShopCart(id: string) {
+    try {
+        const res = await fetch(`/api/shop/cart?id=${id}`, {
+            method: "DELETE",
+        });
+
+        if (!res.ok) throw new Error("Failed to delete item");
+
+        return await res.json();
     } catch (error) {
-        console.log(error)
+        console.log("DeleteShopCart error:", error);
+        return null;
+    }
+}
+export async function ClearShopCart() {
+    try {
+        const res = await fetch(`/api/shop/cart/clear`, {
+            method: "DELETE",
+        });
+
+        if (!res.ok) throw new Error("Failed to delete item");
+
+        return await res.json();
+    } catch (error) {
+        console.log("DeleteShopCart error:", error);
+        return null;
     }
 }
 // Comments ---
@@ -101,3 +173,5 @@ export async function DeleteShopCart() {
 // export async function GetComments(product_slug: string) {
 
 // }
+
+// 

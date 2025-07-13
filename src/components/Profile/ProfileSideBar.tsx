@@ -1,6 +1,7 @@
 "use client";
 import { NavLink } from "@/app/profile/layout";
 import { useUser } from "@/context/UserContext";
+import { convertNumberToPersian } from "@/utils/converNumbers";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MdOutlineLogout } from "react-icons/md";
@@ -16,11 +17,17 @@ function ProfileSideBar({ links }: { links: NavLink[] }) {
           <div className="size-20 rounded-full bg-white"></div>
           <div className="flex flex-col font-medium">
             <p className="font-semibold text-lg">
-              {user.identity?.first_name} {user.identity?.last_name}
+              {user.identity?.first_name || "بدون نام"}{" "}
+              {user.identity?.last_name}
             </p>
-            <p>{user.identity?.phone_number}</p>
-            <p>{user.identity?.national_code}#</p>
-            <button className="bg-white px-2 mt-2 py-1 rounded-lg text-red-500 flex items-center gap-0.5 active:scale-90">
+            <p>{convertNumberToPersian(user.identity?.phone_number)}</p>
+            <button
+              onClick={async () => {
+                await fetch("/api/auth/logout/");
+                location.replace("/");
+              }}
+              className="bg-white px-2 mt-2 py-1 rounded-lg text-red-500 flex items-center gap-0.5 active:scale-90"
+            >
               <MdOutlineLogout className="size-5" />
               خروج از حساب
             </button>

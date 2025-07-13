@@ -23,13 +23,19 @@ import { convertPersianToEnglish } from "@/utils/converNumbers";
 import { login, sendOtp, verifyOtp } from "@/services/usersActions";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuthModal } from "@/context/AuthModalProvider";
+import { useUser } from "@/context/UserContext";
 
 export default function AuthModal() {
-  const { isOpen, onOpenChange, onClose } = useAuthModal();
+  const { user } = useUser();
+  if (user) return null;
+
+  const { isOpen, onOpenChange, onClose, onOpen } = useAuthModal();
   const [step, setStep] = useState<"PHONE" | "OTP" | "PASSWORD">("PHONE");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [canResend, setCanResend] = useState(false);
   const [resendTimer, setResendTimer] = useState(120);
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
@@ -45,14 +51,24 @@ export default function AuthModal() {
   });
 
   const checkPhoneNumber = async ({ phone_number }: SignupFormValues) => {
+    setLoading(true);
     const converted = convertPersianToEnglish(phone_number);
     setPhoneNumber(converted);
-
-    // فرضی: چک می‌کنیم آیا کاربر وجود دارد یا نه
-    const result = await sendOtp(converted);
-
-    if (result?.status === 200) {
-      setStep(result?.data?.exists ? "PASSWORD" : "OTP");
+    try {
+      const result = await sendOtp(converted);
+      if (result?.status === 200) {
+        setStep(result?.data?.exists ? "PASSWORD" : "OTP");
+        if (!result?.data?.exists) {
+          setCanResend(false);
+          setResendTimer(120);
+        }
+      }
+    } catch {
+      phoneForm.setError("phone_number", {
+        message: "خطا در ارسال کد تایید",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,25 +76,45 @@ export default function AuthModal() {
     phone_number,
     password,
   }: LoginFormValues) => {
-    const result = await login(convertPersianToEnglish(phone_number), password);
-    if (result?.status === 200) {
-      loginForm.reset();
-      onClose();
-      const params = new URLSearchParams(searchParams.toString());
-      if (params.has("AuthRequired")) params.delete("AuthRequired");
-      router.replace(params.toString() ? `${pathName}?${params}` : pathName);
+    setLoading(true);
+    try {
+      const result = await login(convertPersianToEnglish(phone_number), password);
+      if (result?.status === 200) {
+        loginForm.reset();
+        onClose();
+        const params = new URLSearchParams(searchParams.toString());
+        if (params.has("authRequired")) params.delete("authRequired");
+        router.replace(params.toString() ? `${pathName}?${params}` : pathName);
+      }
+    } catch {
+      loginForm.setError("password", {
+        message: "رمز عبور اشتباه است",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   const onOtpSubmit = async (data: OtpFormValues) => {
-    await verifyOtp(phoneNumber, data.code, data.referral_code);
-    onClose();
+    setLoading(true);
+    try {
+      const result = await verifyOtp(phoneNumber, data.code, data.referral_code);
+      if (result?.status === 200) {
+        otpForm.reset();
+        onClose();
+      }
+    } catch {
+      otpForm.setError("code", {
+        message: "کد وارد شده اشتباه یا منقضی شده",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (step === "OTP" && !canResend) {
-      interval = setInterval(() => {
+    if (step === "OTP") {
+      const interval = setInterval(() => {
         setResendTimer((prev) => {
           if (prev <= 1) {
             clearInterval(interval);
@@ -88,9 +124,21 @@ export default function AuthModal() {
           return prev - 1;
         });
       }, 1000);
+      return () => clearInterval(interval);
     }
-    return () => clearInterval(interval);
-  }, [step, canResend]);
+  }, [step]);
+
+  useEffect(() => {
+    if (searchParams.get("authRequired") === "true") {
+      onOpen();
+    }
+  }, []);
+
+  useEffect(() => {
+    phoneForm.reset();
+    otpForm.reset();
+    loginForm.reset();
+  }, [step]);
 
   return (
     <Modal
@@ -107,8 +155,8 @@ export default function AuthModal() {
               step === "PHONE"
                 ? phoneForm.handleSubmit(checkPhoneNumber)
                 : step === "OTP"
-                  ? otpForm.handleSubmit(onOtpSubmit)
-                  : loginForm.handleSubmit(onPasswordLogin)
+                ? otpForm.handleSubmit(onOtpSubmit)
+                : loginForm.handleSubmit(onPasswordLogin)
             }
             className="w-full h-full flex flex-col justify-between"
           >
@@ -187,15 +235,30 @@ export default function AuthModal() {
               )}
             </ModalBody>
 
-            <ModalFooter className="mb-4">
-              <button type="submit" className="w-full btn-primary">
-                {step === "PHONE" ? "ادامه" : step === "OTP" ? "تایید" : "ورود"}
+            <ModalFooter className="mb-4 flex flex-col items-center">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full btn-primary disabled:opacity-60 disabled:cursor-wait"
+              >
+                {loading
+                  ? "لطفا صبر کنید..."
+                  : step === "PHONE"
+                  ? "ادامه"
+                  : step === "OTP"
+                  ? "تایید"
+                  : "ورود"}
               </button>
+
               {step === "OTP" && (
                 <button
                   type="button"
                   className="text-xs text-cyan-500 mt-2"
-                  onClick={() => sendOtp(phoneNumber)}
+                  onClick={() => {
+                    sendOtp(phoneNumber);
+                    setCanResend(false);
+                    setResendTimer(120);
+                  }}
                   disabled={!canResend}
                 >
                   {canResend

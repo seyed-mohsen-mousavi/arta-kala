@@ -5,7 +5,7 @@ export async function middleware(request: NextRequest) {
     const user = await GetUserDashboard();
 
     if (!user && request.nextUrl.pathname.startsWith('/profile')) {
-        return NextResponse.redirect(new URL('/login', request.url));
+        return NextResponse.redirect(new URL('/?authRequierd=true', request.url));
     }
 
     return NextResponse.next();

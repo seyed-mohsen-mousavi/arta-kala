@@ -25,7 +25,6 @@ export const UserProvider = ({
   initialUser?: User;
 }) => {
   const user = initialUser || null;
-
   return (
     <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
   );

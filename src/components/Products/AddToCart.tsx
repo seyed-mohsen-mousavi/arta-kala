@@ -24,11 +24,10 @@ function AddToCart({
 }) {
   const [quantity, setQuantity] = useState(1);
   const [newQuantity, setNewQuantity] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [dropDownOpen, setDropDownOpen] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [customQuantities, setCustomQuantities] = useState<number[]>([]);
-  const { addToCart } = useCart();
+  const { addToCart, loading } = useCart();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -52,12 +51,10 @@ function AddToCart({
 
   const handleAddToCart = async () => {
     try {
-      setIsLoading(true);
-
       addToCart({
         id: 0,
         product_id: product.id,
-        name_product: product.name,
+        product_name: product.name,
         product_cover_image: product.cover_image,
         unit_price: product.price,
         quantity: quantity,
@@ -66,8 +63,6 @@ function AddToCart({
       });
     } catch (error) {
       console.log(error);
-    } finally {
-      setIsLoading(false);
     }
   };
   const handleQuantityChange = (value: number) => {
@@ -129,10 +124,11 @@ function AddToCart({
       </div>
       <button
         onClick={handleAddToCart}
-        className="bg-danger text-sm sm:text-base font-semibold px-4 py-2 text-zinc-100 hover:bg-danger/95 transition-colors duration-300 ease-in-out w-full flex items-center gap-2 justify-center"
+        disabled={loading}
+        className="bg-danger text-sm sm:text-base font-semibold px-4 py-2 text-zinc-100 hover:bg-danger/95 transition-colors duration-300 ease-in-out w-full flex items-center gap-2 justify-center disabled:opacity-50 disabled:cursor-wait"
       >
         افزودن به سبد خرید
-        {isLoading ? (
+        {loading ? (
           <Spinner variant="default" size="sm" color="default" />
         ) : (
           <svg

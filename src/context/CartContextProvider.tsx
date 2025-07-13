@@ -5,6 +5,13 @@ import { CartItem } from "@/types/cartItem";
 import { getLocalCart, setLocalCart } from "@/utils/localCart";
 import { addToast } from "@heroui/toast";
 import Link from "next/link";
+import { useUser } from "./UserContext";
+import {
+  DeleteShopCart,
+  GetShopCartList,
+  PatchShopCart,
+  PostShopCart,
+} from "@/services/shopActions";
 
 export type CartFormat = {
   total_items: number;
@@ -13,7 +20,7 @@ export type CartFormat = {
   items: {
     id: number;
     product_id: number;
-    name_product: string;
+    product_name: string;
     product_cover_image: string;
     unit_price: number;
     quantity: number;
@@ -30,20 +37,32 @@ type CartContextType = {
   incrementQuantity: (productId: number) => void;
   decrementQuantity: (productId: number) => void;
   setQuantityToItem: (id: number, quantity: number) => void;
+  loading: boolean;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const user = null;
+  const { user } = useUser();
   const [cart, setCart] = useState<CartFormat>({
     total_items: 0,
     total_quantity: 0,
     total_price: 0,
     items: [],
   });
+  const [loading, setLoading] = useState(false);
 
-  const fetchServerCart = async () => {};
+  const fetchServerCart = async () => {
+    setLoading(true);
+    try {
+      const data = await GetShopCartList();
+      if (data) setCart(data);
+    } catch (err) {
+      console.error("خطا در دریافت سبد خرید:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (user) {
@@ -74,7 +93,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       items: newItems.map((item) => ({
         id: item.id,
         product_id: item.product_id,
-        name_product: item.name_product,
+        product_name: item.product_name,
         product_cover_image: item.product_cover_image,
         unit_price: item.unit_price,
         quantity: item.quantity,
@@ -86,14 +105,39 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const addToCart = async (item: CartItem) => {
     if (user) {
-      // مدیریت سبد خرید برای کاربران لاگین‌کرده
+      setLoading(true);
+      try {
+        const res = await PostShopCart({
+          product_id: item.product_id,
+          quantity: item.quantity,
+        });
+        if (res) {
+          fetchServerCart();
+          addToast({
+            title: "کالا با موفقیت به سبد خرید اضافه شد",
+            hideIcon: true,
+            endContent: (
+              <Link
+                href="/profile/cart"
+                className="bg-danger text-white px-3 py-2 rounded-xs hover:brightness-90 transition-colors duration-300 ease-in-out text-[10px]"
+              >
+                رفتن به سبد خرید
+              </Link>
+            ),
+          });
+        }
+      } catch (err) {
+        console.error("خطا در افزودن کالا:", err);
+      } finally {
+        setLoading(false);
+      }
     } else {
       const existing = cart.items.find((i) => i.product_id === item.product_id);
       let updatedItems: CartItem[];
 
       const rawCart: CartItem[] = cart.items.map((i) => ({
         ...i,
-        name: i.name_product,
+        name: i.product_name,
       }));
 
       if (existing) {
@@ -147,12 +191,24 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const removeFromCart = (productId: number) => {
+  const removeFromCart = async (productId: number) => {
+    setLoading(true);
     if (user) {
+      try {
+        const item = cart.items.find((i) => i.product_id === productId);
+        if (!item) return;
+
+        await DeleteShopCart(String(item.id));
+        fetchServerCart();
+      } catch (err) {
+        console.error("خطا در حذف آیتم از سبد:", err);
+      } finally {
+        setLoading(false);
+      }
     } else {
       const rawCart: CartItem[] = cart.items.map((i) => ({
         ...i,
-        name: i.name_product,
+        name: i.product_name,
       }));
       const updatedItems = rawCart.filter(
         (item) => item.product_id !== productId
@@ -161,10 +217,29 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const incrementQuantity = (productId: number) => {
+  const incrementQuantity = async (productId: number) => {
+    if (user) {
+      setLoading(true);
+      const item = cart.items.find((i) => i.product_id === productId);
+      if (!item) return;
+
+      const newQuantity = item.quantity + 1;
+      const res = await PatchShopCart(item.id, { quantity: newQuantity });
+      setLoading(false);
+      if (res?.error) {
+        addToast({
+          title: " خطا در بروزرسانی کالا !",
+          description: res.error,
+          color: "warning",
+        });
+        return;
+      }
+      fetchServerCart();
+    } else {
+    }
     const rawCart: CartItem[] = cart.items.map((i) => ({
       ...i,
-      name: i.name_product,
+      name: i.product_name,
     }));
 
     const updatedItems = rawCart.map((item) => {
@@ -192,73 +267,147 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     updateLocalStorage(updatedItems);
   };
 
-  const decrementQuantity = (productId: number) => {
-    const rawCart: CartItem[] = cart.items.map((i) => ({
-      ...i,
-      name: i.name_product,
-    }));
+  const decrementQuantity = async (productId: number) => {
+    if (user) {
+      setLoading(true);
+      const item = cart.items.find((i) => i.product_id === productId);
+      if (!item) return;
 
-    const updatedItems = rawCart
-      .map((item) => {
-        if (item.product_id === productId) {
-          const newQuantity = item.quantity - 1;
-          if (newQuantity <= 0) {
-            return null;
+      const newQuantity = item.quantity - 1;
+
+      if (newQuantity <= 0) {
+        removeFromCart(productId);
+        return;
+      }
+
+      try {
+        await PatchShopCart(item.id, { quantity: newQuantity });
+        fetchServerCart();
+      } catch (error) {
+        console.error("خطا در کاهش تعداد:", error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      const rawCart: CartItem[] = cart.items.map((i) => ({
+        ...i,
+        name: i.product_name,
+      }));
+
+      const updatedItems = rawCart
+        .map((item) => {
+          if (item.product_id === productId) {
+            const newQuantity = item.quantity - 1;
+            if (newQuantity <= 0) {
+              return null;
+            }
+            return {
+              ...item,
+              quantity: newQuantity,
+              total_price: newQuantity * item.unit_price,
+            };
           }
-          return {
-            ...item,
-            quantity: newQuantity,
-            total_price: newQuantity * item.unit_price,
-          };
-        }
-        return item;
-      })
-      .filter((item): item is CartItem => item !== null); // فیلتر حذف شده ها
+          return item;
+        })
+        .filter((item): item is CartItem => item !== null);
 
-    updateLocalStorage(updatedItems);
+      updateLocalStorage(updatedItems);
+    }
   };
 
   const clearCart = () => {
     if (user) {
-      // پاک‌سازی سبد برای کاربر لاگین‌کرده
     } else {
       updateLocalStorage([]);
     }
   };
 
-  const setQuantityToItem = (productId: number, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(productId);
-      return;
-    }
+  const setQuantityToItem = async (productId: number, quantity: number) => {
+    if (user) {
+      const item = cart.items.find((i) => i.product_id === productId);
+      if (!item) return;
 
-    const updatedItems = cart.items.map((item) => {
-      if (item.product_id === productId) {
-        if (typeof item.stock === "number" && quantity > item.stock) {
+      if (quantity <= 0) {
+        removeFromCart(productId);
+        return;
+      }
+      setLoading(true);
+      try {
+        const res = await PatchShopCart(item.id, { quantity });
+        if (res?.error) {
           addToast({
-            title: "موجودی کافی نیست",
-            description: `تنها ${item.stock} عدد موجود است.`,
+            title: " خطا در بروزرسانی کالا !",
+            description: res.error,
             color: "warning",
           });
-          return item;
+          return;
+        }
+        fetchServerCart();
+      } catch (error) {
+        console.error("خطا در تنظیم تعداد:", error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      if (quantity <= 0) {
+        removeFromCart(productId);
+        return;
+      }
+
+      const updatedItems = cart.items.map((item) => {
+        if (item.product_id === productId) {
+          if (typeof item.stock === "number" && quantity > item.stock) {
+            addToast({
+              title: "موجودی کافی نیست",
+              description: `تنها ${item.stock} عدد موجود است.`,
+              color: "warning",
+            });
+            return item;
+          }
+
+          return {
+            ...item,
+            quantity,
+            total_price: quantity * item.unit_price,
+          };
+        }
+        return item;
+      });
+
+      updateLocalStorage(updatedItems);
+    }
+  };
+  useEffect(() => {
+    const syncAndFetch = async () => {
+      const localCart = getLocalCart();
+
+      if (user) {
+        if (localCart.items.length > 0) {
+          await Promise.all(
+            localCart.items.map((item) =>
+              PostShopCart({
+                product_id: item.product_id,
+                quantity: item.quantity,
+              })
+            )
+          );
+          setLocalCart([]);
         }
 
-        return {
-          ...item,
-          quantity,
-          total_price: quantity * item.unit_price,
-        };
+        await fetchServerCart();
+      } else {
+        setCart(localCart);
       }
-      return item;
-    });
+    };
 
-    updateLocalStorage(updatedItems);
-  };
+    syncAndFetch();
+  }, [user]);
 
   return (
     <CartContext.Provider
       value={{
         cart,
+        loading,
         addToCart,
         removeFromCart,
         clearCart,

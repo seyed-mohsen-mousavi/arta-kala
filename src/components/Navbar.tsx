@@ -19,7 +19,7 @@ import {
   Badge,
 } from "@heroui/react";
 import { HiXMark } from "react-icons/hi2";
-// import { useUser } from "@/context/UserContext";
+import { useUser } from "@/context/UserContext";
 import { useDisclosure } from "@heroui/react";
 import { useAuthModal } from "@/context/AuthModalProvider";
 import { useCategories } from "@/context/CategoriesContext";
@@ -28,6 +28,7 @@ import { FiPhoneCall, FiTrendingUp, FiUser } from "react-icons/fi";
 import { CiImageOff } from "react-icons/ci";
 import { FaBasketShopping } from "react-icons/fa6";
 import { CartFormat, useCart } from "@/context/CartContextProvider";
+import { convertNumberToPersian } from "@/utils/converNumbers";
 
 function Navbar() {
   const categories = useCategories();
@@ -40,7 +41,7 @@ function Navbar() {
     { href: "/about-us", label: "درباره ما" },
     { href: "/contact-info", label: "تماس با ما" },
   ];
-  // const user = useUser();
+  const { user } = useUser();
   // console.log(user);
   const [isOpen, setIsOpen] = useState(false);
   const { cart } = useCart();
@@ -169,14 +170,26 @@ function Navbar() {
             <div className="lg:space-x-2 flex items-center w-full lg:w-auto">
               <SearchBox />
               <div className="flex justify-around  w-1/2 lg:w-auto gap-1">
-                <button
-                  onClick={onOpen}
-                  className="p-2.5 px-2.5 lg:px-5 w-full rounded-full bg-white hover:bg-zinc-50 active:bg-zinc-100 transition-colors ease-in-out text-black text-center text-xs md:text-sm flex text-nowrap items-center justify-center gap-1 sm:gap-3 font-bold"
-                  aria-label="ورود / عضویت"
-                >
-                  <FiUser className="size-5 md:size-6" />
-                  <span className="">حساب کاربری</span>
-                </button>
+                {user ? (
+                  <Link
+                    href="/profile/dashboard"
+                    className="p-2.5 px-2.5 lg:px-5 w-full rounded-full bg-white hover:bg-zinc-50 active:bg-zinc-100 transition-colors ease-in-out text-black text-center text-xs md:text-sm flex text-nowrap items-center justify-center gap-1 sm:gap-3 font-bold"
+                  >
+                    <FiUser className="size-5 md:size-6" />
+                    {user.identity?.first_name
+                      ? user.identity.first_name + " " + user.identity.last_name
+                      : convertNumberToPersian(user.identity.phone_number)}
+                  </Link>
+                ) : (
+                  <button
+                    onClick={onOpen}
+                    className="p-2.5 px-2.5 lg:px-5 w-full rounded-full bg-white hover:bg-zinc-50 active:bg-zinc-100 transition-colors ease-in-out text-black text-center text-xs md:text-sm flex text-nowrap items-center justify-center gap-1 sm:gap-3 font-bold"
+                    aria-label="ورود / عضویت"
+                  >
+                    <FiUser className="size-5 md:size-6" />
+                    <span className="">حساب کاربری</span>
+                  </button>
+                )}
                 <Link
                   href="/"
                   className="p-2.5 px-2.5 lg:px-5 w-full rounded-full bg-white hover:bg-zinc-50 active:bg-zinc-100 transition-colors ease-in-out text-black text-center text-xs md:text-sm flex text-nowrap items-center justify-center gap-1 sm:gap-3 font-bold"
@@ -491,7 +504,7 @@ function CartDrawer({ cart }: { cart: CartFormat }) {
                       {item.product_cover_image?.length > 0 ? (
                         <Image
                           src={item.product_cover_image}
-                          alt={item?.name_product}
+                          alt={item?.product_name}
                           width={100}
                           height={100}
                           className="size-22 object-cover"
@@ -503,7 +516,7 @@ function CartDrawer({ cart }: { cart: CartFormat }) {
                       )}
                       <div className="flex flex-col w-full  gap-2 text-lg pr-2">
                         <p className="font-semibold text-zinc-500">
-                          {item.name_product}
+                          {item.product_name}
                         </p>
                         <div className="flex items-center gap-2 mb-2">
                           <p className="font-semibold">تعداد :</p>

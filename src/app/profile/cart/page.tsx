@@ -89,8 +89,10 @@ function CartLi({ item }: { item: CartItem }) {
   const [dropDownOpen, setDropDownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    setQuantityToItem(item.product_id, quantity);
-  }, [item.product_id, quantity, setQuantityToItem]);
+    if (item.quantity !== quantity) {
+      setQuantityToItem(item.product_id, quantity);
+    }
+  }, [item.product_id, quantity]);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -114,13 +116,13 @@ function CartLi({ item }: { item: CartItem }) {
       <li className="flex items-center justify-between p-4">
         <div className="flex flex-col  justify-center text-center w-28">
           <Link
-            href={""}
+            href={`/product/${item.product_name}}`}
             className="min-h-28 flex items-center justify-center relative"
           >
             {item.product_cover_image ? (
               <Image
                 src={item.product_cover_image}
-                alt={item.name_product}
+                alt={item.product_name}
                 width={100}
                 height={100}
                 className="object-cover w-28 min-h-28 max-w-full overflow-hidden"
@@ -149,30 +151,28 @@ function CartLi({ item }: { item: CartItem }) {
                     <HiXMark className="size-6" />
                   </button>
                 </div>
-                {[1, 2, 3]
-                  .filter((q) => q > 3)
-                  .map((num) => (
-                    <button
-                      key={num}
-                      className={`w-full p-3 flex items-center justify-between font-bold hover:bg-primary-200 font-dana ${
-                        num === quantity ? "bg-primary-200" : ""
-                      }`}
-                      onClick={() => {
-                        if (num > item.stock) {
-                          addToast({
-                            title: "موجودی کافی نیست",
-                            description: `تنها ${item.stock} عدد موجود است.`,
-                            color: "warning",
-                          });
-                          return;
-                        }
-                        setQuantity(num);
-                        setDropDownOpen(false);
-                      }}
-                    >
-                      {num} عدد
-                    </button>
-                  ))}
+                {[1, 2, 3].map((num) => (
+                  <button
+                    key={num}
+                    className={`w-full p-3 flex items-center justify-between font-bold hover:bg-primary-200 font-dana ${
+                      num === quantity ? "bg-primary-200" : ""
+                    }`}
+                    onClick={() => {
+                      if (num > item.stock) {
+                        addToast({
+                          title: "موجودی کافی نیست",
+                          description: `تنها ${item.stock} عدد موجود است.`,
+                          color: "warning",
+                        });
+                        return;
+                      }
+                      setQuantity(num);
+                      setDropDownOpen(false);
+                    }}
+                  >
+                    {num} عدد
+                  </button>
+                ))}
 
                 <button
                   onClick={() => {
@@ -189,7 +189,7 @@ function CartLi({ item }: { item: CartItem }) {
         </div>
         <div className="flex justify-between w-[80%] h-full items-start pr-2">
           <div className="flex flex-col justify-between h-full">
-            <p className="font-semibold text-lg">{item.name_product}</p>
+            <p className="font-semibold text-lg">{item.product_name}</p>
             <div>
               <p className="text-black">
                 <span className="text-zinc-600">قیمت کل :</span>

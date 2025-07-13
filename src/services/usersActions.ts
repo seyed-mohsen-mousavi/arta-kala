@@ -1,73 +1,111 @@
-
 import { addToast } from "@heroui/toast"
 import api from "./api"
 
 export const login = async (phone_number: string, password: string) => {
-    try {
-        const result = await api.post("/users/login/password/", { phone_number, password });
-        return result
-    } catch (error: any) {
-        if (error?.response?.status === 401) {
-            addToast({
-                title: "شماره تلفن یا رمز عبور اشتباه است",
-                description: "لطفاً اطلاعات ورود خود را بررسی کرده و دوباره تلاش کنید."
-            })
-        } else {
-            addToast({
-                title: "ورود ناموفق بود"
-            })
-        }
-
-    }
-}
+    const res = await fetch("/api/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ phone_number, password }),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    if (!res.ok) throw new Error("Login failed");
+    return await res.json();
+};
 // otp
 export const sendOtp = async (phone_number: string) => {
     try {
         const result = await api.post("/users/otp/request/", { phone_number })
+        console.log(result)
+
         if (result.status == 200) {
             addToast({
                 title: "کد تایید با موفیقت به شماره تلفن شما ارسال شد ",
                 description: phone_number
             })
             return result
-
         } else if (result.status == 400) {
             addToast({
                 title: "شماره تلفن باید ۱۱ رقم باشد",
                 description: phone_number,
-                color: "danger" 
+                color: "danger"
             })
         }
     } catch (error: any) {
+        console.log(error)
+
         addToast({
             title: error?.response?.message || "ورود ناموفق بود"
         })
     }
 }
-
-
-export const verifyOtp = async (phone_number: string, code: string, referral_code?: string) => {
+export const verifyOtp = async (
+    phone_number: string,
+    code: string,
+    referral_code?: string
+) => {
     try {
-        const result = await api.post("/users/otp/verify/", { phone_number, code, referral_code: referral_code || "" })
-        addToast({
-            title: result.data.message || "ثبت نام با موفقیت تکمیل شد"
-        })
-        console.log(result)
-        // location.reload()
-    } catch (error: any) {
-        console.log(error)
-        if (error?.response?.status === 400) {
-            addToast({
-                title: error?.response?.data.error || "کد تایید نامعتبر یا منقضی است",
-                description: "دوباره تلاش کنید",
-                classNames: { description: "text-xs" },
-                color: "danger"
-            })
-        } else {
-            addToast({
-                title: "ورود ناموفق بود"
-            })
+        const result = await fetch("/api/auth/verify-otp", {
+            method: "POST",
+            body: JSON.stringify({ phone_number, code, referral_code }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        const data = await result.json();
+
+        if (!result.ok) {
+            throw new Error(data.error || "خطا در تأیید کد");
         }
 
+        addToast({
+            title: data.message || "ثبت نام با موفقیت تکمیل شد",
+        });
+        location.reload()
+        return data;
+    } catch (error: any) {
+        addToast({
+            title: error?.message || "کد تایید نامعتبر یا منقضی است",
+            description: "دوباره تلاش کنید",
+            classNames: { description: "text-xs" },
+            color: "danger",
+        });
     }
-}
+};
+
+// user
+export const editInfo = async (data: any) => {
+    try {
+        const response = await fetch("/api/users/edit", {
+            method: "PATCH",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+            console.log(response, result)
+            return {
+                success: false,
+                errors: result.errors || {},
+                message: result.message || "خطایی رخ داده است",
+            };
+        }
+
+        return {
+            success: true,
+            data: result,
+        };
+    } catch (err) {
+        console.error("خطا در editInfo:", err);
+        return {
+            success: false,
+            errors: {},
+            message: "خطا در ارتباط با سرور",
+        };
+    }
+};
+

@@ -25,7 +25,7 @@ export const getLocalCart = () => {
         items: cart.map((item) => ({
             id: item.id,
             product_id: item.product_id,
-            name_product: item.name_product,
+            product_name: item.product_name,
             product_cover_image: item.product_cover_image,
             unit_price: item.unit_price,
             quantity: item.quantity,
