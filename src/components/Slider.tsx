@@ -54,14 +54,14 @@ function ProductSlider({
 
       {/* دکمه‌ها */}
       <button
-        onClick={() => swiperRef.current?.slidePrev()}
+        onClick={() => swiperRef.current?.slideNext()}
         className={`absolute top-1/2 -left-6 md:-left-10 -translate-y-1/2 text-red-500 ${className} z-20 drop-shadow-xl`}
         aria-label="Previous Slide"
       >
         <GoChevronLeft className="size-8 md:size-12" />
       </button>
       <button
-        onClick={() => swiperRef.current?.slideNext()}
+        onClick={() => swiperRef.current?.slidePrev()}
         className={`absolute top-1/2 -right-6 md:-right-10 -translate-y-1/2 text-red-500 ${className} z-20 drop-shadow-xl`}
         aria-label="Next Slide"
       >

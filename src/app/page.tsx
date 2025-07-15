@@ -190,9 +190,9 @@ export default async function Home() {
           ))}
         </div>
         <div className="bg-primary-500 rounded-3xl p-4 shadow-[0px_9px_14px_0px_rgba(254,192,1,0.2)] grid grid-cols-1 lg:grid-cols-5 gap-10">
-          <div className="w-full col col-span-1 flex flex-col items-center gap-6 justify-between pr-10 py-10">
+          <div className="w-full col col-span-1 flex flex-col items-center gap-6 justify-between sm:pr-10 py-10">
             <div className="flex flex-row lg:flex-col w-full h-full justify-between font-dana">
-              <h2 className="text-red-600 text-6xl lg:text-5xl font-bold w-full font-pelak text-center flex items-center justify-center">
+              <h2 className="text-red-600 text-5xl sm:text-6xl lg:text-5xl font-bold w-full font-pelak text-center flex items-center justify-center">
                 آف صاف
               </h2>
               <FlipClock targetDate={new Date("9999-12-31T23:59:59")} />

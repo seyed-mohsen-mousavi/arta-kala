@@ -1,9 +1,5 @@
-"use client";
-
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
 const images = [
   {
     id: 1,
@@ -30,27 +26,15 @@ const images = [
     link: "",
   },
 ];
-
-function SliderSkeleton() {
-  return <div className="w-full h-full animate-pulse bg-zinc-300 rounded-2xl" />;
-}
-
-const HomeSlider = dynamic(() => import("@/components/HomeSlider"), {
-  ssr: false,
-  loading: () => <SliderSkeleton />,
-});
+import HomeSlider from "@/components/HomeSlider";
 
 function HomeHeroSection() {
   return (
     <header className="flex flex-col md:flex-row gap-4 w-full h-full py-4 lg:max-h-[500px] overflow-hidden">
-      {/* اسلایدر */}
       <div className="relative w-full md:w-2/3 flex justify-center items-center h-72 sm:min-h-[250px] md:h-auto">
-        <Suspense fallback={<SliderSkeleton />}>
-          <HomeSlider images={images} />
-        </Suspense>
+        <HomeSlider images={images} />
       </div>
 
-      {/* دو تصویر کناری */}
       <div className="flex flex-col space-y-4 w-full h-full md:w-1/3">
         <Link href="/some-page">
           <Image
@@ -58,7 +42,7 @@ function HomeHeroSection() {
             alt="تصویر بزرگ اول"
             width={200}
             height={200}
-            loading="lazy"
+            priority
             className="object-cover w-full h-full rounded-2xl"
             sizes="(max-width: 768px) 100vw, 200px"
           />
@@ -70,7 +54,7 @@ function HomeHeroSection() {
             alt="تصویر بزرگ دوم"
             width={200}
             height={200}
-            loading="lazy"
+            priority
             className="object-cover w-full h-full rounded-2xl"
             sizes="(max-width: 768px) 100vw, 200px"
           />

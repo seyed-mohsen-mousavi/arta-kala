@@ -43,8 +43,7 @@ function Slider({ images }: { images: ImageType[] }) {
                 alt={image.alt}
                 width={500}
                 height={400}
-                priority={index === 0}
-                loading={index === 0 ? "eager" : "lazy"}
+                priority={index === 0 || index === 1}
                 sizes="(max-width: 768px) 100vw, 500px"
                 className="object-cover size-full"
               />

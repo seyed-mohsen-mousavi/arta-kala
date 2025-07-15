@@ -101,9 +101,10 @@ function Navbar() {
               fill
               priority
               className="logo-float"
+              sizes="(max-width: 768px) 40px, 48px"
             />
           </div>
-          <span className="text-3xl sm:text-4xl font-extrabold font-noora text-gray-800  transition-colors duration-300">
+          <span className="text-3xl sm:text-4xl font-extrabold font-noora text-gray-800 transition-colors duration-300 float-text">
             تکنو صاف
           </span>
         </Link>
