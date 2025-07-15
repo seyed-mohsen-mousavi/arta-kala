@@ -122,7 +122,7 @@ function Footer() {
           ))}
         </div>
       </div>
-      <div id="wze60" className="text-center pt-10 mx-auto">
+      <div id="wze60" className="text-center pt-10 mx-auto mt-5">
         <p
           className="text-lg text-gray-600 -mt-16"
           style={{ fontFamily: "pelak,tahoma,serif" }}

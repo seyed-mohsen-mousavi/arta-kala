@@ -66,7 +66,9 @@ function SortBox() {
           hideCloseButton
           isOpen={isOpen}
           onOpenChange={onOpenChange}
-          className="bg-[#f3f3f3] w-full"
+          className="bg-[#f3f3f3] w-full transition-transform duration-300 ease-in-out"
+
+          radius="sm"
         >
           <DrawerContent>
             {(onClose) => (

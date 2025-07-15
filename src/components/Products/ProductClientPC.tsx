@@ -32,6 +32,16 @@ export default function ProductClientPC({ product }: Props) {
               </p>
             </>
           )}
+          {product.stock <= 5 && (
+            <p
+              className={`text-right font-bold font-dana ${
+                product.stock <= 2 ? "text-danger" : "text-warning"
+              }`}
+            >
+              تنها {product.stock === 1 ? "یک" : product.stock + " عدد"} در
+              انبار باقی مانده
+            </p>
+          )}
           <AddToCart is_available={product.is_available} product={product} />
         </div>
 

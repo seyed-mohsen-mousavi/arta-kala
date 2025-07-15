@@ -1,17 +1,12 @@
 "use client";
-import dynamic from "next/dynamic";
-
-const FilterBox = dynamic(() => import("@/components/Products/FilterBox"), {
-  ssr: false,
-});
-const SortBox = dynamic(() => import("@/components/Products/SortBox"), {
-  ssr: false,
-});
 
 import BreadcrumbsBox from "./BreadcrumbsBox";
 import { CategoryNode } from "@/types/categories";
 import ProductType from "@/types/product";
 import Products from "./Products";
+import FilterBox from "./FilterBox";
+import SortBox from "./SortBox";
+import { useCategories } from "@/context/CategoriesContext";
 type LayoutShellProps = {
   products: ProductType[];
   searchParams: Record<string, string | string[]>;
@@ -19,19 +14,54 @@ type LayoutShellProps = {
   categories: CategoryNode[];
 };
 export default function LayoutShell({ searchParams }: LayoutShellProps) {
+  const categories = useCategories();
+  const categoryId = searchParams.category_id;
   const selected =
     Object.keys(searchParams).length > 0 && !("sort" in searchParams);
 
+  const findCategoryPath = (
+    nodes: typeof categories,
+    id: string | undefined,
+    path: { id: number; name: string }[] = []
+  ): { id: number; name: string }[] | null => {
+    if (!id) return null;
+
+    for (const node of nodes) {
+      const newPath = [...path, { id: Number(node.id), name: node.name }];
+
+      if (node.id.toString() === id) return newPath;
+
+      if (node.children?.length) {
+        const childPath = findCategoryPath(node.children, id, newPath);
+        if (childPath) return childPath;
+      }
+    }
+
+    return null;
+  };
+
+  const categoryPath =
+    typeof categoryId === "string"
+      ? findCategoryPath(categories, categoryId)
+      : null;
+
+  const breadcrumbItems = [
+    { label: "خانه", href: "/" },
+    { label: "محصولات", href: "/products" },
+    ...(categoryPath
+      ? categoryPath.map((cat, index) => ({
+          label: cat.name,
+          href:
+            index === categoryPath.length - 1
+              ? undefined
+              : `/products?category_id=${cat.id}`,
+        }))
+      : []),
+  ];
   return (
     <div className="space-y-5">
-      <BreadcrumbsBox
-        title="محصولات"
-        items={[
-          { label: "خانه", href: "/" },
-          { label: "محصولات", href: "/products" },
-          { label: "کفش ورزشی" },
-        ]}
-      />
+      <BreadcrumbsBox title="محصولات" items={breadcrumbItems} />
+
       <section className="flex gap-4 w-full h-full ">
         <FilterBox selected={selected} />
         <div className="size-full space-y-5">

@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { BiSearch } from "react-icons/bi";
 import { MdChevronLeft } from "react-icons/md";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { GoChevronUp } from "react-icons/go";
 import { NumberInput, Slider, SliderValue } from "@heroui/react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
@@ -13,7 +13,6 @@ const minPrice = 3000;
 const maxPrice = 459420000;
 
 export default function FilterBox({
-  selected,
   isShow,
 }: {
   selected?: boolean;
@@ -23,6 +22,8 @@ export default function FilterBox({
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+
+  const [isPending, startTransition] = useTransition();
 
   const [selectedKeys, setSelectedKeys] = useState<any>(new Set(["1"]));
   const [selectedKeys2, setSelectedKeys2] = useState<any>(new Set(["1"]));
@@ -63,34 +64,47 @@ export default function FilterBox({
   };
 
   const applyFilters = (params: Record<string, any>) => {
-    const query = new URLSearchParams(searchParams);
-
-    if (params.category_id !== undefined)
-      query.set("category_id", params.category_id.toString());
-    if (params.min_price !== undefined)
-      query.set("min_price", params.min_price.toString());
-    if (params.max_price !== undefined)
-      query.set("max_price", params.max_price.toString());
-    if (params.is_available !== undefined) {
-      if (params.is_available === false) {
-        query.delete("is_available");
-      } else {
-        query.set("is_available", String(params.is_available));
+    startTransition(() => {
+      const query = new URLSearchParams(searchParams);
+      if (params.category_id !== undefined)
+        query.set("category_id", params.category_id.toString());
+      if (params.min_price !== undefined)
+        query.set("min_price", params.min_price.toString());
+      if (params.max_price !== undefined)
+        query.set("max_price", params.max_price.toString());
+      if (params.is_available !== undefined) {
+        if (params.is_available === false) {
+          query.delete("is_available");
+        } else {
+          query.set("is_available", String(params.is_available));
+        }
       }
-    }
-    if (params.is_featured !== undefined)
-      query.set("is_featured", String(params.is_featured));
-    if (params.search) query.set("search", params.search);
-    if (params.new_days !== undefined)
-      query.set("new_days", params.new_days.toString());
-    if (params.sort) query.set("sort", params.sort);
-    if (params.page !== undefined) query.set("page", params.page.toString());
-    router.push(`${pathname}?${query.toString()}`);
+      if (params.is_featured !== undefined)
+        query.set("is_featured", String(params.is_featured));
+      if (params.search) query.set("search", params.search);
+      if (params.new_days !== undefined)
+        query.set("new_days", params.new_days.toString());
+      if (params.sort) query.set("sort", params.sort);
+      if (params.page !== undefined) query.set("page", params.page.toString());
+
+      router.push(`${pathname}?${query.toString()}`);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
   };
 
   const searchedCategories = categories.filter((i) =>
     i.name.toLowerCase().includes(searchCategory.toLowerCase())
   );
+
+  const activeFilters = {
+    category_id: searchParams.get("category_id"),
+    min_price: searchParams.get("min_price"),
+    max_price: searchParams.get("max_price"),
+    is_available: searchParams.get("is_available"),
+  };
+
+  const hasActiveFilter = Object.values(activeFilters).some(Boolean);
+  const [isClearing, setIsClearing] = useState(false);
 
   return (
     <div
@@ -109,18 +123,60 @@ export default function FilterBox({
           </div>
         </div>
       )}
-      <button>
-        {selected && (
-          <div
-            onClick={() => {
+      {hasActiveFilter && (
+        <button
+          onClick={() => {
+            setIsClearing(true);
+            startTransition(() => {
               router.push(pathname);
-            }}
-            className="text-white bg-red-400 py-3 font-semibold text-base rounded-xs"
-          >
-            حذف فیلتر ها
-          </div>
-        )}
-      </button>
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              setIsClearing(false);
+            });
+          }}
+          disabled={isPending && isClearing}
+          className="text-white bg-danger hover:bg-red-500 transition py-3 font-semibold text-base rounded-xs disabled:opacity-50 w-full"
+        >
+          {isPending && isClearing ? "در حال حذف..." : "حذف فیلترها"}
+        </button>
+      )}
+      {hasActiveFilter && (
+        <div className="bg-white shadow rounded-sm px-4 py-3 text-sm text-zinc-700 space-y-2 border border-zinc-100">
+          <p className="font-semibold text-zinc-600">فیلترهای فعال:</p>
+          <ul className="space-y-1  leading-6">
+            {activeFilters.is_available && (
+              <li className="flex items-center gap-1">
+                <span className="text-zinc-500">•</span>
+                <span className="text-zinc-800 font-medium">
+                  فقط کالاهای موجود
+                </span>
+              </li>
+            )}
+            {activeFilters.category_id && (
+              <li className="flex items-center gap-1">
+                <span className="text-zinc-500">• دسته:</span>
+                <span className="text-zinc-800 font-medium">
+                  {
+                    categories.find(
+                      (c) => c.id.toString() === activeFilters.category_id
+                    )?.name
+                  }
+                </span>
+              </li>
+            )}
+            {activeFilters.min_price && activeFilters.max_price && (
+              <li className="flex items-center gap-1">
+                <span className="text-zinc-500">• قیمت:</span>
+                <span className="text-zinc-800 font-medium">
+                  {Number(activeFilters.min_price).toLocaleString("fa-IR")} تا{" "}
+                  {Number(activeFilters.max_price).toLocaleString("fa-IR")}{" "}
+                  تومان
+                </span>
+              </li>
+            )}
+          </ul>
+        </div>
+      )}
+
       <div className="bg-white shadow rounded-sm px-3 py-2 flex gap-3 items-center text-zinc-700">
         <div className="switch-container">
           <input
@@ -166,7 +222,11 @@ export default function FilterBox({
                 <li key={i.id}>
                   <button
                     onClick={() => applyFilters({ category_id: i.id })}
-                    className="py-2 flex items-center gap-0.5"
+                    className={`py-2 flex items-center gap-1 ${
+                      searchParams.get("category_id") === i.id.toString()
+                        ? "text-primary-500 font-bold"
+                        : ""
+                    }`}
                   >
                     <MdChevronLeft className="size-5" />
                     <span>{i.name}</span>
@@ -177,7 +237,6 @@ export default function FilterBox({
           </AccordionItem>
         </Accordion>
       </div>
-
       <div className="relative bg-white shadow rounded-sm py-0 text-zinc-700">
         <GoChevronUp
           className={`size-5 absolute top-5 left-5 transition-transform duration-300 ${
@@ -224,7 +283,6 @@ export default function FilterBox({
                 onChange={handleSliderChange}
                 dir="rtl"
                 aria-label="Volume"
-                aria-labelledby="price-range-label"
               />
 
               <div className="flex w-full justify-between items-center border-t border-b border-zinc-200 my-2 px-3">
@@ -241,12 +299,11 @@ export default function FilterBox({
                     }}
                     minValue={minPrice}
                     maxValue={maxPrice}
-                    aria-label="Minimum Price"
                   />
                   <p>تومان</p>
                 </div>
                 <div className="h-full w-5 bg-zinc-200" />
-                <div className="flex flex-col items-center gap-2 text-default-500 font-medium text-small w-full p-5 ">
+                <div className="flex flex-col items-center gap-2 text-default-500 font-medium text-small w-full p-5">
                   <label>تا</label>
                   <NumberInput
                     size="sm"
@@ -255,21 +312,20 @@ export default function FilterBox({
                     hideStepper
                     classNames={{
                       inputWrapper: "input !rounded-full",
-                      input: "input font-dana  border-none",
+                      input: "input font-dana border-none",
                     }}
                     minValue={minPrice}
                     maxValue={maxPrice}
-                    aria-label="Maximum Price"
-                    className="font-iranyekan"
                   />
                   <p>تومان</p>
                 </div>
               </div>
               <button
-                className="btn-primary mx-auto p-3 font-light rounded-xs"
+                className="btn-primary mx-auto p-3 font-light rounded-xs disabled:opacity-50"
                 type="submit"
+                disabled={isPending}
               >
-                اعمال محدوده قیمت مورد نظر
+                {isPending ? "در حال اعمال..." : "اعمال محدوده قیمت"}
               </button>
             </form>
           </AccordionItem>

@@ -23,6 +23,26 @@
   --font-dana: "dana", sans-serif;
   --font-noora: "noora", sans-serif;
 }
+.logo-wrapper {
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+
+.logo-float {
+  object-fit: contain;
+  animation: floatUpDown 3s ease-in-out infinite;
+}
+
+@keyframes floatUpDown {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
 
 button {
   cursor: pointer;

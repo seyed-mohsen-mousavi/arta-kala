@@ -17,6 +17,7 @@ import {
   DrawerBody,
   DrawerFooter,
   Badge,
+  Spinner,
 } from "@heroui/react";
 import { HiXMark } from "react-icons/hi2";
 import { useUser } from "@/context/UserContext";
@@ -29,6 +30,7 @@ import { CiImageOff } from "react-icons/ci";
 import { FaBasketShopping } from "react-icons/fa6";
 import { CartFormat, useCart } from "@/context/CartContextProvider";
 import { convertNumberToPersian } from "@/utils/converNumbers";
+import EmptyCart from "./EmptyCart";
 
 function Navbar() {
   const categories = useCategories();
@@ -38,6 +40,7 @@ function Navbar() {
     { href: "/", label: "صفحه اصلی" },
     { href: "/products", label: "محصولات" },
     { href: "/articles", label: "مقالات" },
+    { href: "/gallery", label: "گالری" },
     { href: "/about-us", label: "درباره ما" },
     { href: "/contact-info", label: "تماس با ما" },
   ];
@@ -90,18 +93,21 @@ function Navbar() {
     <>
       <div className="flex justify-between py-5 px-3 items-center container">
         <MobileDrawer links={links} categories={categories} />
-        <Link href={"/"} className="flex items-center gap-1">
-          <Image
-            alt="لوگوی تکنو صاف"
-            src={"/logo.png"}
-            width={50}
-            height={50}
-            priority
-            className="object-contain h-full "
-            sizes="(max-width: 768px) 40px, 50px"
-          />
-          <span className="text-4xl font-bold font-noora">تکنو صاف</span>
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="logo-wrapper">
+            <Image
+              alt="لوگوی تکنو صاف"
+              src="/logo.png"
+              fill
+              priority
+              className="logo-float"
+            />
+          </div>
+          <span className="text-3xl sm:text-4xl font-extrabold font-noora text-gray-800  transition-colors duration-300">
+            تکنو صاف
+          </span>
         </Link>
+
         <div className="flex items-center gap-10">
           <p className="text-zinc-500 text-base font-medium hidden lg:block">
             شماره تماس:{" "}
@@ -152,7 +158,7 @@ function Navbar() {
                   </button>
                 </div>
               </div>
-              <nav className="mr-4 flex gap-2">
+              <nav className="mr-4 flex gap-2 text-xs lg:text-sm 2xl:text-base w-full text-nowrap space">
                 {links.map(({ href, label }) => (
                   <Link
                     key={href}
@@ -394,7 +400,7 @@ export function MobileDrawer({
         hideCloseButton
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        className="transition-transform duration-500 ease-in-out"
+        className="!transition-all !duration-500 !ease-in-out"
       >
         <DrawerContent>
           {(onClose) => (
@@ -455,7 +461,8 @@ export function MobileDrawer({
 
 function CartDrawer({ cart }: { cart: CartFormat }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const { removeFromCart, incrementQuantity, decrementQuantity } = useCart();
+  const { removeFromCart, incrementQuantity, decrementQuantity, loading } =
+    useCart();
   return (
     <div className="relative inline-block group mt-1">
       <Badge
@@ -495,78 +502,98 @@ function CartDrawer({ cart }: { cart: CartFormat }) {
               </DrawerHeader>
 
               <DrawerBody className="relative px-10 flex flex-col gap-20 overflow-auto">
-                {cart.items.map((item, key) => {
-                  return (
-                    <div
-                      key={key}
-                      className="w-full flex items-start gap-1 h-22"
-                    >
-                      {item.product_cover_image?.length > 0 ? (
-                        <Image
-                          src={item.product_cover_image}
-                          alt={item?.product_name}
-                          width={100}
-                          height={100}
-                          className="size-22 object-cover"
-                        />
-                      ) : (
-                        <div className="size-22 bg-zinc-200 rounded-md flex items-center justify-center">
-                          <CiImageOff className="size-15" />
-                        </div>
-                      )}
-                      <div className="flex flex-col w-full  gap-2 text-lg pr-2">
-                        <p className="font-semibold text-zinc-500">
-                          {item.product_name}
-                        </p>
-                        <div className="flex items-center gap-2 mb-2">
-                          <p className="font-semibold">تعداد :</p>
-                          <div className="bg-white flex items-center">
-                            <button
-                              onClick={() => incrementQuantity(item.product_id)}
-                              className="px-3 py-2 border-l border-zinc-400"
-                            >
-                              +
-                            </button>
-                            <span className="px-4">{item.quantity}</span>
-                            <button
-                              onClick={() => decrementQuantity(item.product_id)}
-                              className="px-3 py-2 border-r border-zinc-400"
-                            >
-                              -
-                            </button>
-                          </div>
-                        </div>
-                        <p className="font-semibold text-lg">
-                          {item.unit_price.toLocaleString("fa-IR")} تومان
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => removeFromCart(item.product_id)}
-                        className="bg-white border border-zinc-400 text-zinc-600 p-1 rounded-full"
+                {cart.items.length > 0 ? (
+                  cart.items.map((item, key) => {
+                    return (
+                      <div
+                        key={key}
+                        className="w-full flex items-start gap-1 h-22"
                       >
-                        <HiXMark className="size-4" />
-                      </button>
-                    </div>
-                  );
-                })}
+                        {item.product_cover_image?.length > 0 ? (
+                          <Image
+                            src={item.product_cover_image}
+                            alt={item?.product_name}
+                            width={100}
+                            height={100}
+                            className="size-22 object-cover"
+                          />
+                        ) : (
+                          <div className="size-22 bg-zinc-200 rounded-md flex items-center justify-center">
+                            <CiImageOff className="size-15" />
+                          </div>
+                        )}
+                        <div className="flex flex-col w-full  gap-2 text-lg pr-2">
+                          <p className="font-semibold text-zinc-500">
+                            {item.product_name}
+                          </p>
+                          <div className="flex items-center gap-2 mb-2">
+                            <p className="font-semibold">تعداد :</p>
+                            <div className="bg-white flex items-center">
+                              <button
+                                onClick={() =>
+                                  incrementQuantity(item.product_id)
+                                }
+                                className="px-3 py-2 border-l border-zinc-400"
+                              >
+                                +
+                              </button>
+                              <span className="px-4">{item.quantity}</span>
+                              <button
+                                onClick={() =>
+                                  decrementQuantity(item.product_id)
+                                }
+                                className="px-3 py-2 border-r border-zinc-400"
+                              >
+                                -
+                              </button>
+                            </div>
+                          </div>
+                          <p className="font-semibold text-lg">
+                            {item.unit_price.toLocaleString("fa-IR")} تومان
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => removeFromCart(item.product_id)}
+                          className="bg-white border border-zinc-400 text-zinc-600 p-1 rounded-full"
+                        >
+                          <HiXMark className="size-4" />
+                        </button>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <EmptyCart />
+                )}
+                {loading && (
+                  <div className="absolute top-0 left-0 size-full bg-zinc-100/80 flex flex-col justify-center items-center">
+                    <Spinner
+                      className=""
+                      variant="simple"
+                      color="default"
+                      size="lg"
+                    />
+                  </div>
+                )}
               </DrawerBody>
 
-              <DrawerFooter className="flex flex-col w-full px-0">
-                <div className="flex items-center justify-between w-full px-2 text-xl font-semibold">
-                  <p className="text-zinc-600">جمع کل :‌</p>
-                  <p>{cart.total_price.toLocaleString("fa-IR")} تومان</p>
-                </div>
-                <hr className="text-zinc-400 my-2" />
-                <div className="w-full px-2 h-full flex">
-                  <Link
-                    onClick={onClose}
-                    href="/profile/cart"
-                    className="btn-primary w-full rounded-xl text-center font-semibold"
-                  >
-                    مشاهده سبد خرید
-                  </Link>
-                </div>
-              </DrawerFooter>
+              {cart.items.length > 0 && (
+                <DrawerFooter className="flex flex-col w-full px-0">
+                  <div className="flex items-center justify-between w-full px-2 text-xl font-semibold">
+                    <p className="text-zinc-600">جمع کل :‌</p>
+                    <p>{cart.total_price.toLocaleString("fa-IR")} تومان</p>
+                  </div>
+                  <hr className="text-zinc-400 my-2" />
+                  <div className="w-full px-2 h-full flex">
+                    <Link
+                      onClick={onClose}
+                      href="/profile/cart"
+                      className="btn-primary w-full rounded-xl text-center font-semibold"
+                    >
+                      مشاهده سبد خرید
+                    </Link>
+                  </div>
+                </DrawerFooter>
+              )}
             </>
           )}
         </DrawerContent>

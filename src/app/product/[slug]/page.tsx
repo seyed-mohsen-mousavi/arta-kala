@@ -63,9 +63,7 @@ export default async function Page({
         ]}
       />
 
-      {/* بخش اصلی: عکس و توضیحات + تب‌ها */}
       <div className="bg-white shadow-lg shadow-black/10 rounded-[5px] px-5 py-4 w-full mt-7 text-sm">
-        {/* flex ستون عمودی */}
         <div className="flex flex-col md:flex-row justify-between">
           <div className="w-full lg:w-1/3 h-full flex">
             {data.cover_image ? (

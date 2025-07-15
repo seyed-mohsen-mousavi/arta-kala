@@ -15,20 +15,26 @@ import {
   ModalFooter,
   useDisclosure,
   NumberInput,
+  Spinner,
 } from "@heroui/react";
 import { CiImageOff } from "react-icons/ci";
 import { addToast } from "@heroui/toast";
 import { IoCartOutline } from "react-icons/io5";
+import EmptyCart from "@/components/EmptyCart";
 function Page() {
   const { cart } = useCart();
 
   return (
     <div className="grid md:grid-cols-5 items-start gap-5 p-4 ">
-      <ul className="col-span-3  rounded-sm p-5 flex flex-col gap-4  shadow divide-y-1 divide-zinc-200 border border-zinc-300 max-h-[650px] overflow-auto">
-        {cart.items.map((item: CartItem, key) => (
-          <CartLi item={item} key={key} />
-        ))}
-      </ul>
+      {cart.items.length > 0 ? (
+        <ul className="col-span-3  rounded-sm p-5 flex flex-col gap-4  shadow divide-y-1 divide-zinc-200 border border-zinc-300 max-h-[650px] w-full">
+          {cart.items.map((item: CartItem, key) => (
+            <CartLi item={item} key={key} />
+          ))}
+        </ul>
+      ) : (
+        <EmptyCart />
+      )}
       <div className="col-span-3 md:col-span-2 shadow rounded-lg h-auto p-5 space-y-2 border border-zinc-300 sticky">
         <div className="flex items-center justify-between ">
           <p>قیمت کالاها ({cart.total_items.toLocaleString("fa-IR")} کالا)</p>
@@ -80,7 +86,7 @@ function Page() {
 }
 
 function CartLi({ item }: { item: CartItem }) {
-  const { removeFromCart, setQuantityToItem } = useCart();
+  const { removeFromCart, setQuantityToItem, loading } = useCart();
   const [quantity, setQuantity] = useState(item.quantity);
 
   const [newQuantity, setNewQuantity] = useState<number | null>(null);
@@ -113,7 +119,17 @@ function CartLi({ item }: { item: CartItem }) {
   }, [dropDownOpen]);
   return (
     <>
-      <li className="flex items-center justify-between p-4">
+      <li className="flex items-center justify-between p-4 relative">
+        {loading && (
+          <div className="absolute top-o right-0 size-full bg-white/80 opa z-20 flex items-center justify-center cursor-wait">
+            <Spinner
+              size="lg"
+              variant="simple"
+              color="default"
+              className="z-30"
+            />
+          </div>
+        )}
         <div className="flex flex-col  justify-center text-center w-28">
           <Link
             href={`/product/${item.product_name}}`}
