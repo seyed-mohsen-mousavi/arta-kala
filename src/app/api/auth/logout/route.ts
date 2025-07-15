@@ -14,8 +14,8 @@ export async function POST() {
         httpOnly: true,
         path: "/",
         secure: isProd,
-        sameSite: "lax" as "lax", // اگر هنگام ست کردن ست نشده، حذفش کن
-        expires: new Date(0), // برای حذف کوکی
+        sameSite: "lax" as "lax",
+        expires: new Date(0),
     };
 
     response.cookies.set("access_token", "", cookieOptions);

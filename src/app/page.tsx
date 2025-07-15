@@ -13,6 +13,7 @@ import {
 import { GetLatestArticles } from "@/services/blogActions";
 import HomeHeroSection from "@/components/HomeHeroSection";
 import FlipClock from "@/components/FlipClockWrapper";
+// import { Metadata } from "next";
 
 export type Image = {
   id: number;
@@ -140,6 +141,10 @@ const brands: { link: string; name: string; image: string }[] = [
   },
 ];
 
+// export const metadata : Metadata = {
+//   title : ""
+
+// }
 export default async function Home() {
   let products: ProductType[] = [];
   let latest_products: ProductType[] = [];

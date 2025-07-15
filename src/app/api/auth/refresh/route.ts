@@ -11,7 +11,6 @@ export async function POST() {
     }
 
     try {
-        console.log(refresh)
         const { data } = await api.post('/users/token/refresh/', {
             refresh,
         })
@@ -35,6 +34,7 @@ export async function POST() {
 
         return NextResponse.json({ success: true })
     } catch (err) {
+        console.log(err)
         return NextResponse.json({ error: 'Refresh failed' }, { status: 401 })
     }
 }

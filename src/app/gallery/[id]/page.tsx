@@ -47,10 +47,14 @@
 
 // export default page;
 // app/gallery/[id]/page.tsx
-export default function ImageFullPage({ params }: { params: { id: string } }) {
+export default function ImageFullPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   return (
     <div className="p-10">
-      <h1>Full Image View: {params.id}</h1>
+      {/* <h1>Full Image View: {params?.id}</h1> */}
       {/* Full screen image */}
     </div>
   );

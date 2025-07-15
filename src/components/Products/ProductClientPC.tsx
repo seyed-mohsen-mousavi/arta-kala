@@ -58,7 +58,7 @@ export default function ProductClientPC({ product }: Props) {
                 </p>
               </div>
               <div className="size-14 relative">
-                <img src="/free-delivery-free.svg" alt="ارسال رایگان" />
+                <img src="/free-delivery-free.svg" alt="ارسال رایگان"  />
               </div>
             </div>
           </>

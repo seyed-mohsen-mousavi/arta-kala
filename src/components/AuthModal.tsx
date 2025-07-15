@@ -23,12 +23,8 @@ import { convertPersianToEnglish } from "@/utils/converNumbers";
 import { login, sendOtp, verifyOtp } from "@/services/usersActions";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuthModal } from "@/context/AuthModalProvider";
-import { useUser } from "@/context/UserContext";
 
 export default function AuthModal() {
-  const { user } = useUser();
-  if (user) return null;
-
   const { isOpen, onOpenChange, onClose, onOpen } = useAuthModal();
   const [step, setStep] = useState<"PHONE" | "OTP" | "PASSWORD">("PHONE");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -78,7 +74,10 @@ export default function AuthModal() {
   }: LoginFormValues) => {
     setLoading(true);
     try {
-      const result = await login(convertPersianToEnglish(phone_number), password);
+      const result = await login(
+        convertPersianToEnglish(phone_number),
+        password
+      );
       if (result?.status === 200) {
         loginForm.reset();
         onClose();
@@ -98,7 +97,11 @@ export default function AuthModal() {
   const onOtpSubmit = async (data: OtpFormValues) => {
     setLoading(true);
     try {
-      const result = await verifyOtp(phoneNumber, data.code, data.referral_code);
+      const result = await verifyOtp(
+        phoneNumber,
+        data.code,
+        data.referral_code
+      );
       if (result?.status === 200) {
         otpForm.reset();
         onClose();
@@ -155,8 +158,8 @@ export default function AuthModal() {
               step === "PHONE"
                 ? phoneForm.handleSubmit(checkPhoneNumber)
                 : step === "OTP"
-                ? otpForm.handleSubmit(onOtpSubmit)
-                : loginForm.handleSubmit(onPasswordLogin)
+                  ? otpForm.handleSubmit(onOtpSubmit)
+                  : loginForm.handleSubmit(onPasswordLogin)
             }
             className="w-full h-full flex flex-col justify-between"
           >
@@ -244,10 +247,10 @@ export default function AuthModal() {
                 {loading
                   ? "لطفا صبر کنید..."
                   : step === "PHONE"
-                  ? "ادامه"
-                  : step === "OTP"
-                  ? "تایید"
-                  : "ورود"}
+                    ? "ادامه"
+                    : step === "OTP"
+                      ? "تایید"
+                      : "ورود"}
               </button>
 
               {step === "OTP" && (

@@ -84,6 +84,7 @@ const footerData = [
             src="https://service.emalls.ir/neshan?id=833"
             alt="نشان اعتباری ایمالز"
             className="m-3"
+            loading="lazy"
           />
         </a>
       </div>
