@@ -19,7 +19,7 @@ export const homeContactInfoList = async () => {
 export const homeGalleryList = async () => {
     try {
         const result = await api.get("/home/gallery/")
-        return result
+        return result.data
     } catch (error) {
         console.log(error)
     }

@@ -16,11 +16,7 @@ async function page() {
     <div className="space-y-10">
       <BreadcrumbsBox
         title="ارتباط با ما"
-        items={[
-          { label: "خانه", href: "/" },
-          { label: "محصولات", href: "/products" },
-          { label: "ارتباط با ما" },
-        ]}
+        items={[{ label: "خانه", href: "/" }, { label: "ارتباط با ما" }]}
       />
       <div className="flex flex-col gap-5 bg-white p-5 shadow rounded">
         <h1 className="pr-2 -mb-2 font-semibold text-lg">ارتباط با ما</h1>

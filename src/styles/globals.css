@@ -17,7 +17,7 @@
   --color-primary-700: #f8b02a;
   --color-primary-800: #a37731;
   --color-primary-900: #a37731;
-  --color-danger:#ef4056;
+  --color-danger: #ef4056;
   --font-iranyekan: "iranyekan", sans-serif;
   --font-pelak: "pelak", sans-serif;
   --font-dana: "dana", sans-serif;
@@ -35,14 +35,14 @@
 }
 
 @keyframes floatUpDown {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
     transform: translateY(-6px);
   }
 }
-
 
 button {
   cursor: pointer;
@@ -89,10 +89,10 @@ li::marker {
   }
 }
 .input {
-  @apply outline-none !text-zinc-500 border border-zinc-300 p-3 rounded-sm w-full bg-transparent shadow-none
+  @apply outline-none !text-zinc-500 border border-zinc-300 p-3 rounded-sm w-full bg-transparent shadow-none;
 }
 .btn-primary {
-  @apply p-3 bg-primary text-zinc-700 hover:bg-[#3d464d] hover:text-white transition-colors ease-in-out
+  @apply p-3 bg-primary text-zinc-700 hover:bg-[#3d464d] hover:text-white transition-colors ease-in-out;
 }
 html {
   font-size: 12px;
@@ -155,3 +155,8 @@ html {
   margin-top: 0.8em;
 }
 
+@layer base {
+  img {
+    display: inline;
+  }
+}

@@ -175,3 +175,31 @@ export async function ClearShopCart() {
 // }
 
 // 
+export async function createOrder(data: any) {
+    try {
+        const res = await fetch(`/api/order/create`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!res.ok) throw new Error("Failed to delete item");
+
+        return await res.json();
+    } catch (error) {
+        console.log("DeleteShopCart error:", error);
+        return null;
+    }
+}
+
+export async function GetShippingServices() {
+    try {
+        const result = await api.get(`/shop/shipping-services `);
+        return result
+    } catch (error) {
+        console.log(error)
+        return null
+    }
+}

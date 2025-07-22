@@ -21,20 +21,32 @@ import { CiImageOff } from "react-icons/ci";
 import { addToast } from "@heroui/toast";
 import { IoCartOutline } from "react-icons/io5";
 import EmptyCart from "@/components/EmptyCart";
+import { SetOrder } from "@/services/shopActions";
+import { useUser } from "@/context/UserContext";
 function Page() {
-  const { cart } = useCart();
-
+  const { cart, loading } = useCart();
+  const { user } = useUser();
+  const createOrder = async () => {
+    console.log(user);
+  };
   return (
     <div className="grid md:grid-cols-5 items-start gap-5 p-4 ">
-      {cart.items.length > 0 ? (
-        <ul className="col-span-3  rounded-sm p-5 flex flex-col gap-4  shadow divide-y-1 divide-zinc-200 border border-zinc-300 max-h-[650px] w-full">
+      {loading ? (
+        <div className="col-span-3 w-full h-full p-5 flex items-center justify-center">
+          درحال دریافت اطلاعات سبد خرید ...
+        </div>
+      ) : cart.total_items > 0 ? (
+        <ul className="col-span-3 rounded-sm p-5 flex flex-col gap-4 shadow divide-y-1 divide-zinc-200 border border-zinc-300 max-h-[650px] w-full">
           {cart.items.map((item: CartItem, key) => (
             <CartLi item={item} key={key} />
           ))}
         </ul>
       ) : (
-        <EmptyCart />
+        <div className="col-span-3 p-5">
+          <EmptyCart />
+        </div>
       )}
+
       <div className="col-span-3 md:col-span-2 shadow rounded-lg h-auto p-5 space-y-2 border border-zinc-300 sticky">
         <div className="flex items-center justify-between ">
           <p>قیمت کالاها ({cart.total_items.toLocaleString("fa-IR")} کالا)</p>
@@ -72,14 +84,22 @@ function Page() {
           </p>
         </div>
         <hr className="text-zinc-300 my-3" />
-        <button className="btn-primary w-full relative font-semibold">
-          ادامه ثبت سفارش{" "}
-          <IoCartOutline className="size-8 absolute right-5 top-2.5" />
-        </button>
-        <button className="btn-primary w-full relative font-semibold">
-          ایجاد پیش فاکتور
-          <FaRegFileAlt className="size-7 absolute right-5 top-3" />
-        </button>
+        <div className="flex flex-col gap-2 w-full">
+          <Link
+            href="/profile/order/create"
+            className="btn-primary w-full relative font-semibold text-center"
+          >
+            ادامه ثبت سفارش{" "}
+            <IoCartOutline className="size-8 absolute right-5 top-2.5" />
+          </Link>
+          <Link
+            href="/profile/order/invoice-preview"
+            className="btn-primary w-full relative font-semibold text-center"
+          >
+            ایجاد پیش فاکتور
+            <FaRegFileAlt className="size-7 absolute right-5 top-3" />
+          </Link>
+        </div>
       </div>
     </div>
   );

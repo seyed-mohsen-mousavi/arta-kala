@@ -2,8 +2,10 @@
 import { NavLink } from "@/app/profile/layout";
 import { useUser } from "@/context/UserContext";
 import { convertNumberToPersian } from "@/utils/converNumbers";
+import { LucideUserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { FaUserCircle } from "react-icons/fa";
 import { MdOutlineLogout } from "react-icons/md";
 
 function ProfileSideBar({ links }: { links: NavLink[] }) {
@@ -14,7 +16,11 @@ function ProfileSideBar({ links }: { links: NavLink[] }) {
     <div className="flex flex-col rounded-tl-[60px] md:rounded-tl-xl rounded-tr-[60px] rounded-xl md:w-1/4 h-full overflow-hidden">
       <div className="bg-primary text-zinc-700 py-10 px-7 space-y-2">
         <div className="flex gap-2">
-          <div className="size-20 rounded-full bg-white"></div>
+          {/* <div className=" rounded-full bg-white">
+            <LucideUserRound className="size-5" />
+          </div> */}
+          <FaUserCircle className="size-20 text-white bg-zinc-600 rounded-full p-1" />
+
           <div className="flex flex-col font-medium">
             <p className="font-semibold text-lg">
               {user.identity?.first_name || "بدون نام"}{" "}

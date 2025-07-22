@@ -1,24 +1,35 @@
-// app/gallery/page.tsx
-'use client';
+import { homeGalleryList } from "@/services/homeActions";
+import Image from "next/image";
+import GalleryPage from "./Gallery";
+import BreadcrumbsBox from "@/components/Products/BreadcrumbsBox";
 
-import Link from 'next/link';
+type Image = {
+  id: number;
+  image: string;
+  order: number;
+};
 
-const images = [
-  { id: '1', src: '/img1.jpg' },
-  { id: '2', src: '/img2.jpg' },
-];
+type Gallery = {
+  id: number;
+  title: string;
+  description: string;
+  footer_text: string;
+  images: Image[];
+};
 
-export default function GalleryPage() {
+export default async function Gallery() {
+  const data = await homeGalleryList();
+  console.log(data);
   return (
-    <div>
-      <h1>Gallery</h1>
-      <div className="grid grid-cols-2 gap-4">
-        {images.map((img) => (
-          <Link key={img.id} href={`/gallery/${img.id}`}>
-            <img src={img.src} alt={`Image ${img.id}`} />
-          </Link>
-        ))}
+    <>
+      <BreadcrumbsBox
+        title="گالری"
+        items={[{ label: "خانه", href: "/" }, { label: "گالری" }]}
+      />
+      <div className="p-5">
+        <h1 className="text-3xl font-bold mb-4">گالری </h1>
+        <GalleryPage galleries={data} />
       </div>
-    </div>
+    </>
   );
 }
