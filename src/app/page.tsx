@@ -19,7 +19,7 @@ export type Image = {
   id: number;
   src: string;
   alt: string;
-  link: string;
+  link?: string;
 };
 
 const quickCategories: { label: string; image: string }[] = [

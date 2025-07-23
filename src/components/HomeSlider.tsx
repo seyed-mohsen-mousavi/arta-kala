@@ -34,20 +34,34 @@ function Slider({ images }: { images: ImageType[] }) {
       >
         {images.map((image, index) => (
           <SwiperSlide key={image.id} className="w-full h-full">
-            <Link
-              href={image.link}
-              className="relative block w-full  rounded-2xl overflow-hidden"
-            >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                width={500}
-                height={400}
-                priority={index === 0 || index === 1}
-                sizes="(max-width: 768px) 100vw, 500px"
-                className="object-cover size-full"
-              />
-            </Link>
+            {image.link ? (
+              <Link
+                href={image.link}
+                className="relative block w-full  rounded-2xl overflow-hidden"
+              >
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  width={500}
+                  height={400}
+                  priority={index === 0 || index === 1}
+                  sizes="(max-width: 768px) 100vw, 500px"
+                  className="object-cover size-full"
+                />
+              </Link>
+            ) : (
+              <div className="relative block w-full  rounded-2xl overflow-hidden">
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  width={500}
+                  height={400}
+                  priority={index === 0 || index === 1}
+                  sizes="(max-width: 768px) 100vw, 500px"
+                  className="object-cover size-full"
+                />
+              </div>
+            )}
           </SwiperSlide>
         ))}
       </Swiper>
