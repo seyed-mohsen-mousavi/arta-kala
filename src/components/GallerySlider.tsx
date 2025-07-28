@@ -41,7 +41,7 @@ const GallerySlider = ({ images }: Props) => {
         className="rounded-xl"
         onSwiper={(swiper) => (swiperRef.current = swiper)}
       >
-        {images.map((img, i) => (
+        {images.map((img) => (
           <SwiperSlide key={img.id}>
             <img
               src={img.src}

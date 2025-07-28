@@ -1,8 +1,8 @@
+import api from "@/services/api";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import api from "@/services/api";
 
-export async function PATCH(request: Request) {
+export async function POST(request: Request) {
     const cookieStore = await cookies();
     const token = cookieStore.get("access_token")?.value;
 
@@ -12,8 +12,8 @@ export async function PATCH(request: Request) {
 
     const body = await request.json();
     try {
-        const result = await api.patch(
-            "/users/dashboard/",
+        const result = await api.post(
+            "/users/change-password/",
             body,
             {
                 headers: {

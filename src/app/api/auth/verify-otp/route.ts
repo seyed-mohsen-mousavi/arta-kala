@@ -6,6 +6,7 @@ export async function POST(request: NextRequest) {
     const { phone_number, code, referral_code } = body;
 
     try {
+        console.log(referral_code)
         const res = await api.post("/users/otp/verify/", {
             phone_number,
             code,
@@ -19,8 +20,10 @@ export async function POST(request: NextRequest) {
         response.cookies.set("access_token", access, {
             httpOnly: true,
             path: "/",
-            maxAge: 60 * 60 * 24 * 7, // 7 روز
+            maxAge: 60 * 60 * 24 * 7,
             secure: process.env.NODE_ENV === "production",
+            sameSite: 'lax',
+
         });
 
         response.cookies.set("refresh_token", refresh, {
@@ -28,6 +31,7 @@ export async function POST(request: NextRequest) {
             path: "/",
             maxAge: 60 * 60 * 24 * 30,
             secure: process.env.NODE_ENV === "production",
+            sameSite: 'lax',
         });
 
         return response;

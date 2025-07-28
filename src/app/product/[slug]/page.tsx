@@ -47,7 +47,6 @@ export default async function Page({
   const categories: CategoryNode[] = result?.data || [];
 
   const categoryFind = findCategory(categories, data.category);
-
   return (
     <div>
       <BreadcrumbsBox

@@ -16,7 +16,7 @@ export default function ProductClientPC({ product }: Props) {
     <>
       <div className="w-5/12 h-full space-y-3 lg:block hidden">
         <div className="bg-zinc-100 border border-zinc-200 p-5 text-center space-y-4 rounded-md">
-          {product.is_available && (
+          {product.is_available && product.stock > 0 && (
             <>
               <div className="flex items-center justify-center mb-2">
                 <span className="line-through text-zinc-500 ml-2">
@@ -32,7 +32,7 @@ export default function ProductClientPC({ product }: Props) {
               </p>
             </>
           )}
-          {product.stock <= 5 && (
+          {product.stock <= 5 && product.stock > 0 && (
             <p
               className={`text-right font-bold font-dana ${
                 product.stock <= 2 ? "text-danger" : "text-warning"
@@ -42,10 +42,13 @@ export default function ProductClientPC({ product }: Props) {
               انبار باقی مانده
             </p>
           )}
-          <AddToCart is_available={product.is_available} product={product} />
+          <AddToCart
+            is_available={product.is_available && product.stock > 0}
+            product={product}
+          />
         </div>
 
-        {product.is_available && (
+        {product.is_available && product.stock > 0 && (
           <>
             <a href="#" className="text-cyan-400 spoiler-link relative">
               آیا قیمت مناسب‌تری سراغ دارید؟
@@ -58,7 +61,7 @@ export default function ProductClientPC({ product }: Props) {
                 </p>
               </div>
               <div className="size-14 relative">
-                <img src="/free-delivery-free.svg" alt="ارسال رایگان"  />
+                <img src="/free-delivery-free.svg" alt="ارسال رایگان" />
               </div>
             </div>
           </>

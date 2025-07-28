@@ -2,7 +2,6 @@
 import { NavLink } from "@/app/profile/layout";
 import { useUser } from "@/context/UserContext";
 import { convertNumberToPersian } from "@/utils/converNumbers";
-import { LucideUserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaUserCircle } from "react-icons/fa";
@@ -19,7 +18,7 @@ function ProfileSideBar({ links }: { links: NavLink[] }) {
           {/* <div className=" rounded-full bg-white">
             <LucideUserRound className="size-5" />
           </div> */}
-          <FaUserCircle className="size-20 text-white bg-zinc-600 rounded-full p-1" />
+          <FaUserCircle className="size-20 text-white bg-zinc-600 rounded-full" />
 
           <div className="flex flex-col font-medium">
             <p className="font-semibold text-lg">
@@ -29,7 +28,10 @@ function ProfileSideBar({ links }: { links: NavLink[] }) {
             <p>{convertNumberToPersian(user.identity?.phone_number)}</p>
             <button
               onClick={async () => {
-                await fetch("/api/auth/logout/");
+                await fetch("/api/auth/logout/", {
+                  method: "POST",
+                  credentials: "include",
+                });
                 location.replace("/");
               }}
               className="bg-white px-2 mt-2 py-1 rounded-lg text-red-500 flex items-center gap-0.5 active:scale-90"

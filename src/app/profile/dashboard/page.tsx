@@ -6,10 +6,10 @@ import Loading from "./loading";
 function page() {
   return (
     <div className="relative flex flex-col">
-      <p className="flex items-center gap-1 font-semibold text-xl">
+      <h1 className="flex items-center gap-1 font-semibold text-xl">
         <CiUser className="size-8 stroke-1 text-primary" />
-        اطلاعات شخصی
-      </p>
+        <span className="pt-1">اطلاعات شخصی</span>
+      </h1>
       <Suspense fallback={<Loading />}>
         <PersonalInfoForm />
       </Suspense>

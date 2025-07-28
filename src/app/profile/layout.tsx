@@ -8,6 +8,7 @@ import {
   CiUser,
 } from "react-icons/ci";
 import ProfileSideBar from "@/components/Profile/ProfileSideBar";
+import { headers } from "next/headers";
 export type NavLink = {
   name: string;
   href: string;
@@ -37,7 +38,13 @@ const links: NavLink[] = [
 ];
 async function Layout({ children }: { children: ReactNode }) {
   const user = await GetUserDashboard();
-  if (!user) redirect("/?authRequired=1");
+  const headersList = await headers();
+  const currentPath = headersList.get("x-pathname") || "/profile";
+
+  if (!user) {
+    const redirectUrl = `/?authRequired=1&redirectTo=${encodeURIComponent(currentPath)}`;
+    redirect(redirectUrl);
+  }
   return (
     <section className="flex flex-col md:flex-row gap-5 h-full p-5">
       <ProfileSideBar links={links} />

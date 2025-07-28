@@ -73,10 +73,9 @@ export async function GetFeaturedProducts(): Promise<any> {
 }
 export async function GetShopCartList() {
     try {
-        const res = await fetch("/api/shop/cart", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/shop/cart`, {
             method: "GET",
         });
-
         if (!res.ok) throw new Error("Failed to fetch cart");
 
         return await res.json();
@@ -96,6 +95,7 @@ export async function PostShopCart(data: any) {
             body: JSON.stringify(data),
         });
         const result = await res.json();
+
         if (!res.ok) {
             if (res.status === 400 || res.status === 409) {
                 return { error: result?.error || "خطا در بروزرسانی کالا" };
@@ -103,12 +103,12 @@ export async function PostShopCart(data: any) {
             throw new Error("Failed to add item to cart");
         }
 
-        return await result
-    } catch (error) {
-        console.log("PostShopCart error:", error);
-        return null;
+        return result;
+    } catch (error: any) {
+        return { error: error?.message || "خطا در برقراری ارتباط با سرور" };
     }
 }
+
 export async function PatchShopCart(id: number, data: { quantity: number }) {
     try {
         const res = await fetch("/api/shop/cart", {
@@ -123,7 +123,6 @@ export async function PatchShopCart(id: number, data: { quantity: number }) {
         });
 
         const result = await res.json();
-        console.log(result.status)
         if (!res.ok) {
             if (res.status === 400 || res.status === 409) {
                 return { error: result?.error || "خطا در بروزرسانی کالا" };
@@ -133,7 +132,6 @@ export async function PatchShopCart(id: number, data: { quantity: number }) {
 
         return result;
     } catch (error: any) {
-        console.error("PatchShopCart error:", error.message);
         return { error: error.message };
     }
 }
@@ -177,7 +175,7 @@ export async function ClearShopCart() {
 // 
 export async function createOrder(data: any) {
     try {
-        const res = await fetch(`/api/order/create`, {
+        const res = await fetch(`/api/shop/order/create`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -185,12 +183,18 @@ export async function createOrder(data: any) {
             body: JSON.stringify(data),
         });
 
-        if (!res.ok) throw new Error("Failed to delete item");
+        const json = await res.json();
 
-        return await res.json();
-    } catch (error) {
-        console.log("DeleteShopCart error:", error);
-        return null;
+        if (!res.ok) {
+            throw new Error(json.message || "خطا در ثبت سفارش");
+        }
+
+        return json;
+    } catch (error: any) {
+        return {
+            success: false,
+            message: error.message || "خطای ناشناخته"
+        };
     }
 }
 

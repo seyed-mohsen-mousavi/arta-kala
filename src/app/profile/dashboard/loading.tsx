@@ -16,7 +16,7 @@ const fields = [
 function Loading() {
   return (
     <div className="relative flex flex-col">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2 animate-pulse">
+      <div className="flex flex-col sm:grid grid-cols-1 md:grid-cols-2 gap-5 mt-2 animate-pulse">
         {fields.map((label, index) => (
           <div
             key={index}

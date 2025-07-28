@@ -107,11 +107,19 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     if (user) {
       setLoading(true);
       try {
+        setLoading(true);
         const res = await PostShopCart({
           product_id: item.product_id,
           quantity: item.quantity,
         });
-        if (res) {
+
+        if (res.error) {
+          addToast({
+            title: res.error,
+            hideIcon: false,
+            color: "danger",
+          });
+        } else {
           fetchServerCart();
           addToast({
             title: "کالا با موفقیت به سبد خرید اضافه شد",

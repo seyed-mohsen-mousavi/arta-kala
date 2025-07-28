@@ -10,41 +10,29 @@ const api = axios.create({
     withCredentials: true
 });
 
-api.interceptors.request.use(
-    res => res,
-    err => Promise.reject(err)
-)
-api.interceptors.response.use(
-    res => res,
-    async err => {
-        const originalConfig = err.config;
+// api.interceptors.response.use(
+//     res => res,
+//     async err => {
+//         const originalRequest = err.config;
+//         if (err.response?.status === 401 && !originalRequest._retry) {
+//             originalRequest._retry = true;
 
-        if (err.response?.status === 401 && !originalConfig._retry) {
-            originalConfig._retry = true;
+//             try {
+//                 const res = await fetch("/api/auth/refresh", {
+//                     method: "POST",
+//                     credentials: "include", // بسیار مهم برای ارسال کوکی HttpOnly
+//                 });
 
-            try {
-                await fetch('/api/auth/refresh/', {
-                    method: 'POST',
-                    credentials: 'include',
-                });
+//                 if (res.ok) {
+//                     return api(originalRequest); // retry
+//                 } else {
+//                 }
+//             } catch {
+//             }
+//         }
 
-                return api(originalConfig);
-            } catch (error) {
-                try {
-                    await fetch('http://localhost:3000/api/auth/logout/', {
-                        method: "POST",
-                        credentials: 'include',
-                    });
-                } catch (logoutErr) {
-                    console.error('Logout failed after refresh error:', logoutErr);
-                }
-
-                return Promise.reject(error);
-            }
-        }
-
-        return Promise.reject(err);
-    }
-);
+//         return Promise.reject(err);
+//     }
+// )
 
 export default api;

@@ -25,7 +25,7 @@ const InnerAuthModalProvider = ({ children }: { children: ReactNode }) => {
   const authRequired = searchParams.get("authRequired");
 
   useEffect(() => {
-    if (authRequired === "1") {
+    if (authRequired === "true") {
       onOpen();
     }
   }, [authRequired, onOpen]);

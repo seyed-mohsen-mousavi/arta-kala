@@ -20,21 +20,27 @@ import {
   signupSchema,
 } from "@/schemas/authSchema";
 import { convertPersianToEnglish } from "@/utils/converNumbers";
-import { login, sendOtp, verifyOtp } from "@/services/usersActions";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  checkPhoneExists,
+  login,
+  sendOtp,
+  verifyOtp,
+} from "@/services/usersActions";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthModal } from "@/context/AuthModalProvider";
 
 export default function AuthModal() {
-  const { isOpen, onOpenChange, onClose, onOpen } = useAuthModal();
+  const { isOpen, onOpenChange, onClose } = useAuthModal();
   const [step, setStep] = useState<"PHONE" | "OTP" | "PASSWORD">("PHONE");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [canResend, setCanResend] = useState(false);
   const [resendTimer, setResendTimer] = useState(120);
   const [loading, setLoading] = useState(false);
+  const [isNewUser, setIsNewUser] = useState(false);
+  const searchParams = useSearchParams();
+  const [hasPasswordError, setHasPasswordError] = useState(false);
 
   const router = useRouter();
-  const pathName = usePathname();
-  const searchParams = useSearchParams();
 
   const phoneForm = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -51,44 +57,53 @@ export default function AuthModal() {
     const converted = convertPersianToEnglish(phone_number);
     setPhoneNumber(converted);
     try {
-      const result = await sendOtp(converted);
-      if (result?.status === 200) {
-        setStep(result?.data?.exists ? "PASSWORD" : "OTP");
-        if (!result?.data?.exists) {
+      const exists = await checkPhoneExists(converted);
+
+      if (exists) {
+        setIsNewUser(false);
+        setStep("PASSWORD");
+      } else {
+        setIsNewUser(true);
+
+        const result = await sendOtp(converted);
+
+        if (result?.status === 200) {
+          setStep("OTP");
           setCanResend(false);
           setResendTimer(120);
+        } else {
+          phoneForm.setError("phone_number", {
+            message: "ارسال کد تایید ناموفق بود",
+          });
         }
       }
     } catch {
       phoneForm.setError("phone_number", {
-        message: "خطا در ارسال کد تایید",
+        message: "خطا در بررسی شماره تلفن",
       });
     } finally {
       setLoading(false);
     }
   };
 
-  const onPasswordLogin = async ({
-    phone_number,
-    password,
-  }: LoginFormValues) => {
+  const onPasswordLogin = async ({ password }: { password: string }) => {
+    setHasPasswordError(false);
     setLoading(true);
+
     try {
-      const result = await login(
-        convertPersianToEnglish(phone_number),
-        password
-      );
+      const result = await login(phoneNumber, password);
       if (result?.status === 200) {
         loginForm.reset();
         onClose();
-        const params = new URLSearchParams(searchParams.toString());
-        if (params.has("authRequired")) params.delete("authRequired");
-        router.replace(params.toString() ? `${pathName}?${params}` : pathName);
+        const redirectTo =
+          searchParams.get("redirectTo") || "/profile/dashboard";
+        router.push(redirectTo);
       }
     } catch {
       loginForm.setError("password", {
         message: "رمز عبور اشتباه است",
       });
+      setHasPasswordError(true);
     } finally {
       setLoading(false);
     }
@@ -103,8 +118,11 @@ export default function AuthModal() {
         data.referral_code
       );
       if (result?.status === 200) {
-        otpForm.reset();
+        loginForm.reset();
         onClose();
+        const redirectTo =
+          searchParams.get("redirectTo") || "/profile/dashboard";
+        router.push(redirectTo);
       }
     } catch {
       otpForm.setError("code", {
@@ -114,7 +132,6 @@ export default function AuthModal() {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     if (step === "OTP") {
       const interval = setInterval(() => {
@@ -130,12 +147,6 @@ export default function AuthModal() {
       return () => clearInterval(interval);
     }
   }, [step]);
-
-  useEffect(() => {
-    if (searchParams.get("authRequired") === "true") {
-      onOpen();
-    }
-  }, []);
 
   useEffect(() => {
     phoneForm.reset();
@@ -196,13 +207,36 @@ export default function AuthModal() {
                     {...loginForm.register("password")}
                     type="password"
                     className="input"
+                    placeholder="رمز عبور خود را وارد کنید "
                     id="password"
                   />
-                  {loginForm.formState.errors.password && (
+                  {!loading && hasPasswordError && (
                     <p className="text-xs text-red-500">
-                      {loginForm.formState.errors.password.message}
+                      {loginForm.formState.errors.password?.message}
                     </p>
                   )}
+
+                  <div className="flex items-start">
+                    <button
+                      type="button"
+                      className="text-xs spoiler-link text-cyan-500 hover:text-cyan-400 relative"
+                      onClick={async () => {
+                        try {
+                          setLoading(true);
+                          const result = await sendOtp(phoneNumber);
+                          if (result?.status === 200) {
+                            setStep("OTP");
+                            setCanResend(false);
+                            setResendTimer(120);
+                          }
+                        } finally {
+                          setLoading(false);
+                        }
+                      }}
+                    >
+                      ورود با کد تایید
+                    </button>
+                  </div>
                 </>
               )}
 
@@ -228,12 +262,17 @@ export default function AuthModal() {
                       errorMessage: "text-right",
                     }}
                   />
-                  <label>کد معرف (اختیاری)</label>
-                  <input
-                    {...otpForm.register("referral_code")}
-                    maxLength={11}
-                    className="input"
-                  />
+
+                  {isNewUser && (
+                    <>
+                      <label>کد معرف (اختیاری)</label>
+                      <input
+                        {...otpForm.register("referral_code")}
+                        maxLength={11}
+                        className="input"
+                      />
+                    </>
+                  )}
                 </>
               )}
             </ModalBody>

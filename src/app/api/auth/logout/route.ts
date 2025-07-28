@@ -14,9 +14,9 @@ export async function POST() {
         httpOnly: true,
         path: "/",
         secure: isProd,
-        sameSite: "lax" as "lax",
+        sameSite: "lax",
         expires: new Date(0),
-    };
+    } as const;
 
     response.cookies.set("access_token", "", cookieOptions);
     response.cookies.set("refresh_token", "", cookieOptions);

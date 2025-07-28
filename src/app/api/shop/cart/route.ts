@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     } catch (error: any) {
         const errorMessage = error?.response?.data?.error || "خطای ناشناخته";
         const statusCode = error?.response?.status || 500;
-
+        console.log(errorMessage)
         return new Response(JSON.stringify({ error: errorMessage }), {
             status: statusCode,
             headers: { "Content-Type": "application/json" },

@@ -11,7 +11,7 @@ export default function EmptyCart() {
       </p>
       <Link
         href="/products"
-        className="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl transition"
+        className="btn-primary px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl transition"
       >
         رفتن به فروشگاه
       </Link>

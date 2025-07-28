@@ -20,7 +20,7 @@ export const GetUserDashboard = async () => {
 
     } catch (error: any) {
         const originalError = error?.response?.data || error?.message;
-
+        // console.log(error)
         console.error("Dashboard Error:", originalError);
         return null;
     }

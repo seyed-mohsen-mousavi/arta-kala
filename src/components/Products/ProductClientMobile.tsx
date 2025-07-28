@@ -15,7 +15,7 @@ export default function ProductClientMobile({ product }: Props) {
   return (
     <>
       <div className="hidden sm:block lg:hidden bg-zinc-100 border border-zinc-200 p-5 my-5 text-center space-y-4 rounded-md">
-        {product.is_available && (
+        {product.is_available && product.stock > 0 && (
           <>
             <div className="flex items-center justify-center mb-2">
               <span className="line-through text-zinc-500 ml-2">
@@ -31,9 +31,9 @@ export default function ProductClientMobile({ product }: Props) {
             </p>
           </>
         )}
-        <AddToCart is_available={product.is_available} product={product} />
+        <AddToCart is_available={product.is_available && product.stock > 0} product={product} />
       </div>
-      {product.is_available && (
+      {product.is_available && product.stock > 0 && (
         <div className="my-10 w-full h-full space-y-3 block lg:hidden px-4">
           <a href="#" className="text-cyan-400 spoiler-link relative">
             آیا قیمت مناسب‌تری سراغ دارید؟
@@ -57,7 +57,7 @@ export default function ProductClientMobile({ product }: Props) {
       )}
 
       <div className="fixed bottom-0 z-30 right-0 w-full space-y-3 bg-white shadow-2xl sm:hidden p-3">
-        {product.is_available && (
+        {product.is_available && product.stock > 0 && (
           <>
             <div className="flex items-center justify-start mb-2">
               <p className="text-sm">
@@ -75,7 +75,7 @@ export default function ProductClientMobile({ product }: Props) {
               </span>
               <span className="font-light">تومان</span>
             </p>
-            <AddToCart is_available={product.is_available} product={product} />
+            <AddToCart is_available={product.is_available && product.stock > 0} product={product} />
           </>
         )}
       </div>

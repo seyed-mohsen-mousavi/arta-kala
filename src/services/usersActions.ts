@@ -1,6 +1,5 @@
 import { addToast } from "@heroui/toast"
 import api from "./api"
-
 export const login = async (phone_number: string, password: string) => {
     const res = await fetch("/api/auth/login", {
         method: "POST",
@@ -8,8 +7,19 @@ export const login = async (phone_number: string, password: string) => {
         headers: {
             "Content-Type": "application/json",
         },
+        credentials: "include",
     });
     if (!res.ok) throw new Error("Login failed");
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw new Error(data.error || "خطا در تأیید کد");
+    }
+
+    addToast({
+        title: data.message || "ثبت نام با موفقیت تکمیل شد",
+    });
+    location.reload()
     return await res.json();
 };
 // otp
@@ -51,6 +61,7 @@ export const verifyOtp = async (
             headers: {
                 "Content-Type": "application/json",
             },
+            credentials: "include",
         });
 
         const data = await result.json();
@@ -108,4 +119,41 @@ export const editInfo = async (data: any) => {
         };
     }
 };
+export const changePassword = async (data: any) => {
+    try {
+        const response = await fetch("/api/users/change-password", {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
 
+        const result = await response.json();
+        if (!response.ok) {
+            return {
+                success: false,
+                errors: result.errors || {},
+                message: result.message || "خطایی رخ داده است",
+            };
+        }
+
+        return {
+            success: true,
+            data: result,
+        };
+    } catch (err) {
+        console.error("خطا در editInfo:", err);
+        return {
+            success: false,
+            errors: {},
+            message: "خطا در ارتباط با سرور",
+        };
+    }
+};
+
+export async function checkPhoneExists(phone: string) {
+    const res = await api.post("/users/check-user-status/", { phone_number: phone });
+    const data = await res.data;
+    return data?.has_password;
+}

@@ -146,6 +146,12 @@ const brands: { link: string; name: string; image: string }[] = [
 
 // }
 export default async function Home() {
+  // console.log(refresh);
+  // const s = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/auth/refresh`, {
+  //   method: "POST",
+  //   credentials: "include",
+  // });
+  // console.log(s)
   let products: ProductType[] = [];
   let latest_products: ProductType[] = [];
   let featured_products: ProductType[] = [];

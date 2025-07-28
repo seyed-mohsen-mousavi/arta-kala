@@ -1,13 +1,10 @@
 "use client";
-  import ProductType from "@/types/product";
+import ProductType from "@/types/product";
 import Image from "next/image";
 import Link from "next/link";
 import { CiImageOff } from "react-icons/ci";
 
 function Card({ item }: { item: ProductType }) {
-  // const discountPercent =
-  //   ((item.originalPrice - item.currentPrice) / item.originalPrice) *
-  //   100;
   return (
     <Link
       href={`/product/${item.slug}`}
@@ -21,7 +18,11 @@ function Card({ item }: { item: ProductType }) {
             <Image
               width={380}
               height={180}
-              src={item.cover_image.startsWith("/media") ? `${process.env.NEXT_PUBLIC_BACK_END}${item.cover_image}`: item.cover_image}
+              src={
+                item.cover_image.startsWith("/media")
+                  ? `${process.env.NEXT_PUBLIC_BACK_END}${item.cover_image}`
+                  : item.cover_image
+              }
               alt={item.name}
               className="w-full h-56 object-cover rounded-t-lg"
               loading="lazy"
@@ -36,11 +37,9 @@ function Card({ item }: { item: ProductType }) {
         <h3 className="font-semibold mt-2 mb-10 text-zinc-700 line-clamp-2">
           {item.name}
         </h3>
+        {/* {item.is_available && item.stock > 0 ? ( */}
         {item.is_available ? (
           <div className="relative mt-auto pt-3">
-            {/* دکمه افزودن به سبد خرید */}
-
-            {/* قیمت */}
             <div className="flex justify-end">
               <div className="flex flex-col items-end">
                 <p className="font-bold">
@@ -53,7 +52,6 @@ function Card({ item }: { item: ProductType }) {
             </div>
           </div>
         ) : (
-          // حالت ناموجود بدون تغییر
           <div className="w-full pt-[7.5px] pb-[7.5px]">
             <div className="inline-flex items-center justify-center w-full relative text-zinc-500">
               <hr className="w-full h-px my-0 bg-zinc-600 border-0 rounded-sm" />

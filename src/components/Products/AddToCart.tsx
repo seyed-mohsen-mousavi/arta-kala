@@ -58,7 +58,7 @@ function AddToCart({
         product_cover_image: product.cover_image,
         unit_price: product.price,
         quantity: quantity,
-        total_price: product.price,
+        total_price: product.price * quantity,
         stock: product.stock,
       });
     } catch (error) {
