@@ -22,14 +22,18 @@ export default function ProductClientPC({ product }: Props) {
                 <span className="line-through text-zinc-500 ml-2">
                   {product.price.toLocaleString("fa-IR")}
                 </span>
-                <p className="rounded-full text-sm bg-danger text-white px-4 py-2">
-                  %{Math.round(60).toLocaleString("fa-IR")}
-                </p>
+                {product.discount_percentage && (
+                  <p className="rounded-full text-sm bg-danger text-white px-4 py-2">
+                    %{product.discount_percentage.toLocaleString("fa-IR")}
+                  </p>
+                )}
               </div>
-              <p className="font-dana font-bold text-2xl">
-                {product.price.toLocaleString("fa-IR")}
-                <span className="font-light">تومان</span>
-              </p>
+              {product.final_price && (
+                <p className="font-dana font-bold text-2xl">
+                  {product.final_price.toLocaleString("fa-IR")}
+                  <span className="font-light">تومان</span>
+                </p>
+              )}
             </>
           )}
           {product.stock <= 5 && product.stock > 0 && (

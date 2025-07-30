@@ -13,7 +13,10 @@ type LayoutShellProps = {
   pagination?: { count: number; page: number };
   categories: CategoryNode[];
 };
-export default function LayoutShell({ searchParams }: LayoutShellProps) {
+export default function LayoutShell({
+  searchParams,
+  products,
+}: LayoutShellProps) {
   const categories = useCategories();
   const categoryId = searchParams.category_id;
   const selected =
@@ -66,7 +69,7 @@ export default function LayoutShell({ searchParams }: LayoutShellProps) {
         <FilterBox selected={selected} />
         <div className="size-full space-y-5">
           <SortBox />
-          <Products searchParams={searchParams} />
+          <Products products={products} searchParams={searchParams} />
         </div>
       </section>
     </div>

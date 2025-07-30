@@ -5,6 +5,8 @@ import Link from "next/link";
 import { CiImageOff } from "react-icons/ci";
 
 function Card({ item }: { item: ProductType }) {
+  const discountPercent = item.discount_percentage || 0;
+
   return (
     <Link
       href={`/product/${item.slug}`}
@@ -12,7 +14,7 @@ function Card({ item }: { item: ProductType }) {
       title={item.name}
       className="size-full flex"
     >
-      <div className="bg-white shadow rounded-lg p-3.5 sm:p-5 hover:shadow-lg transition-shadow group/card w-full h-full flex flex-col">
+      <div className="bg-white shadow rounded-lg p-3.5 sm:p-5 hover:shadow-lg transition-shadow group/card w-full h-full flex flex-col relative">
         <div className="relative">
           {item.cover_image ? (
             <Image
@@ -34,22 +36,36 @@ function Card({ item }: { item: ProductType }) {
             </div>
           )}
         </div>
+
         <h3 className="font-semibold mt-2 mb-10 text-zinc-700 line-clamp-2">
           {item.name}
         </h3>
-        {/* {item.is_available && item.stock > 0 ? ( */}
+
         {item.is_available ? (
-          <div className="relative mt-auto pt-3">
-            <div className="flex justify-end">
-              <div className="flex flex-col items-end">
-                <p className="font-bold">
-                  <span className="text-xl">
-                    {item.price.toLocaleString("fa-IR")}
+          <div className="relative mt-auto pt-3 flex justify-between items-center gap-2">
+            <button>
+              
+            </button>
+
+            {item.isDiscounted && item.final_price !== undefined ? (
+              <div>
+                <div className="flex items-center">
+                  <p className="line-through text-zinc-500 ml-2 text-sm">
+                    {item.price.toLocaleString("fa-IR")} تومان
+                  </p>
+                  <span className="px-2 text-white bg-danger rounded-full">
+                    {item.discount_percentage?.toLocaleString("fa-IR")}%
                   </span>
-                  <span className="text-sm"> تومان</span>
+                </div>
+                <p className="font-medium text-xl">
+                  {item.final_price.toLocaleString("fa-IR")} تومان
                 </p>
               </div>
-            </div>
+            ) : (
+              <p className="font-bold text-xl">
+                {item.price.toLocaleString("fa-IR")} تومان
+              </p>
+            )}
           </div>
         ) : (
           <div className="w-full pt-[7.5px] pb-[7.5px]">
@@ -67,22 +83,3 @@ function Card({ item }: { item: ProductType }) {
 }
 
 export default Card;
-{
-  /* {item.isAmazing && (
-          <span className="absolute top-2 left-2 bg-danger px-2 py-1  rounded-sm text-white text-sm">
-            {Math.round(discountPercent)}% جشنواره
-          </span>
-        )} */
-}
-{
-  /* <span className="rounded-full text-sm bg-danger text-white px-2 py-1">
-              {Math.round(discountPercent).toLocaleString("fa-IR")}%
-            </span> */
-}
-{
-  /* <span>
-              <span className="line-through text-zinc-500 ml-2">
-                {item.price.toLocaleString("fa-IR")}
-              </span>
-            </span> */
-}

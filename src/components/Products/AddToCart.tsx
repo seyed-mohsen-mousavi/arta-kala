@@ -14,6 +14,7 @@ import { HiXMark } from "react-icons/hi2";
 import { IoIosNotifications } from "react-icons/io";
 import { useCart } from "@/context/CartContextProvider";
 import ProductType from "@/types/product";
+import ProductButton from "../ProductButton";
 
 function AddToCart({
   product,
@@ -27,8 +28,7 @@ function AddToCart({
   const [dropDownOpen, setDropDownOpen] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [customQuantities, setCustomQuantities] = useState<number[]>([]);
-  const { addToCart, loading } = useCart();
-
+  const { loading, addToCart } = useCart();
   const dropdownRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -60,6 +60,8 @@ function AddToCart({
         quantity: quantity,
         total_price: product.price * quantity,
         stock: product.stock,
+        isDiscounted: product.isDiscounted,
+        final_price: product.final_price,
       });
     } catch (error) {
       console.log(error);
@@ -122,7 +124,7 @@ function AddToCart({
           </div>
         )}
       </div>
-      <button
+      <ProductButton
         onClick={handleAddToCart}
         disabled={loading}
         className="bg-danger text-sm sm:text-base font-semibold px-4 py-2 text-zinc-100 hover:bg-danger/95 transition-colors duration-300 ease-in-out w-full flex items-center gap-2 justify-center disabled:opacity-50 disabled:cursor-wait"
@@ -139,7 +141,7 @@ function AddToCart({
             <use href="#a" />
           </svg>
         )}
-      </button>
+      </ProductButton>
       <Modal
         backdrop="opaque"
         isOpen={isOpen}
