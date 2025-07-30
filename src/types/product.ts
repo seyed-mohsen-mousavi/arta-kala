@@ -11,5 +11,8 @@ export default interface ProductType {
   slug: string;
   pdfs?: string[];
   images: string[];
-  is_available: boolean
+  is_available: boolean;
+  discount_percentage?: number;
+  final_price?: number;
+  isDiscounted?: boolean;
 }
