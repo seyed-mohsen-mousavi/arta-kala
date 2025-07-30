@@ -6,7 +6,9 @@ const api = axios.create({
     headers: {
         'Content-Type': 'application/json',
         "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY,
+
     },
+    
     withCredentials: true
 });
 

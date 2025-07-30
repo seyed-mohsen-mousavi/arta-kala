@@ -7,4 +7,6 @@ export type CartItem = {
     quantity: number;
     total_price: number;
     stock: number;
+    final_price?: number
+    isDiscounted?: boolean
 }

@@ -1,5 +1,8 @@
+
+import { CartFormat } from "@/context/CartContextProvider";
 import api from "./api";
-// Shop ----
+
+// Products ----
 
 export async function GetShopCategoriesTreeList() {
     try {
@@ -20,9 +23,7 @@ interface GetProductsParams {
     sort?: string;
     page?: number;
 }
-export async function GetProducts(
-    params?: GetProductsParams
-): Promise<any> {
+export async function GetProducts(params?: GetProductsParams): Promise<any> {
     try {
         const searchParams = await params || {};
         const query = new URLSearchParams();
@@ -37,22 +38,70 @@ export async function GetProducts(
         if (searchParams?.sort) query.append("sort", searchParams?.sort);
         if (searchParams?.page !== undefined) query.append("page", searchParams?.page.toString());
 
-        const result = await api.get(`/shop/products?${query.toString()}`);
-        return result
+        const [resNormal, resDiscounted] = await Promise.all([
+            api.get(`/shop/products?${query.toString()}`),
+            api.get(`/home/discounted-products/`)
+        ]);
+
+        const normalData = resNormal.data;
+        const normalProducts = normalData.results || [];
+        const discountedList = resDiscounted.data || [];
+
+        const discountedMap = new Map(
+            discountedList.map((item: any) => [item.slug, item])
+        );
+
+        const merged = normalProducts.map((product: any) => {
+            const discount: any = discountedMap.get(product.slug);
+            if (discount) {
+                return {
+                    ...product,
+                    isDiscounted: true,
+                    discount_percentage: discount.discount_percentage,
+                    final_price: discount.final_price
+                };
+            }
+            return product;
+        });
+        return {
+            ...normalData,
+            results: merged
+        };
     } catch (error) {
-        console.log(error)
-        return null
+        return {
+            count: 0,
+            next: null,
+            previous: null,
+            results: []
+        };
     }
 }
+
 export async function GetProductBySlug(slug: string): Promise<any> {
     try {
-        const result = await api.get(`/shop/products/${slug}/`);
-        return result
+        const productRes = await api.get(`/shop/products/${slug}/`);
+        const product = productRes.data;
+
+        try {
+            const discountRes = await api.get(`/home/discounted-products/${slug}/`);
+            const discount = discountRes.data;
+            if (discount) {
+                return {
+                    ...product,
+                    isDiscounted: true,
+                    final_price: discount.final_price,
+                };
+            }
+        } catch (err) {
+        }
+
+        return product;
     } catch (error) {
-        console.log(error)
-        return null
+        console.error('GetProductBySlug error:', error);
+        return null;
     }
 }
+
 export async function GetLatestProducts(): Promise<any> {
     try {
         const result = await api.get(`/shop/latest-products `);
@@ -71,47 +120,92 @@ export async function GetFeaturedProducts(): Promise<any> {
         return null
     }
 }
-export async function GetShopCartList() {
-    try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/shop/cart`, {
-            method: "GET",
-        });
-        if (!res.ok) throw new Error("Failed to fetch cart");
 
-        return await res.json();
+// CART
+export async function GetShopCartList(): Promise<CartFormat | null> {
+    try {
+        const [normalRes, discountedRes] = await Promise.all([
+            fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/shop/cart`, {
+                method: "GET",
+            }),
+            fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/shop/discounted-cart/`, {
+                method: "GET",
+            }),
+        ]);
+
+        if (!normalRes.ok || !discountedRes.ok) {
+            throw new Error("خطا در دریافت سبد خرید");
+        }
+        const normalData = await normalRes.json();
+        const discountedData = await discountedRes.json();
+        console.log(discountedData)
+        console.log(normalData)
+
+        const normalItems = normalData.items || [];
+        const discountedItems = discountedData.items || [];
+
+        const allItems = [...normalItems, ...discountedItems];
+
+        const total_quantity = allItems.reduce(
+            (sum, item) => sum + (item.quantity || 0),
+            0
+        );
+
+        const total_price = allItems.reduce(
+            (sum, item) =>
+                sum +
+                (item.quantity || 0) *
+                (item.is_discounted ? item.final_price : item.unit_price),
+            0
+        );
+
+        return {
+            total_items: allItems.length,
+            total_quantity,
+            total_price,
+            items: allItems,
+        };
     } catch (error) {
         console.log("GetShopCartList error:", error);
         return null;
     }
 }
 
-export async function PostShopCart(data: any) {
+
+export async function PostShopCart(item: {
+    product_id: number;
+    quantity: number;
+    is_discounted?: boolean;
+}) {
+    const url = item.is_discounted
+        ? "/api/shop/discounted-cart/"
+        : "/api/shop/cart/";
+
     try {
-        const res = await fetch("/api/shop/cart", {
+        const res = await fetch(url, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(item),
         });
-        const result = await res.json();
 
-        if (!res.ok) {
-            if (res.status === 400 || res.status === 409) {
-                return { error: result?.error || "خطا در بروزرسانی کالا" };
-            }
-            throw new Error("Failed to add item to cart");
-        }
+        const data = await res.json();
+        if (!res.ok) return { error: data.error || "خطا در افزودن به سبد خرید" };
 
-        return result;
+        return data;
     } catch (error: any) {
-        return { error: error?.message || "خطا در برقراری ارتباط با سرور" };
+        return { error: error.message || "خطا در ارتباط با سرور" };
     }
 }
 
-export async function PatchShopCart(id: number, data: { quantity: number }) {
+
+export async function PatchShopCart(id: number, data: { quantity: number, is_discounted?: boolean },
+) {
+    const url = data?.is_discounted
+        ? "/api/shop/discounted-cart/"
+        : "/api/shop/cart/";
+
     try {
-        const res = await fetch("/api/shop/cart", {
+        const res = await fetch(url, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -138,9 +232,13 @@ export async function PatchShopCart(id: number, data: { quantity: number }) {
 
 
 
-export async function DeleteShopCart(id: string) {
+export async function DeleteShopCart(id: string, is_discounted?: boolean) {
+    const url = is_discounted
+        ? "/api/shop/discounted-cart"
+        : "/api/shop/cart";
+
     try {
-        const res = await fetch(`/api/shop/cart?id=${id}`, {
+        const res = await fetch(`${url}?id=${id}`, {
             method: "DELETE",
         });
 
@@ -166,13 +264,7 @@ export async function ClearShopCart() {
         return null;
     }
 }
-// Comments ---
 
-// export async function GetComments(product_slug: string) {
-
-// }
-
-// 
 export async function createOrder(data: any) {
     try {
         const res = await fetch(`/api/shop/order/create`, {
@@ -206,4 +298,39 @@ export async function GetShippingServices() {
         console.log(error)
         return null
     }
+}
+// Comments
+export async function GetComments(product_id: number) {
+    const response = await api.get(`/shop/products/${product_id}/comments/`);
+    return response.data;
+}
+
+
+export async function PostComment(product_id: number, data: { text: string; parent?: number | null }) {
+    const res = await fetch(`/api/shop/comments/${String(product_id)}/`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error?.message || "ارسال نظر با خطا مواجه شد");
+    }
+
+    return res.json();
+}
+export async function DeleteComment(commentId: number) {
+    const res = await fetch(`/api/shop/comments/delete/${commentId}`, {
+        method: "DELETE",
+    });
+
+    if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "خطا در حذف نظر");
+    }
+
+    return true;
 }
