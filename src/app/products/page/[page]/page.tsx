@@ -6,7 +6,7 @@ import { GetProducts, GetShopCategoriesTreeList } from "@/services/shopActions";
 export default async function ProductsPage({ params, searchParams }: any) {
   const currentPage = Number(params.page) || 1;
   const filters = { ...searchParams, page: currentPage };
-  const { data } = await GetProducts(filters);
+  const data = await GetProducts(filters);
   const categoryRes = await GetShopCategoriesTreeList();
   const categories = categoryRes?.data || [];
   return (

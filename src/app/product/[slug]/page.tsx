@@ -3,14 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
+  GetComments,
   GetProductBySlug,
   GetShopCategoriesTreeList,
 } from "@/services/shopActions";
 import { CategoryNode } from "@/types/categories";
 import ProductType from "@/types/product";
 import ProductClient from "@/components/Products/ProductClientPC";
-import ProductClientTabs from "@/components/Products/ProductClientTabs";
 import ProductClientMobile from "@/components/Products/ProductClientMobile";
+import TabsBox from "@/components/Products/TabsBox";
 
 function findCategory(
   categories: CategoryNode[],
@@ -41,12 +42,13 @@ export default async function Page({
   const res = await GetProductBySlug(decodedSlug);
   if (!res) return notFound();
 
-  const { data }: { data: ProductType } = res;
+  const data: ProductType = res;
 
   const result = await GetShopCategoriesTreeList();
   const categories: CategoryNode[] = result?.data || [];
 
   const categoryFind = findCategory(categories, data.category);
+  const comments = await GetComments(data.id);
   return (
     <div>
       <BreadcrumbsBox
@@ -132,7 +134,11 @@ export default async function Page({
       <ProductClientMobile product={data} />
 
       <div className="bg-white shadow-lg shadow-black/10 rounded-[5px] w-full mt-7 text-sm">
-        <ProductClientTabs description_2={data.description_2} />
+        <TabsBox
+          comments={comments}
+          productId={data.id}
+          description_2={data.description_2}
+        />
       </div>
     </div>
   );

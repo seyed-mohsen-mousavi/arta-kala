@@ -8,7 +8,7 @@ import { GetProducts, GetShopCategoriesTreeList } from "@/services/shopActions";
 // };
 
 export default async function ProductsPage({ searchParams }: any) {
-  const { data } = await GetProducts(searchParams);
+  const data = await GetProducts(searchParams);
   const categoryRes = await GetShopCategoriesTreeList();
   const categories = categoryRes?.data || [];
   return (
