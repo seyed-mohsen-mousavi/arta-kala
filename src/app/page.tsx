@@ -159,7 +159,7 @@ export default async function Home() {
 
   try {
     const [
-      { data },
+      data,
       { data: latestData },
       { data: featuredData },
       { data: articles },

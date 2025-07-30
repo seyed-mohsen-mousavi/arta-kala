@@ -31,6 +31,7 @@ import { FaBasketShopping } from "react-icons/fa6";
 import { CartFormat, useCart } from "@/context/CartContextProvider";
 import { convertNumberToPersian } from "@/utils/converNumbers";
 import EmptyCart from "./EmptyCart";
+import ProductButton from "./ProductButton";
 
 function Navbar() {
   const categories = useCategories();
@@ -472,14 +473,14 @@ function CartDrawer({ cart }: { cart: CartFormat }) {
         placement="bottom-right"
         classNames={{ badge: "font-dana text-white bg-primary pt-1" }}
       >
-        <button
+        <ProductButton
           aria-label="cart"
           title="سبد خرید"
           onClick={onOpen}
           className={`group-hover:bg-primary/50 group-active:bg-primary/50 p-2 rounded-lg `}
         >
           <FaBasketShopping className="size-8 text-zinc-700" />
-        </button>
+        </ProductButton>
       </Badge>
       <Drawer
         hideCloseButton
@@ -549,9 +550,25 @@ function CartDrawer({ cart }: { cart: CartFormat }) {
                               </button>
                             </div>
                           </div>
-                          <p className="font-semibold text-lg">
-                            {item.unit_price.toLocaleString("fa-IR")} تومان
-                          </p>
+                          s
+                          {item.isDiscounted ? (
+                            <div className="flex flex-col gap-1">
+                              s
+                              <div className="flex items-center gap-2">
+                                <p className="line-through text-zinc-400 text-sm">
+                                  {item.total_price.toLocaleString("fa-IR")}{" "}
+                                  تومان
+                                </p>
+                              </div>
+                              <p className="font-bold text-lg text-green-600">
+                                {item.final_price.toLocaleString("fa-IR")} تومان
+                              </p>
+                            </div>
+                          ) : (
+                            <p className="font-bold text-lg">
+                              {item.unit_price.toLocaleString("fa-IR")} تومان
+                            </p>
+                          )}
                         </div>
                         <button
                           onClick={() => removeFromCart(item.product_id)}
