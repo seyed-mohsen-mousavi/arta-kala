@@ -1,5 +1,4 @@
 
-import { CartFormat } from "@/context/CartContextProvider";
 import api from "./api";
 
 // Products ----
@@ -67,6 +66,7 @@ export async function GetProducts(params?: GetProductsParams): Promise<any> {
             ...normalData,
             results: merged
         };
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
         return {
             count: 0,
@@ -76,6 +76,7 @@ export async function GetProducts(params?: GetProductsParams): Promise<any> {
         };
     }
 }
+
 
 export async function GetProductBySlug(slug: string): Promise<any> {
     try {
@@ -91,6 +92,7 @@ export async function GetProductBySlug(slug: string): Promise<any> {
                     final_price: discount.final_price,
                 };
             }
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (err) {
         }
 
@@ -144,8 +146,6 @@ export async function GetShopCartList(): Promise<{
         const normalData = await normalRes.json();
         const discountedData = await discountedRes.json();
 
-        console.log("discountedData:", discountedData);
-        console.log("normalData:", normalData);
 
         const normalItems = normalData.items || [];
         const discountedItems = discountedData.items || [];

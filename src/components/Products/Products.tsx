@@ -1,10 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Card from "./Card";
 import PaginationBox from "./PaginationBox";
-import { GetProducts } from "@/services/shopActions";
 import ProductType from "@/types/product";
-import CardSkeleton from "./CardSkeleton";
 
 function Products({
   searchParams,
@@ -13,10 +11,10 @@ function Products({
   searchParams: any;
   products: ProductType[];
 }) {
-  const [pagination, setPagination] = useState<{ count: number; page: number }>(
-    { count: 0, page: 1 }
-  );
-  const [error, setError] = useState<string | null>(null);
+  // const [pagination, setPagination] = useState<{ count: number; page: number }>(
+  //   { count: 0, page: 1 }
+  // );
+  // const [error, setError] = useState<string | null>(null);
 
   return (
     <>
@@ -39,22 +37,18 @@ function Products({
         className="bg-white shadow p-3 rounded-sm flex justify-between items-center"
         dir="rtl"
       >
-        <PaginationBox
-          searchParams={searchParams}
-          count={pagination?.count || 0}
-          page={pagination?.page || 1}
-        />
+        <PaginationBox searchParams={searchParams} count={0} page={1} />
         <div>
           <span>مجموع نتایج : </span>
-          <span>{pagination?.count || 0}</span>
+          <span>{0}</span>
         </div>
       </div>
 
-      {error && (
+      {/* {error && (
         <div className="text-red-600 bg-red-50 border border-red-200 p-4 rounded mt-4">
           {error}
         </div>
-      )}
+      )} */}
     </>
   );
 }

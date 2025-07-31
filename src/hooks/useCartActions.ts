@@ -45,12 +45,7 @@ export const useCartActions = (setCart: any, setLoading: any, cart: any) => {
                 addToast({
                     title: "کالا با موفقیت به سبد خرید اضافه شد",
                     hideIcon: true,
-                    endContent: `<Link
-                href= "/profile/cart"
-                className="bg-danger text-white px-3 py-2 rounded-xs hover:brightness-90 transition-colors duration-300 ease-in-out text-[10px]">
-        رفتن به سبد خرید
-            </Link>`
-                });
+                } as any);
             }
         }
         catch (err) {

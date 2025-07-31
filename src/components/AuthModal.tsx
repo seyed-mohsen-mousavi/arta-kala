@@ -97,6 +97,8 @@ export default function AuthModal() {
         onClose();
         const redirectTo =
           searchParams.get("redirectTo") || "/profile/dashboard";
+        console.log("redirecting to:", redirectTo);
+
         router.push(redirectTo);
       }
     } catch {

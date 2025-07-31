@@ -339,7 +339,7 @@ export default function SearchBox() {
             });
             setData({
               articles: articlesRes.data,
-              products: productsRes.data.results,
+              products: productsRes.results,
               categories: filteredCategories || [],
             });
           } catch (err) {

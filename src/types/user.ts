@@ -26,11 +26,11 @@ export interface User {
         
     };
 }
-type OrderItem = {
+export type OrderItem = {
     id: number;
     order_number: string;
     amount: string;
     status: "pending" | "paid" | "canceled" | string;
     city: string;
     date: string;
-};
+};      

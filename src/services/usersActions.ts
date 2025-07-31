@@ -73,7 +73,6 @@ export const verifyOtp = async (
         addToast({
             title: data.message || "ثبت نام با موفقیت تکمیل شد",
         });
-        location.reload()
         return data;
     } catch (error: any) {
         addToast({

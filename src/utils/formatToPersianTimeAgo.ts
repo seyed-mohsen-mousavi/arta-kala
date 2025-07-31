@@ -24,7 +24,6 @@ register("fa", function (number: number, index: number) {
 });
 
 export function formatToPersianTimeAgo(jalaliDate: string): string {
-  // ورودی: "1404-05-08 22:32:10"
   const [datePart, timePart] = jalaliDate.split(" ");
   const [jy, jm, jd] = datePart.split("-").map(Number);
   const { gy, gm, gd } = toGregorian(jy, jm, jd);

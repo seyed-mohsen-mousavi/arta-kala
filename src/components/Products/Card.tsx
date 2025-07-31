@@ -5,8 +5,6 @@ import Link from "next/link";
 import { CiImageOff } from "react-icons/ci";
 
 function Card({ item }: { item: ProductType }) {
-  const discountPercent = item.discount_percentage || 0;
-
   return (
     <Link
       href={`/product/${item.slug}`}
@@ -43,9 +41,7 @@ function Card({ item }: { item: ProductType }) {
 
         {item.is_available ? (
           <div className="relative mt-auto pt-3 flex justify-between items-center gap-2">
-            <button>
-              
-            </button>
+            <button></button>
 
             {item.isDiscounted && item.final_price !== undefined ? (
               <div>

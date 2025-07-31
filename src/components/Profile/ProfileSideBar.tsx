@@ -18,7 +18,9 @@ function ProfileSideBar({ links }: { links: NavLink[] }) {
           {/* <div className=" rounded-full bg-white">
             <LucideUserRound className="size-5" />
           </div> */}
-          <FaUserCircle className="size-20 text-white bg-zinc-600 rounded-full" />
+          <div className="size-20 rounded-full bg-zinc-600">
+            <FaUserCircle className="size-20 text-white rounded-full" />
+          </div>
 
           <div className="flex flex-col font-medium">
             <p className="font-semibold text-lg">
@@ -48,7 +50,9 @@ function ProfileSideBar({ links }: { links: NavLink[] }) {
             <Link
               href={link.href}
               className={`px-3 py-3.5 flex items-center gap-2 justify-start rounded-2xl hover:bg-zinc-100 w-full ${
-                pathname === link.href ? "bg-zinc-100 text-primary-700" : ""
+                pathname.startsWith(link.href)
+                  ? "bg-zinc-100 text-primary-700"
+                  : ""
               }`}
             >
               {link.icon}
