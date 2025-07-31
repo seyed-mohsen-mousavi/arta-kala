@@ -56,7 +56,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         incrementQuantity: increment,
         decrementQuantity: decrement,
         setQuantityToItem: updateQuantity,
-        clearCart: () => {}, // بعدا پیاده‌سازی شود
+        clearCart: () => {}, // no need
       }}
     >
       {children}

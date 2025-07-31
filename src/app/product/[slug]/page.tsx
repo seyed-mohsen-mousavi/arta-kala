@@ -9,9 +9,8 @@ import {
 } from "@/services/shopActions";
 import { CategoryNode } from "@/types/categories";
 import ProductType from "@/types/product";
-import ProductClient from "@/components/Products/ProductClientPC";
-import ProductClientMobile from "@/components/Products/ProductClientMobile";
 import TabsBox from "@/components/Products/TabsBox";
+import AddToCart from "@/components/Products/AddToCart";
 
 function findCategory(
   categories: CategoryNode[],
@@ -43,7 +42,6 @@ export default async function Page({
   if (!res) return notFound();
 
   const data: ProductType = res;
-
   const result = await GetShopCategoriesTreeList();
   const categories: CategoryNode[] = result?.data || [];
 
@@ -128,11 +126,132 @@ export default async function Page({
               />
             </div>
           </div>
-          <ProductClient product={data} />
+          <div className="w-5/12 h-full space-y-3 lg:block hidden">
+            <div className="bg-zinc-100 border border-zinc-200 p-5 text-center space-y-4 rounded-md">
+              {data.is_available && data.stock > 0 && (
+                <>
+                  {data.final_price ? (
+                    <>
+                      <div className="flex items-center justify-center mb-2">
+                        <span className="line-through text-zinc-500 ml-2">
+                          {data.price.toLocaleString("fa-IR")}
+                        </span>
+                      </div>
+                      <p className="font-dana font-bold text-2xl">
+                        {data.final_price.toLocaleString("fa-IR")}
+                        <span className="font-light">تومان</span>
+                      </p>
+                    </>
+                  ) : (
+                    <p className="font-dana font-bold text-2xl">
+                      {data.price.toLocaleString("fa-IR")}
+                      <span className="font-light">تومان</span>
+                    </p>
+                  )}
+                </>
+              )}
+              {data.stock <= 5 && data.stock > 0 && (
+                <p
+                  className={`text-right font-bold font-dana ${
+                    data.stock <= 2 ? "text-danger" : "text-warning"
+                  }`}
+                >
+                  تنها {data.stock === 1 ? "یک" : data.stock + " عدد"} در انبار
+                  باقی مانده
+                </p>
+              )}
+              <AddToCart
+                is_available={data.is_available && data.stock > 0}
+                product={data}
+              />
+            </div>
+
+            {data.is_available && data.stock > 0 && (
+              <>
+                <a href="#" className="text-cyan-400 spoiler-link relative">
+                  آیا قیمت مناسب‌تری سراغ دارید؟
+                </a>
+                <div className="bg-white border border-zinc-200 rounded-lg p-2 flex justify-between w-full mt-5 px-3 items-center">
+                  <div>
+                    <p className="text-zinc-800">ارسال رایگان سفارش</p>
+                    <p className="font-light text-zinc-500 font-dana pt-1">
+                      سفارش‌های بالای 5 میلیون تومان
+                    </p>
+                  </div>
+                  <div className="size-14 relative">
+                    <img src="/free-delivery-free.svg" alt="ارسال رایگان" />
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
-      <ProductClientMobile product={data} />
+      <div className="hidden sm:block lg:hidden bg-zinc-100 border border-zinc-200 p-5 my-5 text-center space-y-4 rounded-md">
+        {data.is_available && data.stock > 0 && (
+          <>
+            <div className="flex items-center justify-center mb-2">
+              <span className="line-through text-zinc-500 ml-2">
+                {data.price.toLocaleString("fa-IR")}
+              </span>
+            </div>
+            <p className="font-dana font-bold text-2xl">
+              {data.price.toLocaleString("fa-IR")}
+              <span className="font-light">تومان</span>
+            </p>
+          </>
+        )}
+        <AddToCart
+          is_available={data.is_available && data.stock > 0}
+          product={data}
+        />
+      </div>
+      {data.is_available && data.stock > 0 && (
+        <div className="my-10 w-full h-full space-y-3 block lg:hidden px-4">
+          <a href="#" className="text-cyan-400 spoiler-link relative">
+            آیا قیمت مناسب‌تری سراغ دارید؟
+          </a>
+          <div className="bg-white border border-zinc-200 rounded-lg p-2 flex justify-between w-full mt-5 px-3 items-center">
+            <div>
+              <p className="text-zinc-800">ارسال رایگان سفارش</p>
+              <p className="font-light text-zinc-500 font-dana pt-1">
+                سفارش‌های بالای 5 میلیون تومان
+              </p>
+            </div>
+            <div className="size-14 relative">
+              <img
+                src="/free-delivery-free.svg"
+                loading="lazy"
+                alt="ارسال رایگان"
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
+      <div className="fixed bottom-0 z-30 right-0 w-full space-y-3 bg-white shadow-2xl sm:hidden p-3">
+        {data.is_available && data.stock > 0 && (
+          <>
+            <div className="flex items-center justify-start mb-2">
+              <p className="text-sm">
+                <span className="line-through text-zinc-500 ml-2">
+                  {data.price.toLocaleString("fa-IR")} تومان
+                </span>
+              </p>
+            </div>
+            <p className="font-dana font-bold text-base text-right">
+              <span className="font-bold font-iranyekan text-lg">
+                {data.price.toLocaleString("fa-IR")}
+              </span>
+              <span className="font-light">تومان</span>
+            </p>
+            <AddToCart
+              is_available={data.is_available && data.stock > 0}
+              product={data}
+            />
+          </>
+        )}
+      </div>
       <div className="bg-white shadow-lg shadow-black/10 rounded-[5px] w-full mt-7 text-sm">
         <TabsBox
           comments={comments}

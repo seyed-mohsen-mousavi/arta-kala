@@ -81,7 +81,6 @@ export async function GetProductBySlug(slug: string): Promise<any> {
     try {
         const productRes = await api.get(`/shop/products/${slug}/`);
         const product = productRes.data;
-
         try {
             const discountRes = await api.get(`/home/discounted-products/${slug}/`);
             const discount = discountRes.data;
@@ -122,7 +121,12 @@ export async function GetFeaturedProducts(): Promise<any> {
 }
 
 // CART
-export async function GetShopCartList(): Promise<CartFormat | null> {
+export async function GetShopCartList(): Promise<{
+    total_items: number;
+    total_quantity: number;
+    total_price: number;
+    items: any[];
+} | null> {
     try {
         const [normalRes, discountedRes] = await Promise.all([
             fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/shop/cart`, {
@@ -136,15 +140,36 @@ export async function GetShopCartList(): Promise<CartFormat | null> {
         if (!normalRes.ok || !discountedRes.ok) {
             throw new Error("خطا در دریافت سبد خرید");
         }
+
         const normalData = await normalRes.json();
         const discountedData = await discountedRes.json();
-        console.log(discountedData)
-        console.log(normalData)
+
+        console.log("discountedData:", discountedData);
+        console.log("normalData:", normalData);
 
         const normalItems = normalData.items || [];
         const discountedItems = discountedData.items || [];
 
-        const allItems = [...normalItems, ...discountedItems];
+        const mergedItemsMap = new Map<number, any>();
+
+        [...normalItems, ...discountedItems].forEach((item) => {
+            const productId = item.product_id;
+            const existing = mergedItemsMap.get(productId);
+
+            if (existing) {
+                mergedItemsMap.set(productId, {
+                    ...existing,
+                    quantity: existing.quantity + item.quantity,
+                    unit_price: item.unit_price || existing.unit_price,
+                    final_price: item.final_price ?? existing.final_price,
+                    is_discounted: item.is_discounted || existing.is_discounted,
+                });
+            } else {
+                mergedItemsMap.set(productId, item);
+            }
+        });
+
+        const allItems = Array.from(mergedItemsMap.values());
 
         const total_quantity = allItems.reduce(
             (sum, item) => sum + (item.quantity || 0),
@@ -170,6 +195,7 @@ export async function GetShopCartList(): Promise<CartFormat | null> {
         return null;
     }
 }
+
 
 
 export async function PostShopCart(item: {

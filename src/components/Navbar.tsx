@@ -503,14 +503,11 @@ function CartDrawer({ cart }: { cart: CartFormat }) {
                 </div>
               </DrawerHeader>
 
-              <DrawerBody className="relative px-10 flex flex-col gap-20 overflow-auto">
+              <DrawerBody className="relative px-10 flex flex-col gap-2 overflow-auto">
                 {cart.items.length > 0 ? (
                   cart.items.map((item, key) => {
                     return (
-                      <div
-                        key={key}
-                        className="w-full flex items-start gap-1 h-22"
-                      >
+                      <div key={key} className="w-full flex items-start gap-1">
                         {item.product_cover_image?.length > 0 ? (
                           <Image
                             src={item.product_cover_image}
@@ -550,10 +547,9 @@ function CartDrawer({ cart }: { cart: CartFormat }) {
                               </button>
                             </div>
                           </div>
-                          s
+
                           {item.isDiscounted ? (
                             <div className="flex flex-col gap-1">
-                              s
                               <div className="flex items-center gap-2">
                                 <p className="line-through text-zinc-400 text-sm">
                                   {item.total_price.toLocaleString("fa-IR")}{" "}
