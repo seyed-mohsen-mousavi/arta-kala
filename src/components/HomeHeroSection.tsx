@@ -31,11 +31,9 @@ import HomeSlider from "@/components/HomeSlider";
 function HomeHeroSection() {
   return (
     <header className="flex flex-col md:flex-row gap-4 w-full h-full py-4 lg:max-h-[500px] overflow-hidden">
-      <div className="relative w-full md:w-2/3 flex justify-center items-center h-72 sm:min-h-[250px] md:h-auto">
-        <HomeSlider images={images} />
-      </div>
+      <HomeSlider images={images} />
 
-      <div className="flex flex-col space-y-4 w-full h-full md:w-1/3">
+      {/* <div className="flex flex-col space-y-4 w-full h-full md:w-1/3">
         <Link href="/some-page">
           <Image
             src="/dep.jpg"
@@ -59,7 +57,7 @@ function HomeHeroSection() {
             sizes="(max-width: 768px) 100vw, 200px"
           />
         </Link>
-      </div>
+      </div> */}
     </header>
   );
 }

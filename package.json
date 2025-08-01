@@ -45,7 +45,6 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
     "@types/jalaali-js": "^1.2.0",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/moment-jalaali": "^0.7.9",
