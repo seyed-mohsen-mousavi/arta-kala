@@ -58,7 +58,7 @@ export default function AuthModal() {
     setPhoneNumber(converted);
     try {
       const exists = await checkPhoneExists(converted);
-
+      console.log(exists)
       if (exists) {
         setIsNewUser(false);
         setStep("PASSWORD");

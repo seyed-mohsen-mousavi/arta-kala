@@ -153,6 +153,7 @@ export const changePassword = async (data: any) => {
 
 export async function checkPhoneExists(phone: string) {
     const res = await api.post("/users/check-user-status/", { phone_number: phone });
+    console.log(res)
     const data = await res.data;
     return data?.has_password;
 }
