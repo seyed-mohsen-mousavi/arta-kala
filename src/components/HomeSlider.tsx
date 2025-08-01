@@ -25,11 +25,11 @@ function Slider({ images }: { images: ImageType[] }) {
         loop
         // virtualTranslate={false}
         // cssMode={true}
-        autoplay={
-          images.length > 1
-            ? { delay: 4000, disableOnInteraction: false }
-            : false
-        }
+        // autoplay={
+        //   images.length > 1
+        //     ? { delay: 4000, disableOnInteraction: false }
+        //     : false
+        // }
         keyboard={{ enabled: true }}
         modules={[Keyboard, Autoplay, Navigation]}
         className="size-full"
