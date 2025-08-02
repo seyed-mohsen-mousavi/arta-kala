@@ -26,7 +26,6 @@ export default async function RootLayout({
 }>) {
   const result = await GetShopCategoriesTreeList();
   const user = (await GetUserDashboard()) || undefined;
-
   return (
     <html lang="fa-IR" dir="rtl" className="scroll-smooth bg-[#f9f9f9]">
       <body

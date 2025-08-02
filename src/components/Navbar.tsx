@@ -46,47 +46,52 @@ function Navbar() {
     { href: "/contact-info", label: "تماس با ما" },
   ];
   const { user } = useUser();
-  // console.log(user);
   const [isOpen, setIsOpen] = useState(false);
   const { cart } = useCart();
   const renderCategories = (categories: CategoryNode[]) => {
     return (
       <ul className="relative">
-        {categories.map((category, index) => (
-          <li
-            key={index}
-            className="group relative hover:bg-[#525d66] whitespace-nowrap pt-2"
-          >
-            <Link
-              href={`/products/?category_id=${category.id}`}
-              className="font-normal flex items-center justify-between px-4 w-full h-full py-2 text-sm"
+        {Array.isArray(categories) && categories.length > 0 ? (
+          categories?.map((category, index) => (
+            <li
+              key={index}
+              className="group relative hover:bg-[#525d66] whitespace-nowrap pt-2"
             >
-              {category.name}
+              <Link
+                href={`/products/?category_id=${category.id}`}
+                className="font-normal flex items-center justify-between px-4 w-full h-full py-2 text-sm"
+              >
+                {category.name}
+                {category.children && category.children.length > 0 && (
+                  <GoChevronLeft className="size-4 fill-[#98aab3]" />
+                )}
+              </Link>
               {category.children && category.children.length > 0 && (
-                <GoChevronLeft className="size-4 fill-[#98aab3]" />
-              )}
-            </Link>
-            {category.children && category.children.length > 0 && (
-              <div className="absolute top-0 right-full bg-white text-[#3d464d] rounded-xs shadow-lg group-hover:visible group-hover:opacity-100 invisible opacity-0 transition-all duration-200 z-50 p-4">
-                <ul className=" flex flex-wrap   min-w-[500px] list-disc pr-5">
-                  {category.children.map((child, index) => (
-                    <li
-                      key={index}
-                      className="relative max-w-[25%] flex-[0_0_25%] w-full py-px"
-                    >
-                      <Link
-                        href={`/products/?category_id=${child.id}`}
-                        className="hover:text-primary transition "
+                <div className="absolute top-0 right-full bg-white text-[#3d464d] rounded-xs shadow-lg group-hover:visible group-hover:opacity-100 invisible opacity-0 transition-all duration-200 z-50 p-4">
+                  <ul className=" flex flex-wrap   min-w-[500px] list-disc pr-5">
+                    {category.children.map((child, index) => (
+                      <li
+                        key={index}
+                        className="relative max-w-[25%] flex-[0_0_25%] w-full py-px"
                       >
-                        {child.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </li>
-        ))}
+                        <Link
+                          href={`/products/?category_id=${child.id}`}
+                          className="hover:text-primary transition "
+                        >
+                          {child.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </li>
+          ))
+        ) : (
+          <div className="py-2 px-3 w-full text-center">
+            دسته بندی وجود ندارد
+          </div>
+        )}
       </ul>
     );
   };
@@ -178,15 +183,17 @@ function Navbar() {
             <div className="lg:space-x-2 flex items-center w-full lg:w-auto">
               <SearchBox />
               <div className="flex justify-around  w-1/2 lg:w-auto gap-1">
-                {user ? (
+                {user?.identity ? (
                   <Link
                     href="/profile/dashboard"
                     className="p-2.5 px-2.5 lg:px-5 w-full rounded-full bg-white hover:bg-zinc-50 active:bg-zinc-100 transition-colors ease-in-out text-black text-center text-xs md:text-sm flex text-nowrap items-center justify-center gap-1 sm:gap-3 font-bold"
                   >
                     <FiUser className="size-5 md:size-6" />
                     {user.identity?.first_name
-                      ? user.identity.first_name + " " + user.identity.last_name
-                      : convertNumberToPersian(user.identity.phone_number)}
+                      ? user.identity?.first_name +
+                        " " +
+                        user.identity?.last_name
+                      : convertNumberToPersian(user.identity?.phone_number)}
                   </Link>
                 ) : (
                   <button

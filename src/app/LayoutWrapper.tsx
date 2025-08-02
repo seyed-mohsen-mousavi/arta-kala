@@ -1,8 +1,8 @@
 "use client";
 
+import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { usePathname } from "next/navigation";
-import Footer from "react-multi-date-picker/plugins/range_picker_footer";
 
 export default function LayoutWrapper({
   children,

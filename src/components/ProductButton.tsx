@@ -24,7 +24,7 @@ const ProductButton = ({
   const router = useRouter();
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!user) {
+    if (!user?.identity) {
       e.preventDefault();
       e.stopPropagation();
       onOpen();

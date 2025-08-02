@@ -4,6 +4,8 @@ import "swiper/css";
 import { useRef } from "react";
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import { Autoplay } from "swiper/modules";
+import { AiOutlineWarning } from "react-icons/ai";
+import ErrorMessage from "./ErrorMessage";
 
 function ProductSlider({
   items,
@@ -19,6 +21,11 @@ function ProductSlider({
   className?: string;
 }) {
   const swiperRef: any = useRef(null);
+  const safeItems = Array.isArray(items) ? items : [];
+
+  if (safeItems.length === 0) {
+    return <ErrorMessage />;
+  }
   const enableLoop = items.length > slidesPerView + 1;
   const enableAutoplay = items.length > 1;
   return items?.length > 0 ? (

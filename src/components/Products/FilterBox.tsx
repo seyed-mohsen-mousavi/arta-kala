@@ -92,7 +92,7 @@ export default function FilterBox({
     });
   };
 
-  const searchedCategories = categories.filter((i) =>
+  const searchedCategories = categories?.filter((i) =>
     i.name.toLowerCase().includes(searchCategory.toLowerCase())
   );
 
@@ -218,21 +218,25 @@ export default function FilterBox({
               <BiSearch className="size-6 absolute top-3 right-2 text-zinc-400" />
             </div>
             <ul className="overflow-y-auto max-h-64 text-zinc-500 pt-4">
-              {searchedCategories.map((i) => (
-                <li key={i.id}>
-                  <button
-                    onClick={() => applyFilters({ category_id: i.id })}
-                    className={`py-2 flex items-center gap-1 ${
-                      searchParams.get("category_id") === i.id.toString()
-                        ? "text-primary-500 font-bold"
-                        : ""
-                    }`}
-                  >
-                    <MdChevronLeft className="size-5" />
-                    <span>{i.name}</span>
-                  </button>
-                </li>
-              ))}
+              {searchCategory ? (
+                searchedCategories?.map((i) => (
+                  <li key={i.id}>
+                    <button
+                      onClick={() => applyFilters({ category_id: i.id })}
+                      className={`py-2 flex items-center gap-1 ${
+                        searchParams.get("category_id") === i.id.toString()
+                          ? "text-primary-500 font-bold"
+                          : ""
+                      }`}
+                    >
+                      <MdChevronLeft className="size-5" />
+                      <span>{i.name}</span>
+                    </button>
+                  </li>
+                ))
+              ) : (
+                <>دسته بندی یافت نشد </>
+              )}
             </ul>
           </AccordionItem>
         </Accordion>
@@ -287,8 +291,9 @@ export default function FilterBox({
 
               <div className="flex w-full justify-between items-center border-t border-b border-zinc-200 my-2 px-3">
                 <div className="flex flex-col items-center gap-2 text-default-500 font-medium text-small w-full p-5 border-l border-zinc-200">
-                  <label>از</label>
+                  <label htmlFor="min-price-input">از</label>
                   <NumberInput
+                    id="min-price-input"
                     value={minInput}
                     onValueChange={handleMinChange}
                     hideStepper
@@ -304,8 +309,9 @@ export default function FilterBox({
                 </div>
                 <div className="h-full w-5 bg-zinc-200" />
                 <div className="flex flex-col items-center gap-2 text-default-500 font-medium text-small w-full p-5">
-                  <label>تا</label>
+                  <label htmlFor="max-price-input">تا</label>
                   <NumberInput
+                    id="max-price-input"
                     size="sm"
                     value={maxInput}
                     onValueChange={handleMaxChange}
