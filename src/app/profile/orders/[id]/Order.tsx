@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import "@/styles/print.css";
 import Link from "next/link";
 import { FaChevronRight } from "react-icons/fa6";
 import { formatShamsiDateString } from "@/utils/formatShamsiDateString";
