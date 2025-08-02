@@ -1,4 +1,5 @@
 "use client";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import Image from "next/image";
@@ -12,8 +13,9 @@ function Slider({ images }: { images: ImageType[] }) {
   const swiperRef = useRef<any>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const goNext = useCallback(() => swiperRef.current?.slidePrev(), []);
-  const goPrev = useCallback(() => swiperRef.current?.slideNext(), []);
+  // تصحیح عملکرد دکمه‌ها: goNext به slideNext و goPrev به slidePrev تغییر کرد
+  const goNext = useCallback(() => swiperRef.current?.slideNext(), []);
+  const goPrev = useCallback(() => swiperRef.current?.slidePrev(), []);
 
   return (
     <div className="relative w-full h-full xl:h-[420px] group">
@@ -23,13 +25,6 @@ function Slider({ images }: { images: ImageType[] }) {
         centeredSlides={true}
         navigation={false}
         loop
-        // virtualTranslate={false}
-        // cssMode={true}
-        // autoplay={
-        //   images.length > 1
-        //     ? { delay: 4000, disableOnInteraction: false }
-        //     : false
-        // }
         keyboard={{ enabled: true }}
         modules={[Keyboard, Autoplay, Navigation]}
         className="size-full"
@@ -51,7 +46,7 @@ function Slider({ images }: { images: ImageType[] }) {
             {image.link ? (
               <Link
                 href={image.link}
-                className="relative block w-full   overflow-hidden"
+                className="relative block w-full overflow-hidden"
               >
                 <Image
                   src={image.src}
@@ -60,11 +55,11 @@ function Slider({ images }: { images: ImageType[] }) {
                   height={400}
                   priority={index === 0 || index === 1}
                   className="object-cover size-full rounded-3xl sm:rounded-none"
-                  // حذف تمام ترنزیشن‌های اضافی
+                  unoptimized
                 />
               </Link>
             ) : (
-              <div className="relative block w-full   overflow-hidden">
+              <div className="relative block w-full overflow-hidden">
                 <Image
                   src={image.src}
                   alt={image.alt}
@@ -72,7 +67,7 @@ function Slider({ images }: { images: ImageType[] }) {
                   height={400}
                   priority={index === 0 || index === 1}
                   className="object-cover size-full rounded-3xl sm:rounded-none"
-                  // حذف تمام ترنزیشن‌های اضافی
+                  unoptimized
                 />
               </div>
             )}
@@ -96,7 +91,7 @@ function Slider({ images }: { images: ImageType[] }) {
         <>
           <button
             onClick={goPrev}
-            className="block absolute top-1/2 left-1 md:left-2 -translate-y-1/2 bg-white rounded-full p-1 border border-zinc-400 text-[#a4a4a4] z-20 drop-shadow-xl lg:hover:-translate-x-2  ease-in-out opacity-0 group-hover:opacity-100 transition-all duration-300"
+            className="block absolute top-1/2 left-1 md:left-2 -translate-y-1/2 bg-white rounded-full p-1 border border-zinc-400 text-[#a4a4a4] z-20 drop-shadow-xl lg:hover:-translate-x-2 ease-in-out opacity-0 group-hover:opacity-100 transition-all duration-300"
             aria-label="Previous Slide"
           >
             <GoChevronLeft className="size-8 sm:size-10 lg:size-12" />
@@ -104,7 +99,7 @@ function Slider({ images }: { images: ImageType[] }) {
 
           <button
             onClick={goNext}
-            className="block absolute top-1/2 right-1 md:right-2 -translate-y-1/2 bg-white rounded-full p-1 border border-zinc-400 text-[#a4a4a4] z-20 drop-shadow-xl lg:hover:translate-x-2  ease-in-out opacity-0 group-hover:opacity-100 transition-all duration-300"
+            className="block absolute top-1/2 right-1 md:right-2 -translate-y-1/2 bg-white rounded-full p-1 border border-zinc-400 text-[#a4a4a4] z-20 drop-shadow-xl lg:hover:translate-x-2 ease-in-out opacity-0 group-hover:opacity-100 transition-all duration-300"
             aria-label="Next Slide"
           >
             <GoChevronRight className="size-8 sm:size-10 lg:size-12" />
@@ -114,6 +109,7 @@ function Slider({ images }: { images: ImageType[] }) {
     </div>
   );
 }
+
 type SlideDotProps = {
   active: boolean;
   onClick: () => void;
@@ -129,4 +125,5 @@ function SlideDot({ active, onClick }: SlideDotProps) {
     />
   );
 }
+
 export default Slider;

@@ -17,7 +17,6 @@ export const useCartActions = (setCart: any, setLoading: any, cart: any) => {
         setLoading(true);
         try {
             const data = await GetShopCartList();
-            console.log(data)
             if (data) setCart(data);
         } catch (err) {
             console.error("خطا در دریافت سبد خرید:", err);
@@ -31,7 +30,6 @@ export const useCartActions = (setCart: any, setLoading: any, cart: any) => {
 
         setLoading(true);
         try {
-            console.log(item)
             const res = await PostShopCart({
                 product_id: item.product_id,
                 quantity: item.quantity,
@@ -62,7 +60,6 @@ export const useCartActions = (setCart: any, setLoading: any, cart: any) => {
 
         setLoading(true);
         try {
-            console.log(item.id)
             await DeleteShopCart(String(item.id), item?.isDiscounted);
             await fetchCart();
         } catch (err) {

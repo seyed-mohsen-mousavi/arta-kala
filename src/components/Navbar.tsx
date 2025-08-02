@@ -198,13 +198,13 @@ function Navbar() {
                     <span className="">حساب کاربری</span>
                   </button>
                 )}
-                <Link
-                  href="/"
+                <ProductButton
+                  href="/marketer"
                   className="p-2.5 px-2.5 lg:px-5 w-full rounded-full bg-white hover:bg-zinc-50 active:bg-zinc-100 transition-colors ease-in-out text-black text-center text-xs md:text-sm flex text-nowrap items-center justify-center gap-1 sm:gap-3 font-bold"
                   aria-label="بازاریاب شو"
                 >
                   <FiTrendingUp className="size-5 md:size-6" /> بازاریاب شو
-                </Link>
+                </ProductButton>
               </div>
             </div>
           </div>

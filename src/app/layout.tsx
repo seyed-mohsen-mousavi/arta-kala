@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
-import Navbar from "@/components/Navbar";
 import { GetShopCategoriesTreeList } from "@/services/shopActions";
 import Providers from "./providers";
 import { UserProvider } from "@/context/UserContext";
@@ -9,8 +8,8 @@ import { AuthModalProvider } from "@/context/AuthModalProvider";
 import AuthModal from "@/components/AuthModal";
 import { CategoriesProvider } from "@/context/CategoriesContext";
 import { CartProvider } from "@/context/CartContextProvider";
-import Footer from "@/components/Footer";
 import { dana, iranyekan, noora, pelak } from "@/utils/fonts";
+import LayoutWrapper from "./LayoutWrapper";
 
 export const metadata: Metadata = {
   title: {
@@ -38,13 +37,9 @@ export default async function RootLayout({
             <CartProvider>
               {!user && <AuthModal />}
               <CategoriesProvider categories={result?.data}>
-                <Navbar />
-                <Providers>
-                  <main className="container customSm:max-w-[566px] flex-1 w-full mx-auto pb-20 px-2 lg:px-0 h-full">
-                    {children}
-                  </main>
-                  <Footer />
-                </Providers>
+                <LayoutWrapper>
+                  <Providers>{children}</Providers>
+                </LayoutWrapper>
               </CategoriesProvider>
             </CartProvider>
           </AuthModalProvider>
