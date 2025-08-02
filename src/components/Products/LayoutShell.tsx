@@ -62,7 +62,7 @@ export default function LayoutShell({
       : []),
   ];
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 container customSm:max-w-[566px]">
       <BreadcrumbsBox title="محصولات" items={breadcrumbItems} />
 
       <section className="flex gap-4 w-full h-full ">

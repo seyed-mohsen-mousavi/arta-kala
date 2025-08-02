@@ -6,9 +6,9 @@ export default function Layout({
   modal: React.ReactNode;
 }) {
   return (
-    <>
+    <div className="container customSm:max-w-[566px]">
       {children}
       {modal}
-    </>
+    </div>
   );
 }

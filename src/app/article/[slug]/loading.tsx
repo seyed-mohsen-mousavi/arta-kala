@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <div className="flex items-start gap-10 p-5 font-pelak animate-pulse">
+    <div className="flex items-start gap-10 p-5 font-pelak animate-pulse container customSm:max-w-[566px]">
       <div className="w-3/4 bg-white py-10 px-20 shadow-xl rounded-2xl space-y-6 overflow-hidden">
         <div className="h-8 w-3/4 bg-zinc-200 rounded" />
 

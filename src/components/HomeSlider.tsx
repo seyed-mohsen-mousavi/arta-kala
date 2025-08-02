@@ -3,19 +3,25 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import Image from "next/image";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { Autoplay, Keyboard, Navigation } from "swiper/modules";
 import { Image as ImageType } from "@/app/page";
 import Link from "next/link";
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 
 function Slider({ images }: { images: ImageType[] }) {
+  const [isClient, setIsClient] = useState(false);
   const swiperRef = useRef<any>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // تصحیح عملکرد دکمه‌ها: goNext به slideNext و goPrev به slidePrev تغییر کرد
-  const goNext = useCallback(() => swiperRef.current?.slideNext(), []);
-  const goPrev = useCallback(() => swiperRef.current?.slidePrev(), []);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  const goNext = useCallback(() => swiperRef.current?.slidePrev(), []);
+  const goPrev = useCallback(() => swiperRef.current?.slideNext(), []);
+
+  if (!isClient) return <SliderSkeleton />;
 
   return (
     <div className="relative w-full h-full xl:h-[420px] group">
@@ -31,46 +37,28 @@ function Slider({ images }: { images: ImageType[] }) {
         onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         breakpoints={{
-          640: {
-            slidesPerView: 1,
-            centeredSlides: true,
-          },
-          1024: {
-            slidesPerView: 1,
-            centeredSlides: true,
-          },
+          640: { slidesPerView: 1 },
+          1024: { slidesPerView: 1 },
         }}
       >
         {images.map((image, index) => (
           <SwiperSlide key={image.id} className="w-full h-full">
-            {image.link ? (
-              <Link
-                href={image.link}
-                className="relative block w-full overflow-hidden"
-              >
+            <Link
+              href={image.link || ""}
+              className="block h-full w-full"
+            >
+              <div className="left-1/2 -translate-x-1/2 top-0 max-w-[1920px] absolute h-full w-full">
                 <Image
                   src={image.src}
                   alt={image.alt}
                   width={500}
                   height={400}
-                  priority={index === 0 || index === 1}
-                  className="object-cover size-full rounded-3xl sm:rounded-none"
-                  unoptimized
-                />
-              </Link>
-            ) : (
-              <div className="relative block w-full overflow-hidden">
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  width={500}
-                  height={400}
-                  priority={index === 0 || index === 1}
-                  className="object-cover size-full rounded-3xl sm:rounded-none"
+                  priority={index <= 1}
+                  className="object-cover size-full rounded-3xl sm:rounded-none inline-block"
                   unoptimized
                 />
               </div>
-            )}
+            </Link>
           </SwiperSlide>
         ))}
       </Swiper>
@@ -123,6 +111,22 @@ function SlideDot({ active, onClick }: SlideDotProps) {
         active ? "bg-primary w-5" : "bg-zinc-100"
       }`}
     />
+  );
+}
+
+function SliderSkeleton() {
+  return (
+    <div className="relative w-full h-[300px] xl:h-[420px] animate-pulse overflow-hidden rounded-3xl bg-gray-200">
+      <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div
+            key={index}
+            className="w-2 h-2 rounded-full bg-gray-400"
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 

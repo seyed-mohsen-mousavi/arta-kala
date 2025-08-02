@@ -18,7 +18,7 @@ export default function LayoutWrapper({
   return (
     <>
       <Navbar />
-      <main className="container customSm:max-w-[566px] flex-1 w-full mx-auto pb-20 px-2 lg:px-0 h-full">
+      <main className=" flex-1 w-full mx-auto pb-20 px-2 lg:px-0 h-full">
         {children}
       </main>
       <Footer />

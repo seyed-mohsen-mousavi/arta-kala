@@ -11,7 +11,6 @@ import {
   GetProducts,
 } from "@/services/shopActions";
 import { GetLatestArticles } from "@/services/blogActions";
-import HomeHeroSection from "@/components/HomeHeroSection";
 import FlipClock from "@/components/FlipClockWrapper";
 // import { Metadata } from "next";
 
@@ -141,6 +140,34 @@ const brands: { link: string; name: string; image: string }[] = [
   },
 ];
 
+const images = [
+  {
+    id: 1,
+    src: "/slider/1.webp",
+    alt: "عکس ۱",
+    link: "",
+  },
+  {
+    id: 2,
+    src: "/slider/2.webp",
+    alt: "عکس ۲",
+    link: "",
+  },
+  {
+    id: 3,
+    src: "/slider/3.webp",
+    alt: "عکس ۳",
+    link: "",
+  },
+  {
+    id: 4,
+    src: "/slider/4.webp",
+    alt: "عکس ۴",
+    link: "",
+  },
+];
+import HomeSlider from "@/components/HomeSlider";
+
 // export const metadata : Metadata = {
 //   title : ""
 
@@ -164,16 +191,17 @@ export default async function Home() {
       GetLatestArticles(),
     ]);
     products = data.results || [];
-    latest_products = latestData.latest_products || [];
+    latest_products = latestData.results || [];
     featured_products = featuredData.featured_products || [];
     latest_articles = articles || [];
   } catch (error) {
     console.error("Fetch Faild : ", error);
   }
-
   return (
     <div className="w-full">
-      <HomeHeroSection />
+      <header className="flex flex-col md:flex-row gap-4 w-full h-full py-4 lg:max-h-[500px] overflow-hidden">
+        <HomeSlider images={images} />
+      </header>
       <section className="max-w-[1270px] mx-auto space-y-2">
         <div className="flex flex-row-reverse flex-wrap md:gap-5 items-center w-full justify-around py-5">
           {quickCategories.map((qc, index) => (

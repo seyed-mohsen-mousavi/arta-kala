@@ -16,7 +16,7 @@ async function layout({ children }: { children: ReactNode }) {
         title="مقالات"
         items={[{ label: "خانه", href: "/" }, { label: "مقالات" }]}
       />
-      <div className="flex flex-col lg:flex-row gap-2 py-10">
+      <div className="flex flex-col lg:flex-row gap-2 py-10 container customSm:max-w-[566px]">
         <aside className="w-full lg:w-1/3  pl-4">
           <h3 className="lg:flex hidden text-2xl font-semibold mb-4  gap-2 items-center">
             <FaFilter />

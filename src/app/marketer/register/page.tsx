@@ -19,8 +19,8 @@ async function Register() {
           به کسب درآمد بپردازید. پس از تکمیل فرم زیر و تأیید اطلاعات، پنل
           اختصاصی همکاری در فروش برای شما فعال خواهد شد.
         </p>{" "}
-        <form action="">
-          <button type="submit" className="btn-primary w-full"></button>
+        <form action="" className="grid grid-cols-2">
+          <button type="submit" className="btn-primary w-full font-bold text-lg col-span-2">ثبت نام به عنوان بازاریاب</button>
         </form>
       </div>
     </div>

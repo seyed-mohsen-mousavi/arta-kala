@@ -25,7 +25,7 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
     return moment(jalaliDate, "jYYYY-jMM-jDD").format("jDD jMMMM jYYYY");
   };
   return (
-    <div className="flex items-start gap-10 p-5 font-pelak">
+    <div className="flex items-start gap-10 p-5 font-pelak container customSm:max-w-[566px]">
       <div className="w-3/4 bg-white py-10 px-20 shadow-xl rounded-2xl">
         <h1 className="text-3xl font-semibold">{data.title}</h1>
         <div className="flex items-center gap-5 text-primary-700">

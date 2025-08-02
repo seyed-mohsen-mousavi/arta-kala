@@ -76,6 +76,50 @@ export async function GetProducts(params?: GetProductsParams): Promise<any> {
         };
     }
 }
+export async function GetLatestProducts(): Promise<any> {
+    try {
+        const [resLatest, resDiscounted] = await Promise.all([
+            api.get(`/shop/latest-products`),
+            api.get(`/home/discounted-products/`)
+        ]);
+
+        const latestData = resLatest.data;
+        const latestProducts = latestData.latest_products || [];
+        const discountedList = resDiscounted.data || [];
+        const discountedMap = new Map(
+            discountedList.map((item: any) => [item.slug, item])
+        );
+
+        const merged = latestProducts.map((product: any) => {
+            const discount: any = discountedMap.get(product.slug);
+            if (discount) {
+                return {
+                    ...product,
+                    isDiscounted: true,
+                    discount_percentage: discount.discount_percentage,
+                    final_price: discount.final_price
+                };
+            }
+            return product;
+        });
+        return {
+            data: {
+                ...latestData,
+                results: merged
+            }
+        };
+    } catch (error) {
+        console.log(error);
+        return {
+            data: {
+                count: 0,
+                next: null,
+                previous: null,
+                results: []
+            }
+        };
+    }
+}
 
 
 export async function GetProductBySlug(slug: string): Promise<any> {
@@ -103,15 +147,7 @@ export async function GetProductBySlug(slug: string): Promise<any> {
     }
 }
 
-export async function GetLatestProducts(): Promise<any> {
-    try {
-        const result = await api.get(`/shop/latest-products `);
-        return result
-    } catch (error) {
-        console.log(error)
-        return null
-    }
-}
+
 export async function GetFeaturedProducts(): Promise<any> {
     try {
         const result = await api.get(`/shop/featured-products`);

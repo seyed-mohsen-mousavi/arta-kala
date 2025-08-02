@@ -18,7 +18,7 @@ async function page() {
         title="ارتباط با ما"
         items={[{ label: "خانه", href: "/" }, { label: "ارتباط با ما" }]}
       />
-      <div className="flex flex-col gap-5 bg-white p-5 shadow rounded">
+      <div className="flex flex-col gap-5 bg-white p-5 shadow rounded container customSm:max-w-[566px]">
         <h1 className="pr-2 -mb-2 font-semibold text-lg">ارتباط با ما</h1>
         <div className="w-full gap-3 flex">
           <div className="bg-primary w-[7%] h-px" />

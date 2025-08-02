@@ -52,6 +52,20 @@
     margin: 0;
   }
 }
+@media (min-width: 1281px) {
+    .breakpoint .styles_MainHomeTopSliderItem__widget__lAr4S {
+        min-height: 400px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .styles_MainHomeTopSliderItem__widget__lAr4S {
+        min-height: 300px;
+    }
+}
+.styles_MainHomeTopSliderItem__widget__lAr4S {
+    min-height: 180px;
+}
 
 @keyframes floatUpDown {
   0%,

@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Loading() {
   return (
-    <div>
+    <div className="container customSm:max-w-[566px]">
       <div className="w-full h-6 bg-zinc-200 rounded animate-pulse my-4 max-w-[400px]" />
 
       <div className="bg-white shadow-lg shadow-black/10 rounded-[5px] px-5 py-4 w-full mt-7 text-sm">
