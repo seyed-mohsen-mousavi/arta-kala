@@ -19,8 +19,8 @@ import {
 import { CiImageOff } from "react-icons/ci";
 import { addToast } from "@heroui/toast";
 import { IoCartOutline } from "react-icons/io5";
-import { useCart } from "@/context/CartContextProvider";
-import EmptyCart from "@/components/EmptyCart";
+import { useCart } from "../../../context/CartContextProvider";
+import EmptyCart from "../../../components/EmptyCart";
 function Page() {
   const { cart, loading } = useCart();
   return (
