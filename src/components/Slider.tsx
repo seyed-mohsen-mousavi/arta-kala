@@ -4,7 +4,6 @@ import "swiper/css";
 import { useRef } from "react";
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import { Autoplay } from "swiper/modules";
-import { AiOutlineWarning } from "react-icons/ai";
 import ErrorMessage from "./ErrorMessage";
 
 function ProductSlider({
