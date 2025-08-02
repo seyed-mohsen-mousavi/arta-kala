@@ -12,9 +12,9 @@ import {
   Spinner,
 } from "@heroui/react";
 import { useAsyncList } from "@react-stately/data";
-import { GetUserDashboard } from "@/services/authActions";
+import { GetUserDashboard } from "../../../services/authActions";
 import Link from "next/link";
-import { GetShippingServices } from "@/services/shopActions";
+import { GetShippingServices } from "../../../services/shopActions";
 
 type PreInvoiceItem = {
   id: number;

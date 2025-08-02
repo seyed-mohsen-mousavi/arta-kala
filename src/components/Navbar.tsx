@@ -20,16 +20,16 @@ import {
   Spinner,
 } from "@heroui/react";
 import { HiXMark } from "react-icons/hi2";
-import { useUser } from "@/context/UserContext";
+import { useUser } from "../context/UserContext";
 import { useDisclosure } from "@heroui/react";
-import { useAuthModal } from "@/context/AuthModalProvider";
-import { useCategories } from "@/context/CategoriesContext";
+import { useAuthModal } from "../context/AuthModalProvider";
+import { useCategories } from "../context/CategoriesContext";
 import SearchBox from "./SearchBox";
 import { FiPhoneCall, FiTrendingUp, FiUser } from "react-icons/fi";
 import { CiImageOff } from "react-icons/ci";
 import { FaBasketShopping } from "react-icons/fa6";
-import { CartFormat, useCart } from "@/context/CartContextProvider";
-import { convertNumberToPersian } from "@/utils/converNumbers";
+import { CartFormat, useCart } from "../context/CartContextProvider";
+import { convertNumberToPersian } from "../utils/converNumbers";
 import EmptyCart from "./EmptyCart";
 import ProductButton from "./ProductButton";
 
