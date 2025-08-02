@@ -1,9 +1,8 @@
 "use client";
-
+import "@/styles/print.css";
 import { useRef } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import "@/styles/print.css";
 import Link from "next/link";
 import { FaChevronRight } from "react-icons/fa6";
 import { formatShamsiDateString } from "@/utils/formatShamsiDateString";
@@ -93,7 +92,10 @@ export default function PreInvoice({
               {label.fa}
             </span>
           </div>
-          <div>تاریخ ثبت: {order.order_date ? formatShamsiDateString(order.order_date) : ""}</div>
+          <div>
+            تاریخ ثبت:{" "}
+            {order.order_date ? formatShamsiDateString(order.order_date) : ""}
+          </div>
           <div>مبلغ کل: {order.total_amount.toLocaleString()} تومان</div>
           <div>نام گیرنده: {order.receiver_name}</div>
           <div>شماره موبایل: {order.receiver_phone}</div>

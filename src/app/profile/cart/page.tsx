@@ -1,5 +1,4 @@
 "use client";
-import { useCart } from "@/context/CartContextProvider";
 import { CartItem } from "@/types/cartItem";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,6 +19,7 @@ import {
 import { CiImageOff } from "react-icons/ci";
 import { addToast } from "@heroui/toast";
 import { IoCartOutline } from "react-icons/io5";
+import { useCart } from "@/context/CartContextProvider";
 import EmptyCart from "@/components/EmptyCart";
 function Page() {
   const { cart, loading } = useCart();
