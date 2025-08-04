@@ -105,7 +105,6 @@ export default function FilterBox({
 
   const hasActiveFilter = Object.values(activeFilters).some(Boolean);
   const [isClearing, setIsClearing] = useState(false);
-
   return (
     <div
       className={`h-full ${isShow ? "space-y-4" : "hidden lg:flex w-1/3"} flex-col gap-2 sticky`}
@@ -218,8 +217,9 @@ export default function FilterBox({
               <BiSearch className="size-6 absolute top-3 right-2 text-zinc-400" />
             </div>
             <ul className="overflow-y-auto max-h-64 text-zinc-500 pt-4">
-              {searchCategory ? (
-                searchedCategories?.map((i) => (
+              {Array.isArray(searchedCategories) &&
+              searchedCategories.length > 0 ? (
+                searchedCategories.map((i) => (
                   <li key={i.id}>
                     <button
                       onClick={() => applyFilters({ category_id: i.id })}

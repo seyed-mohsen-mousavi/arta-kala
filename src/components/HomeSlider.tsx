@@ -24,7 +24,7 @@ function Slider({ images }: { images: ImageType[] }) {
   if (!isClient) return <SliderSkeleton />;
 
   return (
-    <div className="relative w-full h-full xl:h-[420px] group">
+    <div className="relative w-full h-[200px] lg:h-[420px] group">
       <Swiper
         spaceBetween={10}
         slidesPerView={1.3}
@@ -32,6 +32,10 @@ function Slider({ images }: { images: ImageType[] }) {
         navigation={false}
         loop
         keyboard={{ enabled: true }}
+        autoplay={{
+          delay: 4000,
+          disableOnInteraction: false,
+        }}
         modules={[Keyboard, Autoplay, Navigation]}
         className="size-full"
         onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
@@ -43,10 +47,7 @@ function Slider({ images }: { images: ImageType[] }) {
       >
         {images.map((image, index) => (
           <SwiperSlide key={image.id} className="w-full h-full">
-            <Link
-              href={image.link || ""}
-              className="block h-full w-full"
-            >
+            <Link href={image.link || ""} className="block h-full w-full">
               <div className="left-1/2 -translate-x-1/2 top-0 max-w-[1920px] absolute h-full w-full">
                 <Image
                   src={image.src}
@@ -120,10 +121,7 @@ function SliderSkeleton() {
       <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
         {Array.from({ length: 3 }).map((_, index) => (
-          <div
-            key={index}
-            className="w-2 h-2 rounded-full bg-gray-400"
-          />
+          <div key={index} className="w-2 h-2 rounded-full bg-gray-400" />
         ))}
       </div>
     </div>

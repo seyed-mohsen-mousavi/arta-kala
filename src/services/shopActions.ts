@@ -181,8 +181,6 @@ export async function GetShopCartList(): Promise<{
 
         const normalData = await normalRes.json();
         const discountedData = await discountedRes.json();
-
-
         const normalItems = normalData.items || [];
         const discountedItems = discountedData.items || [];
 

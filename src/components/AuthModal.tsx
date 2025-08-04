@@ -1,4 +1,7 @@
 "use client";
+import ReCAPTCHA from "react-google-recaptcha";
+
+const RECAPTCHA_SITE_KEY = "6Lc9tJgrAAAAABuHALBXaMFS0_3wm8oWEoyCvedh";
 import {
   InputOtp,
   Modal,
@@ -39,6 +42,7 @@ export default function AuthModal() {
   const [isNewUser, setIsNewUser] = useState(false);
   const searchParams = useSearchParams();
   const [hasPasswordError, setHasPasswordError] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -53,20 +57,41 @@ export default function AuthModal() {
   });
 
   const checkPhoneNumber = async ({ phone_number }: SignupFormValues) => {
-    setLoading(true);
-    const converted = convertPersianToEnglish(phone_number);
-    setPhoneNumber(converted);
+    if (!captchaToken) {
+      phoneForm.setError("phone_number", {
+        message: "لطفاً کپچا را کامل کنید.",
+      });
+      return;
+    }
+
     try {
+      setLoading(true);
+
+      const verifyRes = await fetch("/api/auth/verify-captcha", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: captchaToken }),
+      });
+
+      const verifyData = await verifyRes.json();
+
+      if (!verifyData.success) {
+        phoneForm.setError("phone_number", {
+          message: "اعتبارسنجی کپچا ناموفق بود",
+        });
+        return;
+      }
+
+      const converted = convertPersianToEnglish(phone_number);
+      setPhoneNumber(converted);
+
       const exists = await checkPhoneExists(converted);
-      console.log(exists)
       if (exists) {
         setIsNewUser(false);
         setStep("PASSWORD");
       } else {
         setIsNewUser(true);
-
         const result = await sendOtp(converted);
-
         if (result?.status === 200) {
           setStep("OTP");
           setCanResend(false);
@@ -77,9 +102,9 @@ export default function AuthModal() {
           });
         }
       }
-    } catch {
+    } catch (err) {
       phoneForm.setError("phone_number", {
-        message: "خطا در بررسی شماره تلفن",
+        message: "خطایی در ارسال اطلاعات",
       });
     } finally {
       setLoading(false);
@@ -199,6 +224,16 @@ export default function AuthModal() {
                       {phoneForm.formState.errors.phone_number.message}
                     </p>
                   )}
+
+                  <div className="flex items-center w-full">
+                    <div className="scale-75 -mr-12 -my-5">
+                      <ReCAPTCHA
+                        hl="fa"
+                        sitekey={RECAPTCHA_SITE_KEY}
+                        onChange={(token) => setCaptchaToken(token)}
+                      />
+                    </div>
+                  </div>
                 </>
               )}
 

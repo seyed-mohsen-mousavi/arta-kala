@@ -1,4 +1,3 @@
-// hooks/useCartActions.ts
 import { useCallback } from "react";
 import { addToast } from "@heroui/toast";
 import {
@@ -27,7 +26,6 @@ export const useCartActions = (setCart: any, setLoading: any, cart: any) => {
 
     const addToCart = async (item: CartItem) => {
         if (!user) return;
-
         setLoading(true);
         try {
             const res = await PostShopCart({

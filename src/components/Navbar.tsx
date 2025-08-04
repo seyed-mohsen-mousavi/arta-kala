@@ -33,7 +33,7 @@ import { convertNumberToPersian } from "../utils/converNumbers";
 import EmptyCart from "./EmptyCart";
 import ProductButton from "./ProductButton";
 
-function Navbar() {
+function Navbar({ title }: { title: string }) {
   const categories = useCategories();
   const pathname = usePathname();
   const { onOpen }: any = useAuthModal();
@@ -111,7 +111,7 @@ function Navbar() {
             />
           </div>
           <span className="text-3xl sm:text-4xl font-extrabold font-noora text-gray-800 transition-colors duration-300 float-text">
-            تکنو صاف
+            {title ? title : "تکنو صاف"}
           </span>
         </Link>
 
@@ -206,7 +206,7 @@ function Navbar() {
                   </button>
                 )}
                 <ProductButton
-                  href="/marketer"
+                  href="/marketer/dashboard"
                   className="p-2.5 px-2.5 lg:px-5 w-full rounded-full bg-white hover:bg-zinc-50 active:bg-zinc-100 transition-colors ease-in-out text-black text-center text-xs md:text-sm flex text-nowrap items-center justify-center gap-1 sm:gap-3 font-bold"
                   aria-label="بازاریاب شو"
                 >
@@ -472,6 +472,7 @@ function CartDrawer({ cart }: { cart: CartFormat }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { removeFromCart, incrementQuantity, decrementQuantity, loading } =
     useCart();
+
   return (
     <div className="relative inline-block group mt-1">
       <Badge

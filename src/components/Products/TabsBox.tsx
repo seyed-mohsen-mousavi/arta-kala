@@ -2,11 +2,10 @@
 import { Tabs, Tab } from "@heroui/react";
 import { FaFileAlt } from "react-icons/fa";
 import { HiChatAlt2 } from "react-icons/hi";
-import parse from "html-react-parser";
+import Comments from "./Comments";
+import parse, { DOMNode, Element } from "html-react-parser";
 import sanitizeHtml from "sanitize-html";
 import Image from "next/image";
-import type { DOMNode, Element } from "html-react-parser";
-import Comments from "./Comments";
 
 export default function TabsBox({
   description_2,

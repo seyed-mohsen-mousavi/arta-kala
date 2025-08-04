@@ -7,15 +7,21 @@ import { GetProducts, GetShopCategoriesTreeList } from "@/services/shopActions";
 //   searchParams: Record<string, string | string[]>;
 // };
 
-export default async function ProductsPage({ searchParams }: any) {
+export default async function ProductsPage({
+  searchParams,
+  isShow,
+  items,
+}: any) {
   const data = await GetProducts(searchParams);
   const categoryRes = await GetShopCategoriesTreeList();
   const categories = categoryRes?.data || [];
   return (
     <LayoutShell
+      items={items}
+      isShow={isShow}
       categories={categories}
       products={data.results || []}
-      pagination={{ count: data?.count || 0, page: data?.page || 1 }}
+      pagination={{ count: data.count, page: data?.page || 1 }}
       searchParams={await searchParams}
     />
   );

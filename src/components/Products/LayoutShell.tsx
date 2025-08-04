@@ -12,10 +12,15 @@ type LayoutShellProps = {
   searchParams: Record<string, string | string[]>;
   pagination?: { count: number; page: number };
   categories: CategoryNode[];
+  isShow?: boolean;
+  items?: any[];
 };
 export default function LayoutShell({
   searchParams,
   products,
+  isShow = false,
+  pagination,
+  items,
 }: LayoutShellProps) {
   const categories = useCategories();
   const categoryId = searchParams.category_id;
@@ -62,14 +67,21 @@ export default function LayoutShell({
       : []),
   ];
   return (
-    <div className="space-y-5 container customSm:max-w-[566px]">
-      <BreadcrumbsBox title="محصولات" items={breadcrumbItems} />
-
+    <div
+      className={`${isShow ? "" : "space-y-5 container customSm:max-w-[566px]"}`}
+    >
+      {!isShow && <BreadcrumbsBox items={breadcrumbItems} />}
       <section className="flex gap-4 w-full h-full ">
         <FilterBox selected={selected} />
         <div className="size-full space-y-5">
           <SortBox />
-          <Products products={products} searchParams={searchParams} />
+          <Products
+            items={items}
+            isShow={isShow}
+            pagination={pagination}
+            products={products}
+            searchParams={searchParams}
+          />
         </div>
       </section>
     </div>

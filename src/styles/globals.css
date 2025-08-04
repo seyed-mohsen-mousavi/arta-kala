@@ -302,3 +302,7 @@ html {
   font-size: 16px;
   color: #92400e;
 }
+.recaptcha-container iframe {
+  transform: scale(0.7);
+  transform-origin: 0 0;
+}

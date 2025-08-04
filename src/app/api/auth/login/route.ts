@@ -13,18 +13,12 @@ export async function POST(request: NextRequest) {
         response.cookies.set("access_token", access, {
             httpOnly: true,
             path: "/",
-            maxAge: 60 * 60 * 24 * 7,
-            secure: process.env.NODE_ENV === "production",
+            maxAge: 420,
+            secure: false,
             sameSite: 'lax',
         });
 
-        response.cookies.set("refresh_token", refresh, {
-            httpOnly: true,
-            path: "/",
-            maxAge: 60 * 60 * 24 * 30,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: 'lax',
-        });
+
 
         return response;
     } catch (error: any) {

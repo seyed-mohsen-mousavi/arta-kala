@@ -12,7 +12,7 @@ import ProductType from "@/types/product";
 import TabsBox from "@/components/Products/TabsBox";
 import AddToCart from "@/components/Products/AddToCart";
 
-function findCategory(
+export function findCategory(
   categories: CategoryNode[],
   targetName: string
 ): CategoryNode | undefined {
@@ -47,6 +47,7 @@ export default async function Page({
 
   const categoryFind = findCategory(categories, data.category);
   const comments = await GetComments(data.id);
+
   return (
     <>
       <BreadcrumbsBox

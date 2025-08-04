@@ -30,13 +30,3 @@ export const UserProvider = ({
   );
 };
 
-// useEffect(() => {
-//   if (user) {
-//     const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
-//     if (localCart.length > 0) {
-//       Promise.all(localCart.map((item) => addToServerCart(item))).then(() => {
-//         localStorage.removeItem("cart");
-//       });
-//     }
-//   }
-// }, [user]);

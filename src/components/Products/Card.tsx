@@ -4,14 +4,25 @@ import Image from "next/image";
 import Link from "next/link";
 import { CiImageOff } from "react-icons/ci";
 
-function Card({ item }: { item: ProductType }) {
+export default function Card({
+  item,
+  href,
+  isShow,
+  items,
+}: {
+  item: ProductType;
+  href?: string;
+  isShow?: boolean;
+  items?: any;
+}) {
   return (
     <Link
-      href={`/product/${item.slug}`}
+      href={href ? href : `/product/${item.slug}`}
       key={item.id}
       title={item.name}
-      className="size-full flex"
+      className="size-full flex relative group/card"
     >
+      {isShow && <SelectBox items={items} item={item} />}
       <div className="bg-white shadow rounded-lg p-3.5 sm:p-5 hover:shadow-lg transition-shadow group/card w-full h-full flex flex-col relative">
         <div className="relative">
           {item.cover_image ? (
@@ -77,5 +88,75 @@ function Card({ item }: { item: ProductType }) {
     </Link>
   );
 }
+import { useEffect, useState } from "react";
+import { marketing_products_select_create } from "@/services/marketingActions";
+import { useRouter } from "next/navigation";
+import { addToast } from "@heroui/toast";
 
-export default Card;
+function SelectBox({ item, items }: { item: ProductType; items: any }) {
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isAlreadySelected, setIsAlreadySelected] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const already = items.some((entry: any) => entry.product?.id === item.id);
+    setIsAlreadySelected(already);
+  }, [items, item.id]);
+
+  const handleSelect = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    setLoading(true);
+    setMessage("");
+
+    try {
+      const res = await marketing_products_select_create({
+        product_ids: [item.id],
+      });
+
+      if (!res.success) {
+        setMessage("خطا در انتخاب محصول");
+        addToast({
+          title: res.errors || "خطا در انتخاب محصول",
+          description: "لطفاً دوباره تلاش کنید.",
+          color: "danger",
+        });
+        return;
+      }
+
+      router.refresh();
+      setIsAlreadySelected(true);
+      setMessage("محصول با موفقیت انتخاب شد");
+    } catch (error) {
+      setMessage("ارسال با خطا مواجه شد");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div
+      className={`absolute z-10 top-2 left-2 ${isAlreadySelected ? "bg-green-300 rounded-sm" : "bg-white rounded-br-xl"} p-2 flex flex-col gap-2`}
+    >
+      {isAlreadySelected ? (
+        <p className="text-xs text-green-700 pointer-events-none font-semibold text-center">
+          قبلاً انتخاب شده
+        </p>
+      ) : (
+        <button
+          onClick={handleSelect}
+          disabled={loading}
+          className="btn-primary text-sm px-2 py-1 rounded disabled:opacity-50"
+        >
+          {loading ? "لطفا شکیبا باشید ..." : "انتخاب این محصول"}
+        </button>
+      )}
+
+      {message && (
+        <p className="text-xs text-center text-zinc-600">{message}</p>
+      )}
+    </div>
+  );
+}

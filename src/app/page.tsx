@@ -199,7 +199,7 @@ export default async function Home() {
   }
   return (
     <div className="w-full">
-      <header className="flex flex-col md:flex-row gap-4 w-full h-full py-4 lg:max-h-[500px] overflow-hidden">
+      <header className="flex flex-col gap-4 w-full h-full py-4 max-h-[500px] overflow-hidden">
         <HomeSlider images={images} />
       </header>
       <section className="max-w-[1270px] mx-auto space-y-2">
