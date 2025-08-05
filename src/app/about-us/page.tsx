@@ -1,6 +1,7 @@
 import BreadcrumbsBox from "@/components/Products/BreadcrumbsBox";
 import { homeAboutUsList } from "@/services/homeActions";
 import parse, { DOMNode, Element } from "html-react-parser";
+import { Metadata } from "next";
 import Image from "next/image";
 import sanitizeHtml from "sanitize-html";
 interface aboutT {
@@ -13,6 +14,38 @@ interface aboutT {
   title: string;
   video: string | null;
 }
+
+export const metadata: Metadata = {
+  title: "درباره ما | تکنو صاف",
+  description:
+    "با تکنو صاف آشنا شوید؛ داستان ما، اهداف، و خدماتی که به شما ارائه می‌دهیم. فروشگاهی مطمئن با محصولات باکیفیت و پشتیبانی حرفه‌ای.",
+  keywords: [
+    "درباره ما",
+    "تکنو صاف",
+    "فروشگاه تکنو صاف",
+    "داستان تکنو صاف",
+    "خدمات تکنو صاف",
+  ],
+  openGraph: {
+    title: "درباره ما | تکنو صاف",
+    description:
+      "با تکنو صاف آشنا شوید؛ داستان ما، اهداف، و خدماتی که به شما ارائه می‌دهیم. فروشگاهی مطمئن با محصولات باکیفیت و پشتیبانی حرفه‌ای.",
+    url: `${process.env.NEXT_PUBLIC_SITE_URL}/about-us`,
+    siteName: "تکنو صاف",
+    locale: "fa_IR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "درباره ما | تکنو صاف",
+    description:
+      "با تکنو صاف آشنا شوید؛ داستان ما، اهداف و خدمات فروشگاه تکنو صاف.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 const transform = (node: DOMNode) => {
   if (node.type === "tag" && node.name === "img") {
     const { src, alt, width, height } = (node as Element).attribs;

@@ -1,5 +1,6 @@
 import BreadcrumbsBox from "@/components/Products/BreadcrumbsBox";
 import { homeContactInfoList } from "@/services/homeActions";
+import { Metadata } from "next";
 import { Suspense } from "react";
 import { BsFillTelephonePlusFill } from "react-icons/bs";
 import { FaMapMarkerAlt } from "react-icons/fa";
@@ -8,6 +9,37 @@ interface Contact {
   phone_number: string | null;
   address: string | null;
 }
+export const metadata: Metadata = {
+  title: "ارتباط با ما | تکنو صاف",
+  description:
+    "راه‌های تماس با فروشگاه تکنو صاف؛ آدرس، شماره تلفن و اطلاعات پشتیبانی جهت ارتباط سریع و آسان با ما.",
+  keywords: [
+    "ارتباط با ما",
+    "تماس با تکنو صاف",
+    "فروشگاه تکنو صاف",
+    "آدرس تکنو صاف",
+    "شماره تلفن تکنو صاف",
+  ],
+  openGraph: {
+    title: "ارتباط با ما | تکنو صاف",
+    description:
+      "راه‌های تماس با فروشگاه تکنو صاف؛ آدرس، شماره تلفن و اطلاعات پشتیبانی جهت ارتباط سریع و آسان با ما.",
+    url: `${process.env.NEXT_PUBLIC_SITE_URL}/contact-info`,
+    siteName: "تکنو صاف",
+    locale: "fa_IR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "ارتباط با ما | تکنو صاف",
+    description:
+      "راه‌های تماس با فروشگاه تکنو صاف؛ آدرس، شماره تلفن و اطلاعات پشتیبانی جهت ارتباط سریع و آسان با ما.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 async function page() {
   const result = await homeContactInfoList();
   const contactInfo: Contact[] = result?.data;
