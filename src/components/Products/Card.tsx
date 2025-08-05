@@ -129,7 +129,7 @@ function SelectBox({ item, items }: { item: ProductType; items: any }) {
       router.refresh();
       setIsAlreadySelected(true);
       setMessage("محصول با موفقیت انتخاب شد");
-    } catch (error) {
+    } catch {
       setMessage("ارسال با خطا مواجه شد");
     } finally {
       setLoading(false);

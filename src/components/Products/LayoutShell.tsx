@@ -9,7 +9,7 @@ import SortBox from "./SortBox";
 import { useCategories } from "@/context/CategoriesContext";
 type LayoutShellProps = {
   products: ProductType[];
-  searchParams: Record<string, string | string[]>;
+  searchParams: any;
   pagination?: { count: number; page: number };
   categories: CategoryNode[];
   isShow?: boolean;

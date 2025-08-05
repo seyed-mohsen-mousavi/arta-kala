@@ -19,9 +19,11 @@ import ProductButton from "../ProductButton";
 function AddToCart({
   product,
   is_available,
+  store_name_english,
 }: {
   product: ProductType;
   is_available: boolean;
+  store_name_english?: string;
 }) {
   const [quantity, setQuantity] = useState(1);
   const [newQuantity, setNewQuantity] = useState<number | null>(null);
@@ -62,6 +64,7 @@ function AddToCart({
         stock: product.stock,
         isDiscounted: product.isDiscounted,
         final_price: product.final_price,
+        store_name_english: store_name_english || "",
       });
     } catch (error) {
       console.log(error);

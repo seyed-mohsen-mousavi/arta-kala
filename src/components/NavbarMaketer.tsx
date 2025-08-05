@@ -11,8 +11,6 @@ import {
   LayoutDashboard,
   ChevronLeft,
   ChevronDown,
-  Menu,
-  X,
 } from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -46,7 +44,7 @@ function NavbarMaketer({
       icon: <Wallet size={18} />,
     },
     {
-      href: `/marketer/store/${marketer.store_name_english}`,
+      href: `/store/${marketer.store_name_english}`,
       label: "ویترین فروشگاه",
       icon: <Store size={18} />,
     },

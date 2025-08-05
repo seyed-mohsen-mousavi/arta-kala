@@ -102,7 +102,7 @@ export default function AuthModal() {
           });
         }
       }
-    } catch (err) {
+    } catch {
       phoneForm.setError("phone_number", {
         message: "خطایی در ارسال اطلاعات",
       });

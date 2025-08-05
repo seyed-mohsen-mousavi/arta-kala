@@ -33,7 +33,7 @@ import { convertNumberToPersian } from "../utils/converNumbers";
 import EmptyCart from "./EmptyCart";
 import ProductButton from "./ProductButton";
 
-function Navbar({ title }: { title: string }) {
+function Navbar({ title }: { title?: string }) {
   const categories = useCategories();
   const pathname = usePathname();
   const { onOpen }: any = useAuthModal();
@@ -43,7 +43,7 @@ function Navbar({ title }: { title: string }) {
     { href: "/articles", label: "مقالات" },
     { href: "/gallery", label: "گالری" },
     { href: "/about-us", label: "درباره ما" },
-    { href: "/contact-info", label: "تماس با ما" },
+    { href: "/contact-info", label: "ارتباط با ما" },
   ];
   const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
@@ -533,7 +533,7 @@ function CartDrawer({ cart }: { cart: CartFormat }) {
                           <p className="font-semibold text-zinc-500">
                             {item.product_name}
                           </p>
-                          <div className="flex items-center gap-2 mb-2">
+                          <div className="flex items-center gap-2 mb-2 font-pelak">
                             <p className="font-semibold">تعداد :</p>
                             <div className="bg-white flex items-center">
                               <button
@@ -556,20 +556,31 @@ function CartDrawer({ cart }: { cart: CartFormat }) {
                             </div>
                           </div>
 
-                          {item.isDiscounted ? (
-                            <div className="flex flex-col gap-1">
-                              <div className="flex items-center gap-2">
-                                <p className="line-through text-zinc-400 text-sm">
-                                  {item.total_price.toLocaleString("fa-IR")}{" "}
-                                  تومان
-                                </p>
-                              </div>
-                              <p className="font-bold text-lg text-green-600">
-                                {item.final_price.toLocaleString("fa-IR")} تومان
-                              </p>
+                          {item.final_price ? (
+                            <div className="flex items-center gap-1 font-bold font-pelak">
+                              <Badge
+                                color="danger"
+                                content={`${item.discount_percentage}%`}
+                                classNames={{
+                                  badge: "font-dana pt-1",
+                                }}
+                              >
+                                <div className="pr-4">
+                                  <div className="flex items-center gap-2">
+                                    <p className="line-through text-zinc-400 text-sm">
+                                      {item.total_price.toLocaleString("fa-IR")}{" "}
+                                      تومان
+                                    </p>
+                                  </div>
+                                  <p className="font-bold text-lg text-black">
+                                    {item.final_price.toLocaleString("fa-IR")}{" "}
+                                    تومان
+                                  </p>
+                                </div>
+                              </Badge>
                             </div>
                           ) : (
-                            <p className="font-bold text-lg">
+                            <p className="font-bold text-lg font-pelak">
                               {item.unit_price.toLocaleString("fa-IR")} تومان
                             </p>
                           )}

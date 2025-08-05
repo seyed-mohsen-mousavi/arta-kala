@@ -106,7 +106,7 @@ function CategoryItem({ category }: { category: BlogCategoryNode }) {
       ) : (
         <Link
           onClick={() => setIsOpen(false)}
-          href={`/articles?category_id=${category.id}`}
+          href={`/articles?category=${category.slug}`}
           className="block px-3 py-3.5 text-sm text-zinc-700 font-medium hover:bg-zinc-100 transition-colors"
         >
           {category.title}
