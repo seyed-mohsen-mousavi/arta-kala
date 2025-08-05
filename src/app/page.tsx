@@ -336,29 +336,33 @@ export default async function Home() {
             </div>
           </div>
         )}
-        <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white flex lg:flex-row flex-col">
-          <div className="flex lg:flex-col justify-between gap-5 px-4 text-nowrap">
-            <h4 className="font-semibold text-2xl">بلاگ</h4>
-            <div className="hidden  gap-0.5 lg:flex flex-col">
-              <Link href={"/"}>دانستنی‌های ابزار دستی(۲۲)</Link>
-              <Link href={"/"}>دانستنی های ابزار برقی و شارژی(۶۰)</Link>
-              <Link href={"/"}>دانستنی‌های ابزار بادی و بنزینی(۱)</Link>
-              <Link href={"/"}>دانستنی های ابزار الکتریک و روشنایی(۱)</Link>
+        <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white flex flex-col lg:flex-row overflow-hidden">
+          <div className="w-1/3 flex flex-col lg:justify-between gap-5 px-2 lg:px-4">
+            <h4 className="font-semibold text-2xl">مقالات</h4>
+
+            <div className="hidden lg:flex flex-col gap-2">
+              <Link href={"/"}>دانستنی‌های ابزار دستی (۲۲)</Link>
+              <Link href={"/"}>دانستنی‌های ابزار برقی و شارژی (۶۰)</Link>
+              <Link href={"/"}>دانستنی‌های ابزار بادی و بنزینی (۱)</Link>
+              <Link href={"/"}>دانستنی‌های ابزار الکتریک و روشنایی (۱)</Link>
             </div>
+
             <Link href={"/articles"} className="underline text-lg">
               مشاهده مطالب بیشتر
             </Link>
           </div>
-          <div className="px-12 mt-5 lg:max-w-full w-full">
+
+          <div className="mt-5 lg:w-2/3 px-4 lg:px-12">
             <Slider
-              spaceBetween={10}
               className="!text-primary"
               items={latest_articles}
               Card={QuickBlogCard}
-              slidesPerView={3}
+              spaceBetween={10}
+              slidesPerView={2.2}
             />
           </div>
         </div>
+
         <div className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white mt-10">
           <div className="px-12  h-full">
             <Slider

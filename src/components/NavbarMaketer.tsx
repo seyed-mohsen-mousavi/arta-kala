@@ -15,6 +15,7 @@ import {
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useMarketer } from "@/context/MarketerContext";
+import { User } from "@heroui/react";
 
 function NavbarMaketer({
   setMobileOpen,
@@ -144,12 +145,14 @@ function NavbarMaketer({
 
   return (
     <>
-      <nav className="w-64 p-4 min-h-screen sticky top-0 ">
-        <div className="flex items-center gap-2 mb-4">
-          <Image alt="تکنو صاف" src="/logo.png" width={48} height={48} />
-          <span className="font-bold text-lg">تکنو صاف</span>
+      <nav className="w-64 p-4 min-h-screen sticky top-0 flex flex-col items-start justify-between">
+        <div className="w-full">
+          <div className="flex items-center gap-2 mb-4">
+            <Image alt="تکنو صاف" src="/logo.png" width={48} height={48} />
+            <span className="font-bold text-lg">تکنو صاف</span>
+          </div>
+          <NavContent />
         </div>
-        <NavContent />
       </nav>
     </>
   );

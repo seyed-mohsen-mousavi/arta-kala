@@ -49,7 +49,6 @@ async function page() {
   const bankClass = data.card_number
     ? getBankClass(convertPersianToEnglish(data.card_number))
     : null;
-  console.log(data);
   return (
     <section>
       <h1 className="text-5xl font-bold py-2">داشبورد بازاریاب </h1>
