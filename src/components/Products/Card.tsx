@@ -20,7 +20,7 @@ export default function Card({
       href={href ? href : `/product/${item.slug}`}
       key={item.id}
       title={item.name}
-      className="size-full flex relative group/card"
+      className="size-full flex relative group/card h-full"
     >
       {isShow && <SelectBox items={items} item={item} />}
       <div className="bg-white shadow rounded-lg p-3.5 sm:p-5 hover:shadow-lg transition-shadow group/card w-full h-full flex flex-col relative">

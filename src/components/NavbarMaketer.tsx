@@ -15,7 +15,6 @@ import {
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useMarketer } from "@/context/MarketerContext";
-import { User } from "@heroui/react";
 
 function NavbarMaketer({
   setMobileOpen,
