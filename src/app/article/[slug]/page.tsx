@@ -12,7 +12,53 @@ import { HiMiniCalendarDateRange } from "react-icons/hi2";
 import parse from "html-react-parser";
 import sanitizeHtml from "sanitize-html";
 import moment from "moment-jalaali";
-
+import { Metadata } from "next";
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const data = await GetBlogBySlug((await params).slug);
+  if (!data) {
+    return {
+      title: "مقاله یافت نشد | تکنو صاف",
+    };
+  }
+  return {
+    title: `${data.title} | تکنو صاف`,
+    description: data.introduction,
+    keywords: [data.title, "مقاله تکنو صاف", `مقاله ${data.title}`],
+    openGraph: {
+      title: data.title,
+      description: data.introduction,
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}/article/${data.slug}`,
+      siteName: "تکنو صاف",
+      locale: "fa_IR",
+      type: "article",
+      publishedTime: data.published_at || data.created_at,
+      modifiedTime: data.updated_at,
+      images: [
+        {
+          url: data.thumbnail,
+          alt: data.title,
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: data.title,
+      description: data.introduction,
+      images: [data.thumbnail],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      nocache: true,
+    },
+  };
+}
 async function page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
@@ -62,9 +108,9 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
             دسته بندی ها
           </h2>
           <ul className="font-pelak">
-            {categories?.map((cat , key) => (
+            {categories?.map((cat, key) => (
               <li key={key} className="text-lg">
-                <Link href={`/articles/${cat.id}`}>{cat.title}</Link>
+                <Link href={`/articles?category=${cat.slug}`}>{cat.title}</Link>
               </li>
             ))}
           </ul>
@@ -75,7 +121,7 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
             آخرین مطالب
           </h2>
 
-          <ul className="font-pelak">
+          <ul className="font-pelak space-y-5">
             {latestPosts?.map((post: Article) => (
               <li key={post.id} className="text-lg flex items-start gap-4">
                 <Link href={`/article/${post.slug}`}>

@@ -11,7 +11,11 @@ import { CategoryNode } from "@/types/categories";
 import ProductType from "@/types/product";
 import TabsBox from "@/components/Products/TabsBox";
 import AddToCart from "@/components/Products/AddToCart";
-
+import { Metadata } from "next";
+import { cache } from "react";
+const getProduct = cache(async (slug: string) => {
+  return await GetProductBySlug(slug);
+});
 export function findCategory(
   categories: CategoryNode[],
   targetName: string
@@ -29,7 +33,58 @@ export function findCategory(
   }
   return undefined;
 }
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const decodedSlug = decodeURIComponent(params.slug);
+  const product = await getProduct(decodedSlug);
 
+  if (!product) {
+    return {
+      title: "محصول یافت نشد",
+      description: "محصول مورد نظر در فروشگاه یافت نشد.",
+    };
+  }
+
+  const title = `قیمت و خرید ${product.name}`;
+  const description =
+    product.short_description ||
+    `خرید ${product.name} با بهترین قیمت از دسته ${product.category}${
+      product.final_price ? " - تخفیف ویژه!" : ""
+    }`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}/products/${params.slug}`,
+      images: product.cover_image
+        ? [
+            {
+              url: product.cover_image,
+              width: 800,
+              height: 600,
+              alt: product.name,
+            },
+          ]
+        : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: product.cover_image ? [product.cover_image] : [],
+    },
+    alternates: {
+      canonical: `https://yourdomain.com/products/${params.slug}`,
+    },
+  };
+}
 export default async function Page({
   params,
 }: {
@@ -37,8 +92,9 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
+  if (!slug || typeof slug !== "string") return notFound();
+  const res = await getProduct(decodedSlug);
 
-  const res = await GetProductBySlug(decodedSlug);
   if (!res) return notFound();
 
   const data: ProductType = res;
@@ -180,7 +236,12 @@ export default async function Page({
                       </p>
                     </div>
                     <div className="size-14 relative">
-                      <img src="/free-delivery-free.svg" alt="ارسال رایگان" />
+                      <Image
+                        width={56}
+                        height={56}
+                        src="/free-delivery-free.svg"
+                        alt="ارسال رایگان"
+                      />
                     </div>
                   </div>
                 </>
@@ -220,10 +281,14 @@ export default async function Page({
                 </p>
               </div>
               <div className="size-14 relative">
-                <img
+                <Image
+                  width={56}
+                  height={56}
+
                   src="/free-delivery-free.svg"
                   loading="lazy"
                   alt="ارسال رایگان"
+                  
                 />
               </div>
             </div>

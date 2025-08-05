@@ -32,6 +32,7 @@ export const useCartActions = (setCart: any, setLoading: any, cart: any) => {
                 product_id: item.product_id,
                 quantity: item.quantity,
                 is_discounted: item.isDiscounted,
+                store_name_english: item.store_name_english || "",
             });
 
             if (res?.error) {

@@ -3,6 +3,7 @@ import BreadcrumbsBox from "@/components/Products/BreadcrumbsBox";
 import { convertNumberToPersian } from "@/utils/converNumbers";
 import Image from "next/image";
 import Link from "next/link";
+import { Metadata } from "next";
 
 type Image = {
   id: number;
@@ -17,10 +18,38 @@ type Gallery = {
   footer_text: string;
   images: Image[];
 };
-
+export const metadata: Metadata = {
+  title: "گالری تصاویر | تکنو صاف",
+  description:
+    "گالری تصاویر فروشگاه تکنو صاف شامل مجموعه‌ای از عکس‌های باکیفیت محصولات و رویدادهای ما. تصاویر متنوع و جذاب برای دید بهتر شما.",
+  keywords: [
+    "گالری تصاویر",
+    "تکنو صاف",
+    "عکس محصولات تکنو صاف",
+    "گالری فروشگاه تکنو صاف",
+  ],
+  openGraph: {
+    title: "گالری تصاویر | تکنو صاف",
+    description:
+      "گالری تصاویر فروشگاه تکنو صاف شامل مجموعه‌ای از عکس‌های باکیفیت محصولات و رویدادهای ما. تصاویر متنوع و جذاب برای دید بهتر شما.",
+    url: `${process.env.NEXT_PUBLIC_SITE_URL}/gallery`,
+    siteName: "تکنو صاف",
+    locale: "fa_IR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "گالری تصاویر | تکنو صاف",
+    description:
+      "گالری تصاویر فروشگاه تکنو صاف شامل مجموعه‌ای از عکس‌های باکیفیت محصولات و رویدادهای ما. تصاویر متنوع و جذاب برای دید بهتر شما.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 export default async function Gallery() {
   const data = await homeGalleryList();
-  console.log(data);
   return (
     <>
       <BreadcrumbsBox

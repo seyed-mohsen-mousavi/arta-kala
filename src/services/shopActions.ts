@@ -236,6 +236,7 @@ export async function PostShopCart(item: {
     product_id: number;
     quantity: number;
     is_discounted?: boolean;
+    store_name_english?: string
 }) {
     const url = item.is_discounted
         ? "/api/shop/discounted-cart/"
@@ -293,20 +294,18 @@ export async function PatchShopCart(id: number, data: { quantity: number, is_dis
 
 
 export async function DeleteShopCart(id: string, is_discounted?: boolean) {
-    const url = is_discounted
-        ? "/api/shop/discounted-cart"
-        : "/api/shop/cart";
+    const url = is_discounted ? "/api/shop/discounted-cart" : "/api/shop/cart";
 
     try {
-        const res = await fetch(`${url}?id=${id}`, {
+        const res = await fetch(`${url}?id=${encodeURIComponent(id)}`, {
             method: "DELETE",
         });
 
-        if (!res.ok) throw new Error("Failed to delete item");
+        if (!res.ok) throw new Error(`Failed to delete item, status: ${res.status}`);
 
         return await res.json();
     } catch (error) {
-        console.log("DeleteShopCart error:", error);
+        console.error("DeleteShopCart error:", error);
         return null;
     }
 }

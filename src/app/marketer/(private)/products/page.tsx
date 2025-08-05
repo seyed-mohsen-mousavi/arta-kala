@@ -2,11 +2,7 @@ import ProductsPage from "@/app/products/page";
 import { marketing_products_list } from "@/services/marketingActions";
 import React from "react";
 
-async function page({
-  searchParams,
-}: {
-  searchParams: Record<string, string | string[]>;
-}) {
+async function page({ searchParams }: { searchParams: any }) {
   const res = await marketing_products_list();
 
   return (

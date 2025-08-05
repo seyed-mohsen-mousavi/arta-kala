@@ -8,5 +8,6 @@ export type CartItem = {
     total_price: number;
     stock: number;
     final_price?: number
-    isDiscounted?: boolean
+    isDiscounted?: boolean;
+    store_name_english?: string;
 }

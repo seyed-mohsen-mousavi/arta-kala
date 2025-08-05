@@ -6,16 +6,25 @@ type BlogPostsResponse = {
     next_page: string | null;
     total_pages: number;
 };
-export const GetBlogPosts = async (currentPage?: number): Promise<BlogPostsResponse | undefined> => {
-    console.log(currentPage)
-    try {
-        const result = await api.get<BlogPostsResponse>("/blog/posts/")
-        return result.data
-    } catch (error) {
-        console.error(error)
-        return undefined
-    }
+interface BlogPostsParams {
+    category?: string;
 }
+
+export const GetBlogPosts = async (params?: BlogPostsParams): Promise<BlogPostsResponse | undefined> => {
+    try {
+        const query = new URLSearchParams();
+
+        if (params?.category) query.append("category", params.category);
+
+        const url = `/blog/posts/?${query.toString()}`;
+
+        const result = await api.get<BlogPostsResponse>(url);
+        return result.data;
+    } catch (error) {
+        console.error(error);
+        return undefined;
+    }
+};
 export const GetLatestBlogPosts = async (): Promise<any | undefined> => {
     try {
         const result = await api.get<any>("/blog/posts/latest")

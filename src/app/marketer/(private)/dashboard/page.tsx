@@ -1,19 +1,15 @@
 import { GetUserDashboard } from "@/services/authActions";
 import { marketing_profile_list } from "@/services/marketingActions";
 import { formatShamsiDateString } from "@/utils/formatShamsiDateString";
-import {
-  Activity,
-  ArrowDown,
-  ArrowUp,
-  CircleAlert,
-  ShoppingBag,
-} from "lucide-react";
+import { Activity, ArrowDown, CircleAlert, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { getBankClass } from "@/data/iranianBanks";
 import { convertPersianToEnglish } from "@/utils/converNumbers";
 import "iranianbanklogos/dist/ibl.css";
 import SettlementBox from "./SettlementBox";
+
+import Chart from "./Chart";
 
 function toPersianNumber(input: string) {
   const enToFa = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
@@ -98,18 +94,20 @@ async function page() {
                 </div>
                 <div className="space-y-2">
                   <p className="text-zinc-500 inline-flex items-center gap-3">
-                    فعالیت‌های اخیر
+                    کل پورسانت
                     <CircleAlert className="size-5 fill-zinc-500 text-white" />
                   </p>
-                  <h3 className="text-5xl font-semibold">864 K</h3>
+                  <h3 className="text-5xl font-semibold">
+                    {data.total_commission ?? 0}%
+                  </h3>
                 </div>
               </div>
-              <div>
+              {/* <div>
                 <div className="bg-zinc-50 text-green-400  px-1 rounded-lg flex items-center font-semibold">
                   33%
                   <ArrowUp className="size-5" />
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -241,19 +239,7 @@ async function page() {
           </div>
         </div>
 
-        <div className="col-span-1 sm:col-span-2 lg:col-span-5">
-          <div className="bg-white p-4 rounded-xl h-full ">
-            <div className="flex items-center gap-2">
-              <div className="bg-gray-200 rounded-lg w-5 h-10" />
-              <h2 className="font-semibold text-xl">اطلاعیه‌ها</h2>
-            </div>
-            <div className="mt-4">
-              <p className="text-zinc-500">
-                اطلاعیه‌های جدید شما اینجا نمایش داده می‌شوند.
-              </p>
-            </div>
-          </div>
-        </div>
+        <Chart />
       </div>
     </section>
   );

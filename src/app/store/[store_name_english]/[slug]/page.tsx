@@ -11,12 +11,12 @@ import Link from "next/link";
 import React from "react";
 import parse, { DOMNode, Element } from "html-react-parser";
 import sanitizeHtml from "sanitize-html";
-import Navbar from "@/components/Navbar";
+import { GrLinkNext } from "react-icons/gr";
 
 async function page({
   params,
 }: {
-  params: { store_name_english: string; slug: string };
+  params: Promise<{ store_name_english: string; slug: string }>;
 }) {
   const { store_name_english, slug } = await params;
   const store = await marketing_store_read(store_name_english, slug);
@@ -73,9 +73,19 @@ async function page({
   };
   const res = await marketing_profile_list();
   const profile = res.data;
+  // profile data : {store_name_persian: string, store_name_english: string}
   return (
     <>
-      <Navbar title={`فروشگاه ${profile.store_name_persian}`} />
+      {profile && (
+        <div className="container customSm:max-w-[566px] mx-auto px-4 py-8 flex items-center">
+          <Link
+            href={`/store/${profile.store_name_english}`}
+            className="text-cyan-400 spoiler-link relative text-xl"
+          >
+            <GrLinkNext className="inline-block mr-1" />  برگشت به فروشگاه {profile.store_name_persian}
+          </Link>{" "}
+        </div>
+      )}
       <div className="container customSm:max-w-[566px]">
         <div className="bg-white shadow-lg shadow-black/10 rounded-[5px] px-5 py-4 w-full mt-7 text-sm ">
           <div className="flex flex-col md:flex-row justify-between">
@@ -176,6 +186,7 @@ async function page({
                   </p>
                 )}
                 <AddToCart
+                  store_name_english={store_name_english}
                   is_available={data.is_available && data.stock > 0}
                   product={data}
                 />
@@ -217,6 +228,7 @@ async function page({
             </>
           )}
           <AddToCart
+            store_name_english={store_name_english}
             is_available={data.is_available && data.stock > 0}
             product={data}
           />
@@ -261,6 +273,7 @@ async function page({
                 <span className="font-light">تومان</span>
               </p>
               <AddToCart
+                store_name_english={store_name_english}
                 is_available={data.is_available && data.stock > 0}
                 product={data}
               />

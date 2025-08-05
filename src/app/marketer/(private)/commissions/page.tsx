@@ -18,7 +18,7 @@ async function Commissions() {
   try {
     result = await marketing_commissions_list();
     console.log(result);
-  } catch (error) {
+  } catch {
     return (
       <div className="flex flex-col items-center justify-center p-8 text-danger border border-red-100 rounded-xl h-full max-w-md mx-auto">
         <FaExclamationTriangle className="text-danger mb-4" size={48} />
@@ -55,7 +55,12 @@ async function Commissions() {
           <p className="text-lg xl:text-2xl font-semibold">
             هیچ کمیسیونی موجود نیست.
           </p>
-          <Link href={"/marketer/dashboard"}  className="mt-4 px-6 py-2 text-blue-500 underline underline-offset-2 rounded-lg hover:text-blue-600 transition-colors">بازگشت به داشبورد</Link>
+          <Link
+            href={"/marketer/dashboard"}
+            className="mt-4 px-6 py-2 text-blue-500 underline underline-offset-2 rounded-lg hover:text-blue-600 transition-colors"
+          >
+            بازگشت به داشبورد
+          </Link>
         </div>
       </div>
     );

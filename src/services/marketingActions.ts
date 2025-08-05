@@ -112,7 +112,6 @@ export const marketing_products_list = async (): ApiResponse<any[]> => {
 };
 
 interface MarketingProductRemoveResponse {
-    // Define the expected structure of the response data here if known
     [key: string]: any;
 }
 
@@ -209,7 +208,7 @@ export const marketing_register_create: (data: { store_name_persian: string; sto
 
 export async function marketing_store_read(
     store_name_english: string,
-    product_slug: string | undefined
+    product_slug?: string | undefined
 ): ApiResponse<any> {
     try {
         const headers = await getAuthHeaders();
