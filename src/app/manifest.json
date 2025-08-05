@@ -1,6 +1,15 @@
 {
   "name": "تکنو صاف",
   "short_name": "تکنو صاف",
+  "lang": "fa-IR",
+  "start_url": "/",
+  "scope": "/",
+  "description": "وب‌سایت رسمی تکنو صاف، ارائه‌دهنده خدمات و محصولات با کیفیت.",
+  "dir": "rtl",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#ffd333",
+  "background_color": "#ffd333",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -13,9 +22,11 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    },
+    {
+      "src": "/web-app-icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
-  ],
-  "theme_color": "#ffffff",
-  "background_color": "#f3b61b",
-  "display": "standalone"
+  ]
 }
