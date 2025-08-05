@@ -6,14 +6,14 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     try {
         const res = await api.post("/users/login/password/", body);
-        const { access, refresh, message } = res.data;
+        const { access, message } = res.data;
 
         const response = NextResponse.json({ message });
 
         response.cookies.set("access_token", access, {
             httpOnly: true,
             path: "/",
-            maxAge: 420,
+            maxAge: 60 * 60 * 24 * 7,
             secure: false,
             sameSite: 'lax',
         });

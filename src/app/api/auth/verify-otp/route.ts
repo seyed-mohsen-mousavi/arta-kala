@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
             referral_code: referral_code || "",
         });
 
-        const { access, refresh, message } = res.data;
+        const { access, message } = res.data;
 
         const response = NextResponse.json({ message });
 
@@ -26,13 +26,6 @@ export async function POST(request: NextRequest) {
 
         });
 
-        response.cookies.set("refresh_token", refresh, {
-            httpOnly: true,
-            path: "/",
-            maxAge: 60 * 60 * 24 * 30,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: 'lax',
-        });
 
         return response;
     } catch (error: any) {
