@@ -167,6 +167,7 @@ const images = [
   },
 ];
 import HomeSlider from "@/components/HomeSlider";
+import { homeSliderList } from "@/services/homeActions";
 
 export const metadata: Metadata = {
   title: "تکنو صاف | فروشگاه آنلاین با تضمین کیفیت",
@@ -209,7 +210,8 @@ export default async function Home() {
   let latest_products: ProductType[] = [];
   let featured_products: ProductType[] = [];
   let latest_articles = [];
-
+  const sliders = await homeSliderList();
+  console.log(sliders);
   try {
     const [
       data,

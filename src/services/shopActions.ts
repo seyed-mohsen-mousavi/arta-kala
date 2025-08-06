@@ -22,7 +22,7 @@ interface GetProductsParams {
     sort?: string;
     page?: number;
 }
-export async function GetProducts(params?: GetProductsParams): Promise<any> {
+export async function GetProducts(params?: GetProductsParams, page?: number): Promise<any> {
     try {
         const searchParams = await params || {};
         const query = new URLSearchParams();
@@ -35,7 +35,7 @@ export async function GetProducts(params?: GetProductsParams): Promise<any> {
         if (searchParams?.search) query.append("search", searchParams?.search);
         if (searchParams?.new_days !== undefined) query.append("new_days", searchParams?.new_days.toString());
         if (searchParams?.sort) query.append("sort", searchParams?.sort);
-        if (searchParams?.page !== undefined) query.append("page", searchParams?.page.toString());
+        if (page) query.append("page", String(page));
 
         const [resNormal, resDiscounted] = await Promise.all([
             api.get(`/shop/products?${query.toString()}`),
@@ -295,7 +295,6 @@ export async function PatchShopCart(id: number, data: { quantity: number, is_dis
 
 export async function DeleteShopCart(id: string, is_discounted?: boolean) {
     const url = is_discounted ? "/api/shop/discounted-cart" : "/api/shop/cart";
-
     try {
         const res = await fetch(`${url}?id=${encodeURIComponent(id)}`, {
             method: "DELETE",
@@ -324,30 +323,58 @@ export async function ClearShopCart() {
     }
 }
 
-export async function createOrder(data: any) {
+export async function createDiscountedOrder(data: any) {
     try {
-        const res = await fetch(`/api/shop/order/create`, {
+        const res = await fetch(`/api/shop/order/discounted`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         });
-
         const json = await res.json();
 
         if (!res.ok) {
-            throw new Error(json.message || "خطا در ثبت سفارش");
+            return {
+                success: false,
+                message: json.message || "خطا در ثبت سفارش تخفیف‌دار",
+            };
         }
 
-        return json;
-    } catch (error: any) {
         return {
-            success: false,
-            message: error.message || "خطای ناشناخته"
+            success: true,
+            data: json,
+            message: json.message || "سفارش تخفیف‌دار با موفقیت ثبت شد",
         };
+    } catch (error: any) {
+        return { success: false, message: error.message || "خطای ناشناخته" };
     }
 }
+
+export async function createNormalOrder(data: any) {
+    try {
+        const res = await fetch(`/api/shop/order/normal`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
+        const json = await res.json();
+
+        if (!res.ok) {
+            return {
+                success: false,
+                message: json.message || "خطا در ثبت سفارش عادی",
+            };
+        }
+
+        return {
+            success: true,
+            data: json,
+            message: json.message || "سفارش عادی با موفقیت ثبت شد",
+        };
+    } catch (error: any) {
+        return { success: false, message: error.message || "خطای ناشناخته" };
+    }
+}
+
 
 export async function GetShippingServices() {
     try {

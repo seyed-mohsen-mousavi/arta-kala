@@ -23,7 +23,7 @@ export default function LayoutShell({
   items,
 }: LayoutShellProps) {
   const categories = useCategories();
-  const categoryId = searchParams.category_id;
+  const categoryId = (searchParams).category_id;
   const selected =
     Object.keys(searchParams).length > 0 && !("sort" in searchParams);
 

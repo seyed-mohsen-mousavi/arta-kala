@@ -36,9 +36,10 @@ export function findCategory(
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const decodedSlug = decodeURIComponent(params.slug);
+  const { slug } = await params;
+  const decodedSlug = decodeURIComponent(slug);
   const product = await getProduct(decodedSlug);
 
   if (!product) {
@@ -62,7 +63,7 @@ export async function generateMetadata({
       title,
       description,
       type: "website",
-      url: `${process.env.NEXT_PUBLIC_SITE_URL}/products/${params.slug}`,
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}/products/${slug}`,
       images: product.cover_image
         ? [
             {
@@ -81,7 +82,7 @@ export async function generateMetadata({
       images: product.cover_image ? [product.cover_image] : [],
     },
     alternates: {
-      canonical: `https://yourdomain.com/products/${params.slug}`,
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/products/${slug}`,
     },
   };
 }
@@ -284,11 +285,9 @@ export default async function Page({
                 <Image
                   width={56}
                   height={56}
-
                   src="/free-delivery-free.svg"
                   loading="lazy"
                   alt="ارسال رایگان"
-                  
                 />
               </div>
             </div>

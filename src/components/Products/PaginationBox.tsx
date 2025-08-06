@@ -92,7 +92,7 @@ export default function PaginationBox({
       initialPage={page || 1}
       radius="full"
       renderItem={renderItem}
-      total={Math.ceil(count / 24)}
+      total={Math.ceil(count / 20)}
       boundaries={3}
       variant="light"
       onChange={(page) => {

@@ -54,9 +54,9 @@ function Slider({ images }: { images: ImageType[] }) {
                   alt={image.alt}
                   width={500}
                   height={400}
-                  priority={index <= 1}
+                  priority
+                  quality={85}
                   className="object-cover size-full rounded-3xl sm:rounded-none inline-block"
-                  unoptimized
                 />
               </div>
             </Link>

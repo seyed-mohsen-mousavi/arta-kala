@@ -24,3 +24,11 @@ export const homeGalleryList = async () => {
         console.log(error)
     }
 }
+export const homeSliderList = async () => {
+    try {
+        const result = await api.get("/home/sliders/")
+        return result.data
+    } catch (error) {
+        console.log(error)
+    }
+}

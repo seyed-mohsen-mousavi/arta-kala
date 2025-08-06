@@ -12,7 +12,8 @@ export default async function ProductsPage({
   isShow,
   items,
 }: any) {
-  const data = await getCashedProducts(searchParams);
+  const search = await searchParams;
+  const data = await getCashedProducts(search);
   const categoryRes = await GetShopCategoriesTreeList();
   const categories = categoryRes?.data || [];
   return (
@@ -22,7 +23,7 @@ export default async function ProductsPage({
       categories={categories}
       products={data.results || []}
       pagination={{ count: data.count, page: data?.page || 1 }}
-      searchParams={await searchParams}
+      searchParams={search}
     />
   );
 }
