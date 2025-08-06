@@ -1,12 +1,15 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useCart } from "@/context/CartContextProvider";
 import { useUser } from "@/context/UserContext";
 import { addToast } from "@heroui/toast";
 import provincesWithCitiesRaw from "@/data/iran.json";
 import { Checkbox, Radio, RadioGroup } from "@heroui/react";
-import { createOrder as apiCreateOrder } from "@/services/shopActions";
+import {
+  createDiscountedOrder,
+  createNormalOrder,
+} from "@/services/shopActions";
 import Link from "next/link";
 
 const provincesWithCities: Record<string, string[]> =
@@ -264,7 +267,10 @@ const CreateOrder = ({ shippingServices }: CreateOrderProps) => {
 
     setIsSubmitting(true);
 
-    const payload = {
+    const discountedItems = cart.items.filter((item) => item.final_price);
+    const normalItems = cart.items.filter((item) => !item.final_price);
+
+    const basePayload = {
       shipping_service_id: selectedShippingServiceId,
       discount_code: formData.discount_code || "",
       name_receiver: isSelfReceiver
@@ -287,22 +293,49 @@ const CreateOrder = ({ shippingServices }: CreateOrderProps) => {
         : formData.receiver_postal_code,
     };
 
-    const res = await apiCreateOrder(payload);
+    const requests = [];
 
+    if (discountedItems.length > 0) {
+      requests.push(
+        createDiscountedOrder({
+          ...basePayload,
+          cart_items: discountedItems,
+        })
+      );
+    }
+
+    if (normalItems.length > 0) {
+      requests.push(
+        createNormalOrder({
+          ...basePayload,
+          cart_items: normalItems,
+        })
+      );
+    }
+    const responses = await Promise.all(requests);
     setIsSubmitting(false);
 
-    if (res && res.success) {
+    const allSuccessful = responses.every((res) => res && res.success);
+    if (allSuccessful) {
+      let redirectUrl = "/profile/pre-invoices";
+      if (responses[0]?.data?.id) {
+        redirectUrl = `/profile/orders/${responses[0].data.id}`;
+      } else if (responses[1]?.data?.id) {
+        redirectUrl = `/profile/orders/${responses[1].data.id}`;
+      }
+
       addToast({
         title: "سفارش با موفقیت ثبت شد",
         description: "متشکریم از خرید شما!",
         color: "success",
       });
 
-      location.replace("/profile/cart");
+      location.replace(redirectUrl);
     } else {
+      const failed = responses.find((res) => !res.success);
       addToast({
         title: "خطا در ثبت سفارش",
-        description: res?.message || "مشکلی پیش آمد، دوباره تلاش کنید.",
+        description: failed?.message || "مشکلی پیش آمد، دوباره تلاش کنید.",
         color: "danger",
       });
     }

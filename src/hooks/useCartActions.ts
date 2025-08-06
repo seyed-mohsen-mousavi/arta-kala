@@ -59,7 +59,7 @@ export const useCartActions = (setCart: any, setLoading: any, cart: any) => {
 
         setLoading(true);
         try {
-            await DeleteShopCart(String(item.id), item?.isDiscounted);
+            await DeleteShopCart(String(item.id), item?.final_price);
             await fetchCart();
         } catch (err) {
             console.error("خطا در حذف آیتم:", err);
@@ -79,7 +79,7 @@ export const useCartActions = (setCart: any, setLoading: any, cart: any) => {
         try {
             const res = await PatchShopCart(item.id, {
                 quantity,
-                is_discounted: item?.isDiscounted,
+                is_discounted: item?.final_price,
             });
 
             if (res?.error) {
@@ -97,6 +97,7 @@ export const useCartActions = (setCart: any, setLoading: any, cart: any) => {
             setLoading(false);
         }
     };
+
 
     const increment = (id: number) => {
         const item = cart?.items?.find((i: any) => i.product_id === id);

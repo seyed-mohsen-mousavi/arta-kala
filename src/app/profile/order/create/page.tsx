@@ -1,15 +1,14 @@
+
 import CreateOrder from "@/components/Profile/CreateOrder";
-import { GetUserDashboard } from "@/services/authActions";
 import { GetShippingServices } from "@/services/shopActions";
 import { redirect } from "next/navigation";
 
 export default async function Page() {
-  const { cart } = await GetUserDashboard();
+  const shippingServicesResponse = await GetShippingServices();
 
-  if (!cart?.items?.length) {
+  if (!shippingServicesResponse) {
     redirect("/profile/cart");
   }
 
-  const { data }: any = await GetShippingServices();
-  return <CreateOrder shippingServices={data} />;
+  return <CreateOrder shippingServices={shippingServicesResponse.data} />;
 }

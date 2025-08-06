@@ -63,6 +63,7 @@ const inputTypes: Partial<Record<FieldKey, string>> = {
 
 function PersonalInfoForm() {
   const { user } = useUser();
+  console.log(user)
   const identity = user?.identity;
   const defaultValues: FormSchema = {
     first_name: identity?.first_name || "",
