@@ -11,7 +11,7 @@ export default function LayoutWrapper({
 }) {
   const pathname = usePathname();
 
-  if (pathname.startsWith("/marketer")) {
+  if (pathname.startsWith("/marketer") || pathname.startsWith("/payment")) {
     return <>{children}</>;
   }
 
