@@ -45,12 +45,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     blogcategories.forEach((blog) => {
         blog.children?.forEach(blogChild => {
             sitemap.push({
-                url: `${baseUrl}/products?category_id=${blogChild.id}`,
+                url: `${baseUrl}/articles?category=${blogChild.slug}`,
                 lastModified: new Date(),
             });
         })
         sitemap.push({
-            url: `${baseUrl}/products?category_id=${blog.slug}`,
+            url: `${baseUrl}/articles?category=${blog.slug}`,
             lastModified: new Date(),
         });
     });

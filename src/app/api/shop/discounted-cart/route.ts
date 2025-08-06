@@ -12,7 +12,6 @@ export async function GET() {
             Authorization: `Bearer ${token}`,
         },
     });
-    console.log(res.data)
     return new Response(JSON.stringify(res.data), {
         status: res.status,
         headers: { "Content-Type": "application/json" },
@@ -91,7 +90,6 @@ export async function DELETE(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    console.log(id)
     if (!id) return new Response("Missing item ID", { status: 400 });
 
     const res = await api.delete(`/home/discounted-cart/remove/${id}/`, {
@@ -99,7 +97,6 @@ export async function DELETE(req: NextRequest) {
             "Authorization": `Bearer ${token}`,
         },
     });
-    console.log(res.data)
     return new Response(JSON.stringify(res.data), {
         status: res.status,
         headers: { "Content-Type": "application/json" },

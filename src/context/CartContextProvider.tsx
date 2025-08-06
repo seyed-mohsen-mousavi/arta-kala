@@ -32,7 +32,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     items: [],
   });
   const [loading, setLoading] = useState(false);
-  console.log(cart)
   const {
     fetchCart,
     addToCart,

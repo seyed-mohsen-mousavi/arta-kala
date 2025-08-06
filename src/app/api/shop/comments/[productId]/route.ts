@@ -12,7 +12,6 @@ export async function POST(req: NextRequest, { params }: any) {
     }
 
     const body = await req.json();
-    console.log("ID : " + productId)
     try {
         const { data } = await api.post(`/shop/products/${productId}/comments/`,
             body,

@@ -14,7 +14,6 @@ export async function POST(req: NextRequest) {
                 Authorization: `Bearer ${token}`,
             },
         })
-        console.log(res.data)
 
         return new Response(JSON.stringify(res.data), {
             status: res.status,

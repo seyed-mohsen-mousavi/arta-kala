@@ -24,7 +24,6 @@ export async function PATCH(request: Request) {
         return NextResponse.json(result.data);
     } catch (error: any) {
         const data = error?.response?.data;
-        console.log(data)
         return NextResponse.json(
             { errors: data },
             { status: error?.response?.status || 400 }

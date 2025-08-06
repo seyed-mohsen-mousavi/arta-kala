@@ -6,7 +6,6 @@ export async function POST(request: NextRequest) {
     const { phone_number, code, referral_code } = body;
 
     try {
-        console.log(referral_code)
         const res = await api.post("/users/otp/verify/", {
             phone_number,
             code,

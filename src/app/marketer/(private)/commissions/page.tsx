@@ -17,7 +17,6 @@ async function Commissions() {
   let result;
   try {
     result = await marketing_commissions_list();
-    console.log(result);
   } catch {
     return (
       <div className="flex flex-col items-center justify-center p-8 text-danger border border-red-100 rounded-xl h-full max-w-md mx-auto">
@@ -28,7 +27,6 @@ async function Commissions() {
       </div>
     );
   }
-  console.log(Array.isArray(result.data));
   if (!result?.success || !result.data) {
     return (
       <div className="flex flex-col items-center justify-center p-8  h-screen max-w-md mx-auto">

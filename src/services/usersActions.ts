@@ -26,8 +26,6 @@ export const login = async (phone_number: string, password: string) => {
 export const sendOtp = async (phone_number: string) => {
     try {
         const result = await api.post("/users/otp/request/", { phone_number })
-        console.log(result)
-
         if (result.status == 200) {
             addToast({
                 title: "کد تایید با موفیقت به شماره تلفن شما ارسال شد ",
@@ -97,7 +95,6 @@ export const editInfo = async (data: any) => {
 
         const result = await response.json();
         if (!response.ok) {
-            console.log(response, result)
             return {
                 success: false,
                 errors: result.errors || {},
@@ -151,7 +148,7 @@ export const changePassword = async (data: any) => {
     }
 };
 
-export async function checkPhoneExists(phone: string ) {
+export async function checkPhoneExists(phone: string) {
     const res = await api.post("/users/check-user-status/", { phone_number: phone });
     const data = await res.data;
     return data?.has_password;

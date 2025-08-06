@@ -30,7 +30,7 @@ function SortBox() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  const currentSort = searchParams.get("sort");
+  const currentSort = searchParams.get("sort") || "newest";
 
   return (
     <>
@@ -67,7 +67,6 @@ function SortBox() {
           isOpen={isOpen}
           onOpenChange={onOpenChange}
           className="bg-[#f3f3f3] w-full transition-transform duration-300 ease-in-out"
-
           radius="sm"
         >
           <DrawerContent>

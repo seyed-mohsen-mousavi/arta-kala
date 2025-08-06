@@ -9,7 +9,7 @@ function QuickBlogCard({ item }: { item: Article }) {
     <article className="relative w-full">
       <Link
         href={`/article/${item.slug}`}
-        className="block relative w-full h-96 overflow-hidden rounded-sm"
+        className="block relative w-full h-72 overflow-hidden rounded-sm"
       >
         <Image
           width={100}

@@ -9,21 +9,25 @@ export default function Card({
   href,
   isShow,
   items,
+  className,
 }: {
   item: ProductType;
   href?: string;
   isShow?: boolean;
   items?: any;
+  className?: string;
 }) {
   return (
     <Link
       href={href ? href : `/product/${item.slug}`}
       key={item.id}
       title={item.name}
-      className="size-full flex relative group/card h-full"
+      className="size-full flex relative group/card h-full "
     >
       {isShow && <SelectBox items={items} item={item} />}
-      <div className="bg-white shadow rounded-lg p-3.5 sm:p-5 hover:shadow-lg transition-shadow group/card w-full h-full flex flex-col relative">
+      <div
+        className={`bg-white shadow rounded-lg p-3.5 sm:p-5 hover:shadow-lg transition-shadow group/card w-full flex flex-col relative h-96 ${className ?? ""}`}
+      >
         <div className="relative">
           {item.cover_image ? (
             <Image
@@ -46,14 +50,11 @@ export default function Card({
           )}
         </div>
 
-        <h3 className="font-semibold mt-2 mb-10 text-zinc-700 line-clamp-2">
+        <h3 className="font-semibold  mb-10 text-zinc-700 line-clamp-2 text-lg sm:">
           {item.name}
         </h3>
-
         {item.is_available ? (
-          <div className="relative mt-auto pt-3 flex justify-between items-center gap-2">
-            <button></button>
-
+          <div className="relative mt-auto flex justify-end gap-2">
             {item.isDiscounted && item.final_price !== undefined ? (
               <div>
                 <div className="flex items-center">
@@ -69,7 +70,7 @@ export default function Card({
                 </p>
               </div>
             ) : (
-              <p className="font-bold text-xl">
+              <p className="font-bold text-xl ">
                 {item.price.toLocaleString("fa-IR")} تومان
               </p>
             )}
@@ -100,6 +101,7 @@ function SelectBox({ item, items }: { item: ProductType; items: any }) {
   const router = useRouter();
 
   useEffect(() => {
+    if (!items) return;
     const already = items.some((entry: any) => entry.product?.id === item.id);
     setIsAlreadySelected(already);
   }, [items, item.id]);

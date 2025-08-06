@@ -3,7 +3,6 @@ import api from "./api"
 export const homeAboutUsList = async () => {
     try {
         const result = await api.get("/home/about-us/")
-        console.log(result)
         return result
     } catch (error) {
         console.log(error)
