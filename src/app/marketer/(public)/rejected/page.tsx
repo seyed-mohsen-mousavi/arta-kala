@@ -1,4 +1,18 @@
-function Rejected() {
+import { marketing_profile_list } from "@/services/marketingActions";
+import { redirect } from "next/navigation";
+
+async function Rejected() {
+  const res = await marketing_profile_list();
+  if (!res.success || !res.data) {
+    redirect("/marketer/register");
+  }
+
+  const marketer = res.data;
+  if (marketer.status === "در حال بررسی") {
+    redirect("/marketer/pending");
+  } else if (marketer.status == "تأیید شده") {
+    redirect("/marketer/dashboard");
+  }
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 px-4 text-center">
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
@@ -23,7 +37,8 @@ function Rejected() {
         <p className="text-gray-600">
           متأسفانه درخواست شما رد شده است. لطفاً اطلاعات خود را بررسی کنید و در
           صورت نیاز با تیم ما تماس بگیرید.
-          <br />باتشکر از درخواست شما🌹
+          <br />
+          باتشکر از درخواست شما🌹
         </p>
       </div>
     </div>

@@ -1,4 +1,18 @@
-function Pending() {
+import { marketing_profile_list } from "@/services/marketingActions";
+import { redirect } from "next/navigation";
+
+async function Pending() {
+  const res = await marketing_profile_list();
+  if (!res.success || !res.data) {
+    redirect("/marketer/register");
+  }
+
+  const marketer = res.data;
+  if (marketer.status === "رد شده") {
+    redirect("/marketer/rejected");
+  } else if (marketer.status == "تأیید شده") {
+    redirect("/marketer/dashboard");
+  }
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 px-4 text-center">
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
@@ -17,9 +31,12 @@ function Pending() {
             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
-        <h1 className="text-2xl font-semibold text-gray-800 mb-2">در حال بررسی</h1>
+        <h1 className="text-2xl font-semibold text-gray-800 mb-2">
+          در حال بررسی
+        </h1>
         <p className="text-gray-600">
-          درخواست شما در حال بررسی است. لطفاً شکیبا باشید، به زودی نتیجه اعلام خواهد شد.
+          درخواست شما در حال بررسی است. لطفاً شکیبا باشید، به زودی نتیجه اعلام
+          خواهد شد.
         </p>
       </div>
     </div>

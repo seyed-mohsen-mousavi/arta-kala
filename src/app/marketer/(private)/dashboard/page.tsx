@@ -238,7 +238,7 @@ async function page() {
           </div>
         </div>
 
-        <Chart />
+        {/* <Chart /> */}
       </div>
     </section>
   );
