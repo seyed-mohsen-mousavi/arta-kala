@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
     try {
-        const cookieStore =await cookies();
+        const cookieStore = await cookies();
         const token = cookieStore.get("access_token")?.value;
         if (!token) return new Response("Unauthorized", { status: 401 });
 
@@ -20,8 +20,7 @@ export async function POST(req: NextRequest) {
             headers: { "Content-Type": "application/json" },
         });
     } catch (error: any) {
-        console.log(error)
-        const errorMessage = error?.response?.data?.message || "خطای ناشناخته";
+        const errorMessage = error?.response?.data?.error || "خطای ناشناخته";
         const statusCode = error?.response?.status || 500;
 
         return new Response(
