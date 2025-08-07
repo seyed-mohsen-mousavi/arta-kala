@@ -224,7 +224,7 @@ export async function marketing_store_read(
 
         const storeData = resStore.data;
         const discountedList = resDiscounted.data || [];
-
+        console.log(storeData)
         const discountedMap: any = new Map(
             discountedList.map((item: any) => [item.slug, item])
         );

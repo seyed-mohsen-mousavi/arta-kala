@@ -45,7 +45,7 @@ function Slider({ images }: { images: ImageType[] }) {
           1024: { slidesPerView: 1 },
         }}
       >
-        {images.map((image, index) => (
+        {images.map((image) => (
           <SwiperSlide key={image.id} className="w-full h-full">
             <Link href={image.link || ""} className="block h-full w-full">
               <div className="left-1/2 -translate-x-1/2 top-0 max-w-[1920px] absolute h-full w-full">

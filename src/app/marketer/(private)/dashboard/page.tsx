@@ -9,7 +9,7 @@ import { convertPersianToEnglish } from "@/utils/converNumbers";
 import "iranianbanklogos/dist/ibl.css";
 import SettlementBox from "./SettlementBox";
 
-import Chart from "./Chart";
+// import Chart from "./Chart";
 
 function toPersianNumber(input: string) {
   const enToFa = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
