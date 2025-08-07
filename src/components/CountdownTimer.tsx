@@ -133,7 +133,7 @@ const FlipClock: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
   }
 
   return (
-    <div className="space-y-3 flex flex-col items-center justify-center size-full">
+    <div className=" flex flex-col items-center justify-center md:size-full">
       <div className="flex flex-col items-center gap-2">
         <div className={"flipClock"}>
           <FlipUnitContainer
@@ -152,7 +152,7 @@ const FlipClock: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
             shuffle={hoursShuffle}
           />
         </div>
-        <div className="w-full mx-auto bg-red-600 text-white flex items-center justify-between px-2">
+        <div className="w-full mx-auto bg-white text-black flex items-center justify-between px-2 rounded-lg py-1">
           <span>ثانیه</span>
           <span className="pr-2">دقیقه</span>
           <span>ساعت</span>

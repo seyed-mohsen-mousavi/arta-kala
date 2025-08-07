@@ -5,11 +5,10 @@ import "swiper/css";
 import Image from "next/image";
 import { useRef, useState, useEffect, useCallback } from "react";
 import { Autoplay, Keyboard, Navigation } from "swiper/modules";
-import { Image as ImageType } from "@/app/page";
 import Link from "next/link";
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 
-function Slider({ images }: { images: ImageType[] }) {
+function Slider({ images }: { images: any[] }) {
   const [isClient, setIsClient] = useState(false);
   const swiperRef = useRef<any>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -30,7 +29,6 @@ function Slider({ images }: { images: ImageType[] }) {
         slidesPerView={1.3}
         centeredSlides={true}
         navigation={false}
-        loop
         keyboard={{ enabled: true }}
         autoplay={{
           delay: 4000,
@@ -45,18 +43,18 @@ function Slider({ images }: { images: ImageType[] }) {
           1024: { slidesPerView: 1 },
         }}
       >
-        {images.map((image) => (
-          <SwiperSlide key={image.id} className="w-full h-full">
+        {images.map((image, index) => (
+          <SwiperSlide key={image.id} className="w-full h-full relative">
             <Link href={image.link || ""} className="block h-full w-full">
-              <div className="left-1/2 -translate-x-1/2 top-0 max-w-[1920px] absolute h-full w-full">
+              <div className="relative w-full h-full">
                 <Image
                   src={image.src}
                   alt={image.alt}
-                  width={500}
-                  height={400}
-                  priority
+                  fill
+                  priority={index === 0}
+                  loading={index === 0 ? "eager" : "lazy"}
                   quality={85}
-                  className="object-cover size-full rounded-3xl sm:rounded-none inline-block"
+                  className="object-cover rounded-3xl sm:rounded-none"
                 />
               </div>
             </Link>
@@ -80,16 +78,16 @@ function Slider({ images }: { images: ImageType[] }) {
         <>
           <button
             onClick={goPrev}
-            className="block absolute top-1/2 left-1 md:left-2 -translate-y-1/2 bg-white rounded-full p-1 border border-zinc-400 text-[#a4a4a4] z-20 drop-shadow-xl lg:hover:-translate-x-2 ease-in-out opacity-0 group-hover:opacity-100 transition-all duration-300"
-            aria-label="Previous Slide"
+            className="block absolute top-1/2 left-0 md:left-0 -translate-y-1/2 bg-white rounded-full p-1 border border-zinc-400 text-[#a4a4a4] z-20 drop-shadow-xl lg:hover:-translate-x-2 ease-in-out opacity-0 group-hover:opacity-100 transition-all duration-300"
+            aria-label="اسلاید بعدی"
           >
             <GoChevronLeft className="size-8 sm:size-10 lg:size-12" />
           </button>
 
           <button
             onClick={goNext}
-            className="block absolute top-1/2 right-1 md:right-2 -translate-y-1/2 bg-white rounded-full p-1 border border-zinc-400 text-[#a4a4a4] z-20 drop-shadow-xl lg:hover:translate-x-2 ease-in-out opacity-0 group-hover:opacity-100 transition-all duration-300"
-            aria-label="Next Slide"
+            className="block absolute top-1/2 right-0 md:right-0 -translate-y-1/2 bg-white rounded-full p-1 border border-zinc-400 text-[#a4a4a4] z-20 drop-shadow-xl lg:hover:translate-x-2 ease-in-out opacity-0 group-hover:opacity-100 transition-all duration-300"
+            aria-label="اسلاید قبلی"
           >
             <GoChevronRight className="size-8 sm:size-10 lg:size-12" />
           </button>

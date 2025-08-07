@@ -7,7 +7,6 @@ import {
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalHeader,
 } from "@heroui/react";
 import React, { useEffect, useState } from "react";
@@ -179,6 +178,7 @@ export default function AuthModal() {
     phoneForm.reset();
     otpForm.reset();
     loginForm.reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
   return (
@@ -208,7 +208,7 @@ export default function AuthModal() {
               </button>
             </ModalHeader>
 
-            <ModalBody>
+            <ModalBody className="">
               {step === "PHONE" && (
                 <>
                   <label htmlFor="phone_number">شماره تلفن</label>
@@ -239,7 +239,7 @@ export default function AuthModal() {
 
               {step === "PASSWORD" && (
                 <>
-                  <label>رمز عبور</label>
+                  <label htmlFor="password">رمز عبور</label>
                   <input
                     {...loginForm.register("password")}
                     type="password"
@@ -282,7 +282,7 @@ export default function AuthModal() {
                   <div className="bg-green-100 border border-green-200 p-4 text-zinc-600 rounded-sm">
                     کد تایید برای شماره {phoneNumber} ارسال شد
                   </div>
-                  <label>کد تایید</label>
+                  <label htmlFor="otp_code">کد تایید</label>
                   <InputOtp
                     {...otpForm.register("code")}
                     errorMessage={otpForm.formState.errors?.code?.message}
@@ -312,13 +312,10 @@ export default function AuthModal() {
                   )}
                 </>
               )}
-            </ModalBody>
-
-            <ModalFooter className="mb-4 flex flex-col items-center">
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full btn-primary disabled:opacity-60 disabled:cursor-wait"
+                className="w-full btn-primary disabled:opacity-60 disabled:cursor-wait mb-5"
               >
                 {loading
                   ? "لطفا صبر کنید..."
@@ -332,7 +329,7 @@ export default function AuthModal() {
               {step === "OTP" && (
                 <button
                   type="button"
-                  className="text-xs text-cyan-500 mt-2"
+                  className="text-xs text-cyan-500 mt-2 pb-3"
                   onClick={() => {
                     sendOtp(phoneNumber);
                     setCanResend(false);
@@ -347,7 +344,7 @@ export default function AuthModal() {
                       ).padStart(2, "0")}`}
                 </button>
               )}
-            </ModalFooter>
+            </ModalBody>
           </form>
         )}
       </ModalContent>

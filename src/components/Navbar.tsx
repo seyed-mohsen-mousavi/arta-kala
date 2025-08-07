@@ -25,13 +25,14 @@ import { useDisclosure } from "@heroui/react";
 import { useAuthModal } from "../context/AuthModalProvider";
 import { useCategories } from "../context/CategoriesContext";
 import SearchBox from "./SearchBox";
-import { FiPhoneCall, FiTrendingUp, FiUser } from "react-icons/fi";
-import { CiImageOff } from "react-icons/ci";
-import { FaBasketShopping } from "react-icons/fa6";
+import { FiPhoneCall } from "react-icons/fi";
+import { CiImageOff, CiLogin } from "react-icons/ci";
+import { FaBasketShopping, FaBriefcase } from "react-icons/fa6";
 import { CartFormat, useCart } from "../context/CartContextProvider";
-import { convertNumberToPersian } from "../utils/converNumbers";
 import EmptyCart from "./EmptyCart";
 import ProductButton from "./ProductButton";
+import UserDropdown from "./UserMenu";
+import { User } from "@/types/user";
 
 function Navbar({ title }: { title?: string }) {
   const categories = useCategories();
@@ -98,7 +99,12 @@ function Navbar({ title }: { title?: string }) {
   return (
     <>
       <div className="flex justify-between py-5 px-3 items-center container">
-        <MobileDrawer links={links} categories={categories} />
+        <MobileDrawer
+          onAuthOpen={onOpen}
+          user={user}
+          links={links}
+          categories={categories}
+        />
         <Link href="/" className="flex items-center gap-3 group">
           <div className="logo-wrapper">
             <Image
@@ -184,33 +190,30 @@ function Navbar({ title }: { title?: string }) {
               <SearchBox />
               <div className="flex justify-around  w-1/2 lg:w-auto gap-1">
                 {user?.identity ? (
-                  <Link
-                    href="/profile/dashboard"
-                    className="p-2.5 px-2.5 lg:px-5 w-full rounded-full bg-white hover:bg-zinc-50 active:bg-zinc-100 transition-colors ease-in-out text-black text-center text-xs md:text-sm flex text-nowrap items-center justify-center gap-1 sm:gap-3 font-bold"
-                  >
-                    <FiUser className="size-5 md:size-6" />
-                    {user.identity?.first_name
-                      ? user.identity?.first_name +
-                        " " +
-                        user.identity?.last_name
-                      : convertNumberToPersian(user.identity?.phone_number)}
-                  </Link>
+                  <UserDropdown user={user} />
                 ) : (
                   <button
                     onClick={onOpen}
-                    className="p-2.5 px-2.5 lg:px-5 w-full rounded-full bg-white hover:bg-zinc-50 active:bg-zinc-100 transition-colors ease-in-out text-black text-center text-xs md:text-sm flex text-nowrap items-center justify-center gap-1 sm:gap-3 font-bold"
+                    className="p-2.5 px-2.5 hidden lg:px-5 w-full font-bold rounded-full bg-white hover:bg-zinc-100 active:bg-zinc-200 transition-colors ease-in-out text-black text-center md:text-sm sm:flex text-nowrap items-center justify-center gap-1 sm:gap-3"
                     aria-label="ورود / عضویت"
                   >
-                    <FiUser className="size-5 md:size-6" />
-                    <span className="">حساب کاربری</span>
+                    <CiLogin className="size-5 md:size-6 stroke-1" />
+                    <span className="">ورود </span>
                   </button>
                 )}
                 <ProductButton
                   href="/marketer/dashboard"
-                  className="p-2.5 px-2.5 lg:px-5 w-full rounded-full bg-white hover:bg-zinc-50 active:bg-zinc-100 transition-colors ease-in-out text-black text-center text-xs md:text-sm flex text-nowrap items-center justify-center gap-1 sm:gap-3 font-bold"
+                  className="relative w-full group h-11 text-slate-950 transition-all font-bold flex items-center justify-center whitespace-nowrap rounded-full hover:rotate-[3deg] will-change-transform duration-300 shadow-lg hover:shadow-xl text-full pr-[4rem] pl-6 bg-white shadow-yellow-400/30 hover:shadow-yellow-400/30"
                   aria-label="بازاریاب شو"
                 >
-                  <FiTrendingUp className="size-5 md:size-6" /> بازاریاب شو
+                  <div>بازاریاب شو</div>
+
+                  <div className="absolute right-0 top-0 mt-1 mr-1 bg-primary p-[0.45rem] bottom-1 group-hover:w-[calc(100%-0.5rem)] transition-all rounded-full duration-300 h-9 w-9">
+                    <FaBriefcase className="size-full text-neutral-700" />
+                  </div>
+
+                  {/* <div className="bg-orange-400 absolute flex rounded-full animate-ping opacity-75 h-5 w-5 -top-2 -right-2"></div>
+                  <div className="bg-orange-600 absolute flex rounded-full scale-[90%] h-5 w-5 -top-2 -right-2"></div> */}
                 </ProductButton>
               </div>
             </div>
@@ -375,9 +378,13 @@ function MobileCategory({
 export function MobileDrawer({
   categories,
   links,
+  user,
+  onAuthOpen,
 }: {
   categories: CategoryNode[];
   links: any;
+  user: User | null;
+  onAuthOpen: () => void;
 }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [stack, setStack] = useState<CategoryNode[][]>([]);
@@ -395,6 +402,13 @@ export function MobileDrawer({
     setCurrent(prev ?? null);
     setTitle(prevTitle ?? "منوی دسترسی");
   };
+  const name =
+    user?.identity?.first_name && user?.identity?.last_name
+      ? `${user.identity.first_name} ${user.identity.last_name}`
+      : "بدون نام";
+  const firstLetter =
+    user?.identity?.first_name?.[0] || user?.identity?.phone_number?.[0] || "؟";
+  const phone = user?.identity?.phone_number ?? "بدون شماره";
 
   return (
     <>
@@ -409,7 +423,7 @@ export function MobileDrawer({
         hideCloseButton
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        className="!transition-all !duration-500 !ease-in-out"
+        className="transition-all ease-linear"
       >
         <DrawerContent>
           {(onClose) => (
@@ -459,7 +473,28 @@ export function MobileDrawer({
                 ))}
               </DrawerBody>
 
-              <DrawerFooter />
+              <DrawerFooter>
+                {user?.identity ? (
+                  <div className="flex flex-row  gap-3">
+                    <div className="size-11 ring-4 ring-primary-100 flex items-center justify-center rounded-full bg-primary text-white font-bold text-sm">
+                      {firstLetter}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-base">{name}</p>
+                      <p className="text-sm text-gray-500">{phone}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    onClick={onAuthOpen}
+                    className="w-full btn-primary rounded-xl text-center font-semibold flex items-center justify-center gap-2"
+                    aria-label="ورود / عضویت"
+                  >
+                    <CiLogin className="size-6" />
+                    ورود / عضویت
+                  </button>
+                )}
+              </DrawerFooter>
             </>
           )}
         </DrawerContent>

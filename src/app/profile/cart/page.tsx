@@ -107,7 +107,8 @@ function CartLi({ item }: { item: CartItem }) {
     if (item.quantity !== quantity) {
       setQuantityToItem(item.product_id, quantity);
     }
-  }, [item.product_id, quantity]);
+  }, [item.product_id, item.quantity, quantity, setQuantityToItem]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (

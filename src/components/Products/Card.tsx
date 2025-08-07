@@ -50,7 +50,7 @@ export default function Card({
           )}
         </div>
 
-        <h3 className="font-semibold  mb-10 text-zinc-700 line-clamp-2 text-lg sm:">
+        <h3 className="font-semibold text-zinc-700 line-clamp-2 text-lg sm:">
           {item.name}
         </h3>
         {item.is_available ? (
