@@ -8,9 +8,9 @@ import React from "react";
 type ProductButtonProps = {
   children: React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  href?: string; // اگر بخواد ریدایرکت کنه
+  href?: string;
   className?: string;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>; // شامل type, disabled, aria, etc.
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 const ProductButton = ({
   children,

@@ -420,3 +420,4 @@ export async function DeleteComment(commentId: number) {
 
     return true;
 }
+

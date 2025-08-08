@@ -69,7 +69,7 @@ export default function UserDropdown({ user }: { user: any }) {
             key="profile"
             startContent={<FiUser className={iconClasses} />}
             as={Link}
-            href="/profile/dashboard"
+            href="/profile"
           >
             حساب کاربری
           </DropdownItem>

@@ -16,8 +16,13 @@ export type NavLink = {
 };
 const links: NavLink[] = [
   {
-    name: "پروفایل",
-    href: "/profile/dashboard",
+    name: "خلاصه فعالیت ها",
+    href: "/profile",
+    icon: <CiUser className="size-5 stroke-1" />,
+  },
+  {
+    name: "اطلاعات حساب کاربری",
+    href: "/profile/personal-info",
     icon: <CiUser className="size-5 stroke-1" />,
   },
   {

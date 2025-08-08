@@ -1,3 +1,4 @@
+import { cookies } from "next/headers"
 import api from "./api"
 
 export const homeAboutUsList = async () => {
@@ -30,5 +31,45 @@ export const homeSliderList = async () => {
         return result.data
     } catch (error) {
         console.log(error)
+    }
+}
+export async function GetDiscountedOrders() {
+    "use server";
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('access_token')?.value;
+
+    if (!accessToken) {
+        return null;
+    } try {
+        const response = await api.get(`/home/discounted-orders/`, {
+            headers: {
+                "Authorization": `Bearer ${accessToken}`
+            },
+
+        });
+        return response.data;
+    } catch (error) {
+        console.error("GetOrders error:", error);
+        return null;
+    }
+}
+export async function GetDiscountedOrder(orderNumber: string) {
+    "use server";
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('access_token')?.value;
+
+    if (!accessToken) {
+        return null;
+    } try {
+        const response = await api.get(`/home/discounted-orders/${orderNumber}`, {
+            headers: {
+                "Authorization": `Bearer ${accessToken}`
+            },
+
+        });
+        return response.data;
+    } catch (error) {
+        console.error("GetOrders error:", error);
+        return null;
     }
 }
