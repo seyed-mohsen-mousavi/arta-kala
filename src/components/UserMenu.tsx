@@ -9,6 +9,7 @@ import {
 import { FiUser, FiLogOut, FiFileText, FiShoppingBag } from "react-icons/fi";
 import Link from "next/link";
 import { FaChevronDown } from "react-icons/fa6";
+import { convertNumberToPersian } from "@/utils/converNumbers";
 
 export default function UserDropdown({ user }: { user: any }) {
   const iconClasses = "text-xl text-default-500 pointer-events-none shrink-0";
@@ -58,7 +59,9 @@ export default function UserDropdown({ user }: { user: any }) {
               </div>
               <div>
                 <p className="font-semibold text-base">{name}</p>
-                <p className="text-sm text-gray-500">{phone}</p>
+                <p className="text-sm text-gray-500">
+                  {convertNumberToPersian(phone)}
+                </p>
               </div>
             </div>
           </DropdownItem>

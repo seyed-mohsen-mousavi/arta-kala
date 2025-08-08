@@ -33,6 +33,7 @@ import EmptyCart from "./EmptyCart";
 import ProductButton from "./ProductButton";
 import UserDropdown from "./UserMenu";
 import { User } from "@/types/user";
+import { convertNumberToPersian } from "@/utils/converNumbers";
 
 function Navbar({ title }: { title?: string }) {
   const categories = useCategories();
@@ -475,13 +476,13 @@ export function MobileDrawer({
 
               <DrawerFooter>
                 {user?.identity ? (
-                  <div className="flex flex-row  gap-3">
-                    <div className="size-11 ring-4 ring-primary-100 flex items-center justify-center rounded-full bg-primary text-white font-bold text-sm">
+                  <div className="flex flex-row  gap-3 w-full">
+                    <div className="size-14 text-xl ring-4 ring-primary-100 flex items-center justify-center rounded-full bg-primary text-white font-bold">
                       {firstLetter}
                     </div>
                     <div>
                       <p className="font-semibold text-base">{name}</p>
-                      <p className="text-sm text-gray-500">{phone}</p>
+                      <p className="text-sm text-gray-500">{convertNumberToPersian(phone)}</p>
                     </div>
                   </div>
                 ) : (
