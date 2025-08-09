@@ -1,0 +1,519 @@
+"use client";
+
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useUser } from "@/context/UserContext";
+import { addToast } from "@heroui/toast";
+import provincesWithCitiesRaw from "@/data/iran.json";
+import { Checkbox, Radio, RadioGroup } from "@heroui/react";
+import { GetShippingServices } from "@/services/shopActions";
+import Link from "next/link";
+import ProductType from "@/types/product";
+import { marketing_create_order } from "@/services/shopActions";
+
+const provincesWithCities: Record<string, string[]> =
+  provincesWithCitiesRaw as Record<string, string[]>;
+
+interface ShippingService {
+  id: number;
+  name: string;
+  description?: string;
+  is_default?: boolean;
+}
+
+interface CreateOrderProps {
+  store_name_english: string;
+  product: ProductType;
+  quantity: number;
+}
+
+interface FormData {
+  name_receiver: string;
+  receiver_phone: string;
+  receiver_province: string;
+  receiver_city: string;
+  address_receiver: string;
+  receiver_postal_code: string;
+  discount_code: string;
+  quantity: number;
+  shipping_service_id?: number;
+}
+
+interface Errors {
+  [key: string]: string;
+}
+
+const CreateMarketerOrder = ({
+  product,
+  quantity,
+  store_name_english,
+}: CreateOrderProps) => {
+  const { user } = useUser();
+  const [shippingServices, setShippingServices] = useState<ShippingService[]>(
+    []
+  );
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await GetShippingServices();
+        setShippingServices(response?.data);
+      } catch (error) {
+        console.error("Error fetching shipping services:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
+  const [isSelfReceiver, setIsSelfReceiver] = useState(true);
+  const [formData, setFormData] = useState<FormData>({
+    name_receiver: "",
+    receiver_phone: "",
+    receiver_province: "",
+    receiver_city: "",
+    address_receiver: "",
+    receiver_postal_code: "",
+    discount_code: "",
+    quantity,
+  });
+
+  const [selectedShippingServiceId, setSelectedShippingServiceId] = useState<
+    number | null
+  >(
+    shippingServices.find((s) => s.is_default)?.id ||
+      (shippingServices.length > 0 ? shippingServices[0].id : null)
+  );
+
+  const [errors, setErrors] = useState<Errors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [discountApplied, setDiscountApplied] = useState(false);
+  const [discountAmount, setDiscountAmount] = useState<number>(0);
+  const [checkingDiscount, setCheckingDiscount] = useState(false);
+
+  const selectedProvince = formData.receiver_province;
+  const cities: string[] = provincesWithCities[selectedProvince] || [];
+
+  const handleSelfReceiverChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    setIsSelfReceiver(checked);
+
+    if (checked && user?.identity) {
+      setFormData((prev) => ({
+        ...prev,
+        name_receiver: `${user.identity.first_name || ""} ${user.identity.last_name || ""}`,
+        receiver_phone: user.identity.phone_number || "",
+        receiver_province: user.identity.province || "",
+        receiver_city: user.identity.city || "",
+        address_receiver: user.identity.address || "",
+        receiver_postal_code: user.identity.postal_code || "",
+      }));
+      setErrors({});
+    } else if (!checked) {
+      setFormData((prev) => ({
+        ...prev,
+        name_receiver: "",
+        receiver_phone: "",
+        receiver_province: "",
+        receiver_city: "",
+        address_receiver: "",
+        receiver_postal_code: "",
+      }));
+    }
+  };
+
+  const handleCheckDiscount = async () => {
+    if (!formData.discount_code) return;
+
+    setCheckingDiscount(true);
+    try {
+      const res = await fetch("/api/shop/discount/check/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: formData.discount_code }),
+      });
+
+      const result = await res.json();
+      if (!res.ok || !result?.data?.discount_percentage) {
+        throw new Error(result.message || "کد تخفیف معتبر نیست.");
+      }
+
+      const discountData = result.data;
+      const calculatedDiscount = Math.floor(
+        (product.price * discountData.discount_percentage) / 100
+      );
+
+      setDiscountAmount(calculatedDiscount);
+      setDiscountApplied(true);
+
+      addToast({
+        title: "کد تخفیف اعمال شد",
+        description: `٪${discountData.discount_percentage} معادل ${calculatedDiscount.toLocaleString(
+          "fa-IR"
+        )} تومان از قیمت محصول کسر شد.`,
+        color: "success",
+      });
+    } catch (error: any) {
+      setDiscountApplied(false);
+      setDiscountAmount(0);
+      addToast({
+        title: "خطا در کد تخفیف",
+        description: error.message || "کد تخفیف معتبر نیست.",
+        color: "danger",
+      });
+    } finally {
+      setCheckingDiscount(false);
+    }
+  };
+
+  const removeDiscount = () => {
+    setDiscountApplied(false);
+    setDiscountAmount(0);
+    setFormData((prev) => ({
+      ...prev,
+      discount_code: "",
+    }));
+    addToast({
+      title: "کد تخفیف حذف شد",
+      description: "کد تخفیف از سفارش شما حذف شد.",
+      color: "warning",
+    });
+  };
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+    setErrors((prev) => ({
+      ...prev,
+      [e.target.name]: "",
+    }));
+  };
+
+  const validate = (): boolean => {
+    const newErrors: Errors = {};
+    if (!selectedShippingServiceId) {
+      newErrors.shipping_service = "لطفاً سرویس باربری را انتخاب کنید";
+    }
+
+    if (isSelfReceiver) {
+      if (
+        !user?.identity?.first_name ||
+        !user?.identity?.last_name ||
+        !user?.identity?.phone_number ||
+        !user?.identity?.province ||
+        !user?.identity?.city ||
+        !user?.identity?.address ||
+        !user?.identity?.postal_code
+      ) {
+        addToast({
+          title: "اطلاعات گیرنده ناقص است",
+          description:
+            "برای ثبت سفارش به عنوان گیرنده خودتان، لطفاً اطلاعات شخصی خود را در پروفایل کامل کنید.",
+          color: "warning",
+          endContent: (
+            <Link
+              href="/profile/personal-info"
+              className="bg-primary text-white px-3 py-2 rounded-xs hover:brightness-90 text-[10px]"
+            >
+              پروفایل
+            </Link>
+          ),
+        });
+        return false;
+      }
+    } else {
+      const requiredFields = [
+        "name_receiver",
+        "receiver_phone",
+        "receiver_province",
+        "receiver_city",
+        "address_receiver",
+        "receiver_postal_code",
+      ];
+      requiredFields.forEach((field) => {
+        if (!formData[field as keyof FormData])
+          newErrors[field] = "این فیلد ضروری است";
+      });
+
+      const phoneRegex = /^09\d{9}$/;
+      if (
+        formData.receiver_phone &&
+        !phoneRegex.test(formData.receiver_phone)
+      ) {
+        newErrors.receiver_phone = "شماره موبایل معتبر نیست.";
+      }
+
+      const postalCodeRegex = /^\d{10}$/;
+      if (
+        formData.receiver_postal_code &&
+        !postalCodeRegex.test(formData.receiver_postal_code)
+      ) {
+        newErrors.receiver_postal_code = "کد پستی باید ۱۰ رقم باشد.";
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const createOrder = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!user || !user.identity) {
+      addToast({
+        title: "خطا",
+        description: "اطلاعات کاربری یافت نشد.",
+        color: "danger",
+      });
+      return;
+    }
+
+    if (!validate()) return;
+    setIsSubmitting(true);
+    const baseData = {
+      shipping_service_id: selectedShippingServiceId,
+      discount_code: formData.discount_code || "",
+      product_id: product.id,
+      quantity,
+    };
+    const data = isSelfReceiver
+      ? baseData
+      : {
+          ...baseData,
+          name_receiver: formData.name_receiver,
+          receiver_phone: formData.receiver_phone,
+          receiver_province: formData.receiver_province,
+          receiver_city: formData.receiver_city,
+          address_receiver: formData.address_receiver,
+          receiver_postal_code: formData.receiver_postal_code,
+        };
+
+    const res = await marketing_create_order(data, store_name_english);
+    setIsSubmitting(false);
+    if (res && res.success) {
+      addToast({
+        title: "سفارش با موفقیت ثبت شد",
+        description: "متشکریم از خرید شما!",
+        color: "success",
+      });
+      location.replace("/profile/orders");
+    } else {
+      addToast({
+        title: "خطا در ثبت سفارش",
+        description: res?.message || "مشکلی پیش آمد، دوباره تلاش کنید.",
+        color: "danger",
+      });
+    }
+  };
+
+  const finalPrice =
+    (product.price - discountAmount) * (formData.quantity || 1);
+
+  return (
+    <form
+      onSubmit={createOrder}
+      className="grid md:grid-cols-5 gap-6 p-5 rounded max-w-7xl mx-auto"
+    >
+      <div className="col-span-3 flex flex-col gap-6">
+        <h1 className="text-2xl font-bold mb-4">مشخصات گیرنده سفارش</h1>
+        <div className="flex items-center gap-2">
+          <Checkbox
+            checked={isSelfReceiver}
+            onChange={handleSelfReceiverChange}
+            defaultSelected
+            id="selfReceiver"
+          >
+            گیرنده خودم هستم
+          </Checkbox>
+        </div>
+        {!isSelfReceiver && (
+          <>
+            <div className="space-y-1">
+              <label className="block">نام و نام خانوادگی گیرنده</label>
+              <input
+                name="name_receiver"
+                value={formData.name_receiver}
+                onChange={handleChange}
+                className={`w-full border rounded px-3 py-2 ${errors.name_receiver ? "!border-red-500 placeholder:text-red-300" : "border-gray-300"} input`}
+              />
+              {errors.name_receiver && (
+                <p className="text-red-500 text-sm">{errors.name_receiver}</p>
+              )}
+            </div>
+
+            <div className="space-y-1">
+              <label className="block">شماره موبایل</label>
+              <input
+                name="receiver_phone"
+                value={formData.receiver_phone}
+                onChange={handleChange}
+                className={`w-full border rounded px-3 py-2 ${errors.receiver_phone ? "!border-red-500 placeholder:text-red-300" : "border-gray-300"} input`}
+              />
+              {errors.receiver_phone && (
+                <p className="text-red-500 text-sm">{errors.receiver_phone}</p>
+              )}
+            </div>
+
+            <div className="space-y-1">
+              <label className="block">استان</label>
+              <select
+                name="receiver_province"
+                value={formData.receiver_province}
+                onChange={handleChange}
+                className={`w-full border rounded px-3 py-2 ${errors.receiver_province ? "!border-red-500 placeholder:text-red-300" : "border-gray-300"} input`}
+              >
+                <option value="">انتخاب استان</option>
+                {Object.keys(provincesWithCities).map((province) => (
+                  <option key={province} value={province}>
+                    {province}
+                  </option>
+                ))}
+              </select>
+              {errors.receiver_province && (
+                <p className="text-red-500 text-sm">
+                  {errors.receiver_province}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-1">
+              <label className="block">شهر</label>
+              <select
+                name="receiver_city"
+                value={formData.receiver_city}
+                onChange={handleChange}
+                className={`w-full border rounded px-3 py-2 ${errors.receiver_city ? "!border-red-500 placeholder:text-red-300" : "border-gray-300"} input`}
+                disabled={!formData.receiver_province}
+              >
+                <option value="">انتخاب شهر</option>
+                {cities.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </select>
+              {errors.receiver_city && (
+                <p className="text-red-500 text-sm">{errors.receiver_city}</p>
+              )}
+            </div>
+
+            <div className="space-y-1">
+              <label className="block">آدرس کامل</label>
+              <textarea
+                name="address_receiver"
+                value={formData.address_receiver}
+                onChange={handleChange}
+                className={`w-full border rounded px-3 py-2 ${errors.address_receiver ? "!border-red-500 placeholder:text-red-300" : "border-gray-300"} input`}
+              />
+              {errors.address_receiver && (
+                <p className="text-red-500 text-sm">
+                  {errors.address_receiver}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-1">
+              <label className="block">کد پستی</label>
+              <input
+                name="receiver_postal_code"
+                value={formData.receiver_postal_code}
+                onChange={handleChange}
+                className={`w-full border rounded px-3 py-2 ${errors.receiver_postal_code ? "!border-red-500 placeholder:text-red-300" : "border-gray-300"} input`}
+              />
+              {errors.receiver_postal_code && (
+                <p className="text-red-500 text-sm">
+                  {errors.receiver_postal_code}
+                </p>
+              )}
+            </div>
+          </>
+        )}
+        <div className="space-y-1">
+          <label className="block">کد تخفیف (اختیاری)</label>
+          <div className="flex gap-2">
+            <input
+              name="discount_code"
+              value={formData.discount_code}
+              onChange={handleChange}
+              className="input flex-1 border rounded px-3 py-2 border-gray-300"
+              readOnly={discountApplied}
+            />
+            <button
+              type="button"
+              onClick={discountApplied ? removeDiscount : handleCheckDiscount}
+              className={`transition disabled:pointer-events-none rounded-md ${
+                discountApplied
+                  ? "bg-danger/10 border border-danger/40 text-danger/80  px-4 py-2"
+                  : "btn-primary !px-4 py-2"
+              }`}
+              disabled={checkingDiscount}
+            >
+              {discountApplied
+                ? "حذف کد تایید"
+                : checkingDiscount
+                  ? "در حال بررسی..."
+                  : "بررسی کد"}
+            </button>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <label className="block font-medium">سرویس باربری</label>
+          <RadioGroup
+            value={selectedShippingServiceId?.toString() || ""}
+            onValueChange={(value) =>
+              setSelectedShippingServiceId(Number(value))
+            }
+          >
+            {shippingServices.map((service) => (
+              <Radio
+                key={service.id}
+                value={service.id.toString()}
+                className="flex items-start gap-2 p-2 rounded-md  w-full"
+              >
+                <div className="flex flex-col">
+                  <span>{service.name}</span>
+                  {service.description && (
+                    <small className="text-gray-500">
+                      {service.description}
+                    </small>
+                  )}
+                </div>
+              </Radio>
+            ))}
+          </RadioGroup>
+          {errors.shipping_service && (
+            <p className="text-sm text-red-600">{errors.shipping_service}</p>
+          )}
+        </div>
+      </div>
+
+      <div className="col-span-3 md:col-span-2 shadow rounded-lg p-5 space-y-2 border border-zinc-300 sticky">
+        {discountAmount > 0 && (
+          <div className="flex items-center justify-between text-green-700">
+            <p>تخفیف</p>
+            <p className="font-semibold">
+              -{discountAmount.toLocaleString("fa-IR")}
+              <span className="pr-1 text-xs">تومان</span>
+            </p>
+          </div>
+        )}
+        <div className="flex items-center justify-between text-lg font-semibold">
+          <p>مبلغ قابل پرداخت</p>
+          <p>{finalPrice.toLocaleString("fa-IR")} تومان</p>
+        </div>
+        <button
+          type="submit"
+          className="btn-primary w-full"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "در حال ثبت..." : "ثبت نهایی"}
+        </button>
+      </div>
+    </form>
+  );
+};
+
+export default CreateMarketerOrder;
