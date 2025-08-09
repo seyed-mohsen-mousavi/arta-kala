@@ -1,5 +1,6 @@
 import { marketing_profile_list } from "@/services/marketingActions";
 import { redirect } from "next/navigation";
+export const dynamic = "force-dynamic";
 
 async function Rejected() {
   const res = await marketing_profile_list();

@@ -10,7 +10,8 @@ interface PageProps {
 }
 
 const getCashedBlogPosts = async (searchParams: any) => {
-  return await GetBlogPosts(searchParams);
+  const search = await searchParams;
+  return await GetBlogPosts(search);
 };
 
 export async function generateMetadata({

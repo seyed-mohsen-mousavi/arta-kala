@@ -4,6 +4,7 @@ import { marketing_profile_list } from "@/services/marketingActions";
 import { MarketerProvider } from "@/context/MarketerContext";
 import { cookies } from "next/headers";
 import LayoutWrapper from "./LayoutWrapper";
+export const dynamic = 'force-dynamic';
 
 export default async function MarketerPrivateLayout({
   children,

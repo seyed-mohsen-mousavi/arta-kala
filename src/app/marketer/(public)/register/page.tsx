@@ -1,4 +1,5 @@
 export const metadata = { layout: false };
+export const dynamic = 'force-dynamic';
 
 import RegisterForm from "@/components/Marketer/RegisterForm";
 import { marketing_profile_list } from "@/services/marketingActions";
