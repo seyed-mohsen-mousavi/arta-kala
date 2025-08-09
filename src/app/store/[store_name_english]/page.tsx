@@ -13,15 +13,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { store_name_english } = await params;
   const store = await marketing_store_read(store_name_english);
+  // console.log(store);
   const products = store?.data || [];
-  const res = await marketing_profile_list();
-  const profile = res.data;
 
   return {
-    title: `فروشگاه ${profile.store_name_persian}`,
-    description: `${products.length} محصول از ${profile.store_name_persian} در فروشگاه موجود است.`,
+    title: `فروشگاه ${store_name_english}`,
+    description: `${products.length} محصول از ${store_name_english} در فروشگاه موجود است.`,
     openGraph: {
-      title: `فروشگاه ${profile.store_name_persian}`,
+      title: `فروشگاه ${store_name_english}`,
       description: `${products.length} محصول موجود است.`,
     },
     robots: {
@@ -39,13 +38,11 @@ async function Page({
   const { store_name_english } = await params;
   const store = await marketing_store_read(store_name_english);
   const products = store?.data || [];
-  const res = await marketing_profile_list();
-  const profile = res.data;
 
   return (
     <>
       <div className="container mx-auto px-4 py-8">
-        {profile && (
+        {/* {profile && (
           <div className="mb-8">
             <h1 className="lg:text-3xl 2xl:text-4xl text-2xl font-bold">
               فروشگاه {profile.store_name_persian}
@@ -54,7 +51,7 @@ async function Page({
               {products.length} محصول موجود
             </p>
           </div>
-        )}
+        )} */}
 
         {products.length === 0 ? (
           <div className="text-center text-gray-500">محصولی یافت نشد.</div>

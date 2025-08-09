@@ -1,5 +1,5 @@
 import { findCategory } from "@/app/product/[slug]/page";
-import AddToCart from "@/components/Products/AddToCart";
+import AddToCart from "@/components/BuyNow";
 import {
   marketing_profile_list,
   marketing_store_read,
