@@ -20,7 +20,7 @@ async function getToken(): Promise<string | undefined> {
 }
 
 // ساخت هدرهای authorization
-async function getAuthHeaders() {
+export async function getAuthHeaders() {
     const token = await getToken();
     return token ? { Authorization: `Bearer ${token}` } : {};
 }
@@ -61,7 +61,7 @@ export const marketing_commissions_list: () => ApiResponse<any> = async () => {
 export async function marketing_commissions_read(commission_id: any): ApiResponse<any> {
     try {
         const headers = await getAuthHeaders();
-        const response = await api.get(`/api/marketing/commissions/${commission_id}/`, { headers });
+        const response = await api.get(`/marketing/commissions/${commission_id}/`, { headers });
         return { success: true, data: response.data };
     } catch (err) {
         return handleError(err);
@@ -119,6 +119,7 @@ export const marketing_products_remove_delete: (
     product_id: string | number
 ) => ApiResponse<MarketingProductRemoveResponse> = async (product_id) => {
     try {
+        console.log(`/marketing/products/remove/${product_id}/`)
         const headers = await getAuthHeaders();
         const response = await api.delete<MarketingProductRemoveResponse>(`/marketing/products/remove/${product_id}/`, { headers });
         return { success: true, data: response.data };
@@ -162,7 +163,6 @@ export const marketing_profile_list: () => ApiResponse<any> = async () => {
                 data: null,
             };
         }
-        console.error("خطا در marketing_profile_list:", err);
         return {
             success: false,
             errors: {},
@@ -224,7 +224,6 @@ export async function marketing_store_read(
 
         const storeData = resStore.data;
         const discountedList = resDiscounted.data || [];
-        console.log(storeData)
         const discountedMap: any = new Map(
             discountedList.map((item: any) => [item.slug, item])
         );
@@ -276,3 +275,23 @@ export const marketing_withdrawal_request_create: (data: { amount: number; }) =>
         return handleError(err);
     }
 };
+
+export const marketing_withdrawal_requests: () => ApiResponse<any> = async () => {
+    try {
+        const headers = await getAuthHeaders();
+        const response = await api.get("/marketing/withdrawal-requests/", { headers });
+        return { success: true, data: response.data };
+    } catch (err) {
+        return handleError(err);
+    }
+};
+export const marketing_withdrawal_request: (id: string) => ApiResponse<any> = async (id) => {
+    try {
+        const headers = await getAuthHeaders();
+        const response = await api.get(`/marketing/withdrawal-requests/${id}/`, { headers });
+        return { success: true, data: response.data };
+    } catch (err) {
+        return handleError(err);
+    }
+};
+

@@ -374,6 +374,35 @@ export async function createNormalOrder(data: any) {
         return { success: false, message: error.message || "خطای ناشناخته" };
     }
 }
+export async function marketing_create_order(data: any, store_name_english: string) {
+    try {
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/marketing/store/${store_name_english}/order/create`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        const json = await res.json();
+
+        if (!res.ok) {
+            return {
+                success: false,
+                message: json.message || "خطا در ثبت سفارش مارکتینگ",
+            };
+        }
+
+        return {
+            success: true,
+            data: json,
+            message: json.message || "سفارش مارکتینگ با موفقیت ثبت شد",
+        };
+    } catch (error: any) {
+        return { success: false, message: error.message || "خطای ناشناخته" };
+    }
+}
 
 
 export async function GetShippingServices() {
