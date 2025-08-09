@@ -39,7 +39,7 @@ function NavbarMaketer({
       icon: <Percent size={18} />,
     },
     {
-      href: "/marketer/withdrawal",
+      href: "/marketer/withdrawals",
       label: "تسویه حساب ها",
       icon: <Wallet size={18} />,
     },

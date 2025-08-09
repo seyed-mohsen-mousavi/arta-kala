@@ -294,6 +294,7 @@ export default function FilterBox({
                   <label htmlFor="min-price-input">از</label>
                   <NumberInput
                     id="min-price-input"
+                    aria-label="min-price-input"
                     value={minInput}
                     onValueChange={handleMinChange}
                     hideStepper
@@ -311,6 +312,7 @@ export default function FilterBox({
                 <div className="flex flex-col items-center gap-2 text-default-500 font-medium text-small w-full p-5">
                   <label htmlFor="max-price-input">تا</label>
                   <NumberInput
+                    aria-label="max-price-input"
                     id="max-price-input"
                     size="sm"
                     value={maxInput}

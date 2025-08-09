@@ -12,18 +12,14 @@ type LayoutShellProps = {
   searchParams: any;
   pagination?: { count: number; page: number };
   categories: CategoryNode[];
-  isShow?: boolean;
-  items?: any[];
 };
 export default function LayoutShell({
   searchParams,
   products,
-  isShow = false,
   pagination,
-  items,
 }: LayoutShellProps) {
   const categories = useCategories();
-  const categoryId = (searchParams).category_id;
+  const categoryId = searchParams.category_id;
   const selected =
     Object.keys(searchParams).length > 0 && !("sort" in searchParams);
 
@@ -67,17 +63,13 @@ export default function LayoutShell({
       : []),
   ];
   return (
-    <div
-      className={`${isShow ? "" : "space-y-5 container customSm:max-w-[566px]"}`}
-    >
-      {!isShow && <BreadcrumbsBox items={breadcrumbItems} />}
+    <div className={"space-y-5 container customSm:max-w-[566px]"}>
+      <BreadcrumbsBox items={breadcrumbItems} />
       <section className="flex gap-4 w-full h-full ">
         <FilterBox selected={selected} />
         <div className="size-full space-y-5">
           <SortBox />
           <Products
-            items={items}
-            isShow={isShow}
             pagination={pagination}
             products={products}
             searchParams={searchParams}

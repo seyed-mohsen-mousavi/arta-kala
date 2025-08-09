@@ -15,6 +15,7 @@ export default function PaginationBox({
   page?: number;
   count: number;
   searchParams: any;
+  isShow?: boolean;
 }) {
   const router = useRouter();
   const renderItem = ({
