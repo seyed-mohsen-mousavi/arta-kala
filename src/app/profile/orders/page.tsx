@@ -8,12 +8,11 @@ import Orders from "./Orders";
 export default async function Page() {
   const discountedOrders = await GetDiscountedOrders();
   const { orders } = await GetUserDashboard();
-
-  const mapOrders = (data: any[]) =>
+  const mapOrders = (data: any[], type: "regular" | "discounted") =>
     data.map((order) => ({
-      id: order.id,
+      id: `${order.id}-${type}`,
       order_number: order?.order_number,
-      amount: order.total_amount || order.discounted_amount || 0, // عددی
+      amount: order.total_amount || order.discounted_amount || 0,
       amountFormatted:
         (order.total_amount || order.discounted_amount)?.toLocaleString(
           "fa-IR"
@@ -21,13 +20,18 @@ export default async function Page() {
       status: order?.status,
       date: order.order_date,
       dateFormatted: formatToPersianTimeAgo(order.order_date),
-      detailsLink: order.discounted_amount
-        ? `/profile/dis-orders/${order.order_number}`
-        : `/profile/orders/${order.order_number}`,
+      detailsLink:
+        type === "discounted"
+          ? `/profile/dis-orders/${order.order_number}`
+          : `/profile/orders/${order.order_number}`,
     }));
 
-  const items = [...mapOrders(orders), ...mapOrders(discountedOrders)];
+  const items = [
+    ...mapOrders(orders, "regular"),
+    ...mapOrders(discountedOrders, "discounted"),
+  ];
 
+  console.log(items);
   return (
     <div>
       <h1 className="flex items-center gap-1 font-semibold text-xl mb-5">

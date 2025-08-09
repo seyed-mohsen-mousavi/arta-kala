@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 const FooterSection = ({
@@ -80,11 +81,13 @@ const footerData = [
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img
-            src="https://service.emalls.ir/neshan?id=833"
+          <Image
+            src="/neshan.svg"
             alt="نشان اعتباری ایمالز"
             className="m-3"
             loading="lazy"
+            width={50}
+            height={100}
           />
         </a>
       </div>

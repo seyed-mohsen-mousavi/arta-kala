@@ -20,6 +20,7 @@ type CartContextType = {
   decrementQuantity: (productId: number) => void;
   setQuantityToItem: (productId: number, quantity: number) => void;
   clearCart: () => void;
+  refreshCart: () => void;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -44,7 +45,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     fetchCart();
   }, [fetchCart]);
-
+  const refreshCart = async () => {
+    setLoading(true);
+    await fetchCart();
+    setLoading(false);
+  };
   return (
     <CartContext.Provider
       value={{
@@ -55,6 +60,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         incrementQuantity: increment,
         decrementQuantity: decrement,
         setQuantityToItem: updateQuantity,
+        refreshCart,
         clearCart: () => {}, // no need
       }}
     >

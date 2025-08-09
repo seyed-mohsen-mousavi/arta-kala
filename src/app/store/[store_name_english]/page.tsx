@@ -1,7 +1,4 @@
-import {
-  marketing_profile_list,
-  marketing_store_read,
-} from "@/services/marketingActions";
+import { marketing_store_read } from "@/services/marketingActions";
 import React from "react";
 import Card from "@/components/Products/Card";
 import { Metadata } from "next";

@@ -224,7 +224,7 @@ function BuyNow({
         placement="center"
       >
         <ModalContent>
-          {(onClose) => (
+          {() => (
             <>
               <ModalHeader>
                 <p>ثبت سفارش</p>

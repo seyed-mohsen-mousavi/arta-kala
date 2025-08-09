@@ -8,7 +8,6 @@ import { convertPersianToEnglish } from "@/utils/converNumbers";
 import "iranianbanklogos/dist/ibl.css";
 import SettlementBox from "./SettlementBox";
 
-
 function toPersianNumber(input: string) {
   const enToFa = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
   return input.replace(/\d/g, (d) => enToFa[+d]);
@@ -23,6 +22,7 @@ async function page() {
   const userData = await GetUserDashboard();
   const { identity: user } = userData;
   const res = await marketing_profile_list();
+  console.log(res)
   if (!res.success || !res.data) {
     return (
       <div>
@@ -72,7 +72,7 @@ async function page() {
                     <CircleAlert className="size-5 fill-zinc-500 text-white" />
                   </p>
                   <h3 className="text-5xl font-semibold">
-                    {data.orders?.length ?? 0}
+                    {data.orders?.length.toLocaleString("fa-IR") ?? 0}
                   </h3>
                 </div>
               </div>
@@ -96,7 +96,7 @@ async function page() {
                     <CircleAlert className="size-5 fill-zinc-500 text-white" />
                   </p>
                   <h3 className="text-5xl font-semibold">
-                    {data.total_commission ?? 0}%
+                    {data.total_commission.toLocaleString("fa-IR") ?? 0} <span className="text-zinc-600 text-lg">تومان</span>
                   </h3>
                 </div>
               </div>

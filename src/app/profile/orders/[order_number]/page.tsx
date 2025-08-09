@@ -4,10 +4,11 @@ import { notFound } from "next/navigation";
 
 async function Page({ params }: any) {
   const data = await GetUserDashboard();
-  const orderId = Number((await params).id);
-  const foundOrder = data.orders.find((order: any) => order.id === orderId);
+  const order_number = (await params).order_number;
+  const foundOrder = data.orders.find(
+    (order: any) => order.order_number == order_number
+  );
   if (!foundOrder) return notFound();
-
   return (
     <div>
       <Order order={foundOrder} />

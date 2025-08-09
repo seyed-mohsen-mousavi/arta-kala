@@ -417,7 +417,7 @@ export function MobileDrawer({
         onClick={onOpen}
         className="hover:bg-white/50 active:bg-white/50 p-2 rounded-sm lg:hidden text-zinc-600 transition-colors ease-in-out"
       >
-        <RiMenu3Fill className="size-8 sm:size-9 md:size-10" />
+        <RiMenu3Fill className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10" />
       </button>
 
       <Drawer
@@ -482,7 +482,9 @@ export function MobileDrawer({
                     </div>
                     <div>
                       <p className="font-semibold text-base">{name}</p>
-                      <p className="text-sm text-gray-500">{convertNumberToPersian(phone)}</p>
+                      <p className="text-sm text-gray-500">
+                        {convertNumberToPersian(phone)}
+                      </p>
                     </div>
                   </div>
                 ) : (

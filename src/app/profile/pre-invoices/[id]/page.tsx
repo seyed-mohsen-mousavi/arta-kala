@@ -1,18 +1,21 @@
 import PreInvoice from "./PreInvoice";
 import { GetUserDashboard } from "@/services/authActions";
 import { GetShippingServices } from "@/services/shopActions";
-import { notFound } from "next/navigation";
 
 async function Page({ params }: any) {
   const data = await GetUserDashboard();
   const { data: shippingServices }: any = await GetShippingServices();
-
+  console.log(data);
   const orderId = Number(params.id);
-  const foundOrder = data.pre_invoices.find((order: any) => order.id === orderId);
-  if (!foundOrder) return notFound();
+  const foundOrder = data.pre_invoices.find(
+    (order: any) => order.id == orderId
+  );
+  console.log(data);
+
+  // if (!foundOrder) return notFound();
 
   const shipping = shippingServices.find(
-    (s: any) => s.id === foundOrder.shipping_service
+    (s: any) => s.id == foundOrder.shipping_service
   );
 
   const shippingName = shipping?.name || "نامشخص";

@@ -153,3 +153,35 @@ export async function checkPhoneExists(phone: string) {
     const data = await res.data;
     return data?.has_password;
 }
+export async function GenDiscount(data: { order_amount: number }) {
+    try {
+        const response = await fetch("/api/users/discount", {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+            return {
+                success: false,
+                errors: result.errors || {},
+                message: result.message || "خطایی رخ داده است",
+            };
+        }
+        return {
+            success: true,
+            data: result.data,
+        };
+    } catch (err) {
+        console.error("خطا در editInfo:", err);
+        return {
+            success: false,
+            errors: {},
+            message: "خطا در ارتباط با سرور",
+        };
+    }
+}
+

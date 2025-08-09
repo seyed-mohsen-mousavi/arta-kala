@@ -12,7 +12,6 @@ import {
   Chip,
 } from "@heroui/react";
 import { useAsyncList } from "@react-stately/data";
-import Link from "next/link";
 
 const statusMap: Record<
   string,

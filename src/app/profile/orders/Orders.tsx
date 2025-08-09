@@ -77,6 +77,7 @@ export default function Orders({ items }: { items: OrderItem[] }) {
       sortDescriptor={list.sortDescriptor}
       onSortChange={list.sort}
       isVirtualized
+      isHeaderSticky
     >
       <TableHeader>
         <TableColumn key="order_number" allowsSorting>
@@ -99,7 +100,7 @@ export default function Orders({ items }: { items: OrderItem[] }) {
         loadingContent={<Spinner variant="simple" label="در حال بارگذاری..." />}
       >
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow key={`${item.id}`}>
             <TableCell>{item.order_number}</TableCell>
             <TableCell>{item.amountFormatted}</TableCell>
             <TableCell>

@@ -11,6 +11,7 @@ import "swiper/css/free-mode";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
+import Image from "next/image";
 
 type Props = {
   images: any[];
@@ -42,7 +43,9 @@ const GallerySlider = ({ images }: Props) => {
       >
         {images.map((img) => (
           <SwiperSlide key={img.id}>
-            <img
+            <Image
+              width={500}
+              height={500}
               src={img.src}
               alt={img.alt}
               onClick={() => setOpen(true)}
@@ -63,7 +66,9 @@ const GallerySlider = ({ images }: Props) => {
       >
         {images.map((img) => (
           <SwiperSlide key={`thumb-${img.id}`} className="group">
-            <img
+            <Image
+              width={130}
+              height={130}
               src={img.src}
               alt={img.alt}
               className="h-34 w-full object-cover rounded-md border-2 border-transparent group-[.swiper-slide-thumb-active]:border-primary group-[.swiper-slide-thumb-active]:opacity-70 transition"
