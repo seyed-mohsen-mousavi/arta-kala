@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 
 export async function POST(
     req: NextRequest,
-    { params }: { params: Promise<{ store_name_english: string }> }
+    { params }: { params: Promise<{ store_name_english: string }>}
 ) {
     try {
         const cookieStore = await cookies();
@@ -13,6 +13,7 @@ export async function POST(
 
         const { store_name_english } = await params;
         const body = await req.json();
+        console.log(token, store_name_english, body);
         const res = await api.post(
             `/marketing/store/${store_name_english}/order/create/`,
             body,
