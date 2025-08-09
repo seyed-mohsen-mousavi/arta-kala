@@ -5,6 +5,7 @@ import Cards from "./Cards";
 
 async function Products() {
   const res = await marketing_products_list();
+  console.log(res)
   if (!res.success || !res.data || res.data.length === 0) {
     return (
       <div className="p-6">

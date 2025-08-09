@@ -11,15 +11,17 @@ export default function SettlementBox({
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const numericAmount = parseInt(amount);
+  const validAmount = !isNaN(numericAmount) ? numericAmount : 0;
+
   const handleSubmit = async () => {
-    const numericAmount = parseInt(amount);
-    if (numericAmount <= 0 || numericAmount > available_commission) {
+    if (validAmount <= 0 || validAmount > available_commission) {
       return;
     }
 
     setLoading(true);
     const res = await marketing_withdrawal_request_create({
-      amount: numericAmount,
+      amount: validAmount,
     });
     setLoading(false);
 
@@ -51,29 +53,20 @@ export default function SettlementBox({
         placeholder={
           available_commission === 0
             ? "شما در حال حاضر درآمدی برای تسویه ندارید"
-            : "غیر فعال"
+            : "مقدار را وارد کنید"
         }
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
         min={0}
         max={available_commission}
-        readOnly={
-          loading ||
-          !amount ||
-          parseInt(amount) <= 0 ||
-          parseInt(amount) > available_commission ||
-          available_commission === 0
-        }
+        disabled={loading || available_commission === 0}
       />
 
       <button
         onClick={handleSubmit}
         className="w-full bg-transparent border border-green-400 text-green-600  py-2 rounded-lg hover:bg-green-100 transition-colors disabled:pointer-events-none disabled:opacity-50"
         disabled={
-          loading ||
-          !amount ||
-          parseInt(amount) <= 0 ||
-          parseInt(amount) > available_commission
+          loading || validAmount <= 0 || validAmount > available_commission
         }
       >
         {loading ? "در حال ارسال..." : "درخواست تسویه حساب"}

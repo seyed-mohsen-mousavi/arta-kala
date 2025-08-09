@@ -1,12 +1,14 @@
 "use client";
 import Card from "@/components/Products/Card";
 import { marketing_products_remove_delete } from "@/services/marketingActions";
+import { formatShamsiDateString } from "@/utils/formatShamsiDateString";
 import React from "react";
 
 function Cards({ items }: { items: any[] }) {
   const hanldeClick = async (e: any, id: any) => {
     e.preventDefault();
     e.stopPropagation();
+    console.log(id);
     const confirmation = confirm(
       "آیا مطمئن هستید که می‌خواهید این محصول را از لیست محصولات انتخاب شده حذف کنید؟"
     );
@@ -23,12 +25,18 @@ function Cards({ items }: { items: any[] }) {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 2xl:grid-cols-5 gap-6 p-6">
       {items.map((item: any) => (
         <div key={item.id} className="relative">
-          <button
-            onClick={(e) => hanldeClick(e, item.id)}
-            className="absolute top-2 left-2 bg-danger text-white  justify-center shadow-md hover:bg-danger/90 px-2 py-1 rounded-full transition-all ease-initial z-10"
-          >
-            حذف از محصولات
-          </button>
+          <div className="absolute top-2 left-2 w-full flex flex-col items-end gap-2 p-2 z-10">
+            <button
+              onClick={(e) => hanldeClick(e, item.product.id)}
+              className= "bg-danger text-white  justify-center shadow-md hover:bg-danger/90 px-2 py-1 rounded-full transition-all ease-initial "
+            >
+              حذف از محصولات
+            </button>
+            <p className="text-xs bdge px-2 py-1 rounded bg-white shadow-sm">
+              در{formatShamsiDateString(item.added_at)} اضافه شده
+            </p>
+          </div>
+
           <Card item={item.product} />
         </div>
       ))}

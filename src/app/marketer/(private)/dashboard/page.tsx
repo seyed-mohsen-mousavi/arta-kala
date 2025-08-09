@@ -1,6 +1,5 @@
 import { GetUserDashboard } from "@/services/authActions";
 import { marketing_profile_list } from "@/services/marketingActions";
-import { formatShamsiDateString } from "@/utils/formatShamsiDateString";
 import { Activity, ArrowDown, CircleAlert, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -9,7 +8,6 @@ import { convertPersianToEnglish } from "@/utils/converNumbers";
 import "iranianbanklogos/dist/ibl.css";
 import SettlementBox from "./SettlementBox";
 
-// import Chart from "./Chart";
 
 function toPersianNumber(input: string) {
   const enToFa = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
@@ -22,7 +20,8 @@ function formatCardNumber(value: string) {
   return toPersianNumber(withSpaces);
 }
 async function page() {
-  const { identity: user } = await GetUserDashboard();
+  const userData = await GetUserDashboard();
+  const { identity: user } = userData;
   const res = await marketing_profile_list();
   if (!res.success || !res.data) {
     return (
@@ -224,15 +223,7 @@ async function page() {
                 نام فروشگاه (انگلیسی): <b>{data.store_name_english}</b>
               </p>
               <p>
-                وضعیت حساب: <b>{data.status}</b>
-              </p>
-              <p>
-                <span className=" text-zinc-900">تاریخ ایجاد:</span>{" "}
-                <b>{formatShamsiDateString(res.data.created_at)}</b>
-              </p>
-              <p className="mt-1">
-                <span className=" text-zinc-900">آخرین بروزرسانی:</span>{" "}
-                <b>{formatShamsiDateString(res.data.updated_at)}</b>
+                وضعیت حساب: <b>{data.status_display}</b>
               </p>
             </div>
           </div>

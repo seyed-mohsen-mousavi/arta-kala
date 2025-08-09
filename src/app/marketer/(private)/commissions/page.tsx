@@ -1,98 +1,60 @@
+import { formatShamsiDateString } from "@/utils/formatShamsiDateString";
+import { FaPercent } from "react-icons/fa";
 import { marketing_commissions_list } from "@/services/marketingActions";
-import Link from "next/link";
-import React from "react";
-import {
-  FaExclamationTriangle,
-  FaCheckCircle,
-  FaInfoCircle,
-} from "react-icons/fa";
+import CommissionRequests from "./CommissionRequests";
 
-interface Commission {
-  id: number;
-  name: string;
-  amount: number;
-}
+export default async function Commissions() {
+  const res = await marketing_commissions_list();
 
-async function Commissions() {
-  let result;
-  try {
-    result = await marketing_commissions_list();
-  } catch {
-    return (
-      <div className="flex flex-col items-center justify-center p-8 text-danger border border-red-100 rounded-xl h-full max-w-md mx-auto">
-        <FaExclamationTriangle className="text-danger mb-4" size={48} />
-        <p className="text-lg font-semibold">
-          خطا در اتصال به سرور. لطفاً دوباره تلاش کنید.
-        </p>
-      </div>
-    );
-  }
-  if (!result?.success || !result.data) {
-    return (
-      <div className="flex flex-col items-center justify-center p-8  h-screen max-w-md mx-auto">
-        <div className=" rounded-xl flex flex-col items-center justify-center p-8 text-danger border border-red-100">
-          <FaExclamationTriangle
-            className="text-danger xl:size-20 mb-4"
-            size={48}
-          />
-          <p className="text-lg xl:text-2xl font-semibold">
-            خطا در بارگذاری داده‌ها.
-          </p>
-        </div>
-      </div>
-    );
+  if (!res || !res.success) {
+    return <p>خطا در دریافت داده‌ها</p>;
   }
 
-  const { commissions }: { commissions: Commission[] } = result.data;
+  const {
+    commissions,
+    total_commission,
+    total_paid_commission,
+    available_commission,
+  } = res.data;
 
-  if (commissions.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen max-w-md mx-auto">
-        <div className="text-gray-500 bg-gray-100 rounded-xl flex flex-col items-center justify-center p-8">
-          <FaInfoCircle className="text-gray-500 xl:size-20 mb-4" size={48} />
-          <p className="text-lg xl:text-2xl font-semibold">
-            هیچ کمیسیونی موجود نیست.
-          </p>
-          <Link
-            href={"/marketer/dashboard"}
-            className="mt-4 px-6 py-2 text-blue-500 underline underline-offset-2 rounded-lg hover:text-blue-600 transition-colors"
-          >
-            بازگشت به داشبورد
-          </Link>
-        </div>
-      </div>
-    );
+  if (!Array.isArray(commissions)) {
+    return <p>داده‌ها به شکل درست دریافت نشد.</p>;
   }
+
+  const mappedCommissions = commissions.map((item: any) => ({
+    id: item.id,
+    orderNumber: item.order_number,
+    commissionBaseAmount: item.commission_base_amount || 0,
+    totalCommission: item.total_commission || 0,
+    paidCommission: item.paid_commission || 0,
+    availableCommission: item.available_commission || 0,
+    status: item.status,
+    statusDisplay: item.status_display,
+    createdAt: item.created_at,
+    createdAtFormatted: formatShamsiDateString(item.created_at),
+    detailsLink: `/marketer/commissions/${item.id}`,
+  }));
 
   return (
-    <div style={{ maxWidth: 600, margin: "0 auto", padding: "1rem" }}>
-      <h1 style={{ textAlign: "center", marginBottom: "1rem" }}>کمیسیون‌ها</h1>
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {commissions.map((comm) => (
-          <li
-            key={comm.id}
-            style={{
-              background: "#e9f7ef",
-              marginBottom: "0.5rem",
-              padding: "0.75rem 1rem",
-              borderRadius: 8,
-              boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              fontWeight: "bold",
-            }}
-          >
-            <span>{comm.name}</span>
-            <span style={{ color: "#198754" }}>
-              {comm.amount.toLocaleString()} تومان
-            </span>
-            <FaCheckCircle color="#198754" />
-          </li>
-        ))}
-      </ul>
+    <div>
+      <h1 className="flex items-center gap-1 font-semibold text-xl mb-5">
+        <FaPercent className="size-8 text-zinc-700" />
+        <span className="pt-1">پورسانت‌ها</span>
+      </h1>
+
+      <div className="mb-6 flex gap-6 text-sm">
+        <div>
+          مجموع پورسانت: <b>{total_commission.toLocaleString("fa-IR")}</b>
+        </div>
+        <div>
+          پرداخت شده: <b>{total_paid_commission.toLocaleString("fa-IR")}</b>
+        </div>
+        <div>
+          قابل برداشت: <b>{available_commission.toLocaleString("fa-IR")}</b>
+        </div>
+      </div>
+
+      <CommissionRequests items={mappedCommissions} />
     </div>
   );
 }
-
-export default Commissions;
