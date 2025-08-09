@@ -11,11 +11,13 @@ export default function PaginationBox({
   page,
   count,
   searchParams,
+  href,
 }: {
   page?: number;
   count: number;
   searchParams: any;
   isShow?: boolean;
+  href?: string;
 }) {
   const router = useRouter();
   const renderItem = ({
@@ -98,7 +100,7 @@ export default function PaginationBox({
       variant="light"
       onChange={(page) => {
         const params = new URLSearchParams(searchParams).toString();
-        router.push(`/products/page/${page}?${params}`);
+        router.push(`/${href ? href : "products"}/page/${page}?${params}`);
       }}
     />
   );

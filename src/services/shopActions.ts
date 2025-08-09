@@ -22,19 +22,23 @@ interface GetProductsParams {
     sort?: string;
     page?: number;
 }
-export async function GetProducts(params?: GetProductsParams, page?: number): Promise<any> {
+export async function GetProducts(
+    params?: GetProductsParams,
+    page?: number,
+    onlyDiscounted?: boolean
+): Promise<any> {
     try {
-        const searchParams = await params || {};
+        const searchParams = params || {};
         const query = new URLSearchParams();
 
-        if (searchParams?.category_id !== undefined) query.append("category_id", searchParams?.category_id.toString());
-        if (searchParams?.min_price !== undefined) query.append("min_price", searchParams?.min_price.toString());
-        if (searchParams?.max_price !== undefined) query.append("max_price", searchParams?.max_price.toString());
-        if (searchParams?.is_available !== undefined) query.append("is_available", String(searchParams?.is_available));
-        if (searchParams?.is_featured !== undefined) query.append("is_featured", String(searchParams?.is_featured));
-        if (searchParams?.search) query.append("search", searchParams?.search);
-        if (searchParams?.new_days !== undefined) query.append("new_days", searchParams?.new_days.toString());
-        if (searchParams?.sort) query.append("sort", searchParams?.sort);
+        if (searchParams?.category_id !== undefined) query.append("category_id", searchParams.category_id.toString());
+        if (searchParams?.min_price !== undefined) query.append("min_price", searchParams.min_price.toString());
+        if (searchParams?.max_price !== undefined) query.append("max_price", searchParams.max_price.toString());
+        if (searchParams?.is_available !== undefined) query.append("is_available", String(searchParams.is_available));
+        if (searchParams?.is_featured !== undefined) query.append("is_featured", String(searchParams.is_featured));
+        if (searchParams?.search) query.append("search", searchParams.search);
+        if (searchParams?.new_days !== undefined) query.append("new_days", searchParams.new_days.toString());
+        if (searchParams?.sort) query.append("sort", searchParams.sort);
         if (page) query.append("page", String(page));
 
         const [resNormal, resDiscounted] = await Promise.all([
@@ -62,11 +66,16 @@ export async function GetProducts(params?: GetProductsParams, page?: number): Pr
             }
             return product;
         });
+
+        const finalResults = onlyDiscounted
+            ? merged.filter((p: any) => p.isDiscounted)
+            : merged;
+
         return {
             ...normalData,
-            results: merged
+            results: finalResults
         };
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     } catch (error) {
         return {
             count: 0,
@@ -76,6 +85,10 @@ export async function GetProducts(params?: GetProductsParams, page?: number): Pr
         };
     }
 }
+
+
+
+
 export async function GetLatestProducts(): Promise<any> {
     try {
         const [resLatest, resDiscounted] = await Promise.all([

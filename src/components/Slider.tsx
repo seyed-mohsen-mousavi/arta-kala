@@ -68,7 +68,7 @@ function ProductSlider({
       <button
         onClick={() => swiperRef.current?.slideNext()}
         className={`
-    absolute top-1/2 -left-6 md:-left-10 -translate-y-1/2 
+    absolute top-1/2 -left-8 md:-left-12 -translate-y-1/2 
     z-20 
     w-12 h-12 md:w-14 md:h-14
     rounded-full 
@@ -79,7 +79,7 @@ function ProductSlider({
     hover:shadow-md 
     transition-shadow duration-200 ease-in-out 
     active:outline-none active:ring-2 active:ring-primary-400 
-    ${className}
+    ${className ? className  : ""}
   `}
         aria-label="Next Slide"
       >
@@ -89,7 +89,7 @@ function ProductSlider({
       <button
         onClick={() => swiperRef.current?.slidePrev()}
         className={`
-    absolute top-1/2 -right-6 md:-right-10 -translate-y-1/2 
+    absolute top-1/2 -right-8 md:-right-12 -translate-y-1/2 
     z-20 
     w-12 h-12 md:w-14 md:h-14
     rounded-full 
@@ -100,7 +100,7 @@ function ProductSlider({
     hover:shadow-md 
     transition-shadow duration-200 ease-in-out 
     active:outline-none active:ring-2 active:ring-primary-400 
-    ${className}
+    ${className ? className  : ""}
   `}
         aria-label="Previous Slide"
       >

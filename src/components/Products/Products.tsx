@@ -8,10 +8,12 @@ function Products({
   searchParams,
   products,
   pagination = { count: 0, page: 1 },
+  href,
 }: {
   searchParams: any;
   products: ProductType[];
   pagination?: { count: number; page: number };
+  href?: string;
 }) {
   return (
     <>
@@ -35,6 +37,7 @@ function Products({
         dir="rtl"
       >
         <PaginationBox
+          href={href}
           searchParams={searchParams}
           count={pagination?.count}
           page={pagination?.page}

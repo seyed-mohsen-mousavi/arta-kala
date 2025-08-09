@@ -21,7 +21,7 @@ export default function Card({
       className="size-full flex relative group/card h-full "
     >
       <div
-        className={`bg-white shadow rounded-lg p-3.5 sm:p-5 hover:shadow-lg transition-shadow group/card w-full flex flex-col relative h-96 ${className ?? ""}`}
+        className={`bg-white shadow rounded-2xl p-3.5 sm:p-5 hover:shadow-lg transition-shadow group/card w-full flex flex-col relative h-96 ${className ?? ""}`}
       >
         <div className="relative">
           {item.cover_image ? (

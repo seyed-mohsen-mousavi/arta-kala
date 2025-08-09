@@ -12,11 +12,13 @@ type LayoutShellProps = {
   searchParams: any;
   pagination?: { count: number; page: number };
   categories: CategoryNode[];
+  href?: string;
 };
 export default function LayoutShell({
   searchParams,
   products,
   pagination,
+  href,
 }: LayoutShellProps) {
   const categories = useCategories();
   const categoryId = searchParams.category_id;
@@ -70,6 +72,7 @@ export default function LayoutShell({
         <div className="size-full space-y-5">
           <SortBox />
           <Products
+            href={href}
             pagination={pagination}
             products={products}
             searchParams={searchParams}

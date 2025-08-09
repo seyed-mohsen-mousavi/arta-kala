@@ -271,12 +271,12 @@ export default async function Home() {
               <FlipClock targetDate={new Date("9999-12-31T23:59:59")} />
             </Link>
 
-            <button
-              type="button"
+            <Link
+              href="/products/offers"
               className=" bg-white text-black text-xs sm:text-sm px-7 py-2 rounded-full ring-4 ring-primary-200 hover:ring-primary-400 focus:outline-none focus:ring-2 focus:ring-red-400 transition shadow-lg hover:shadow-2xl"
             >
               مشاهده همه آف‌ها
-            </button>
+            </Link>
           </div>
 
           <div className="w-full lg:col-span-4 px-4 h-full flex flex-col items-center justify-center  md:pl-8 ">
