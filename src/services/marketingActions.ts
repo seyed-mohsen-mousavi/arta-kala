@@ -11,21 +11,16 @@ type ApiResponse<T> = Promise<{
     status?: number;
 }>;
 
-// --- کمک‌تابع‌ها ---
-
-// گرفتن توکن از کوکی‌ها
 async function getToken(): Promise<string | undefined> {
     const cookieStore = await cookies();
     return cookieStore.get("access_token")?.value;
 }
 
-// ساخت هدرهای authorization
 export async function getAuthHeaders() {
     const token = await getToken();
     return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-// هندل کردن خطا و لاگ کردن
 function handleError(err: any, fallbackMsg = "خطا در ارتباط با سرور") {
     if (err.response) {
         console.error("Data:", err.response.data);
@@ -46,7 +41,6 @@ function handleError(err: any, fallbackMsg = "خطا در ارتباط با سر
     };
 }
 
-// --- توابع API ---
 
 export const marketing_commissions_list: () => ApiResponse<any> = async () => {
     try {
@@ -289,6 +283,24 @@ export const marketing_withdrawal_request: (id: string) => ApiResponse<any> = as
     try {
         const headers = await getAuthHeaders();
         const response = await api.get(`/marketing/withdrawal-requests/${id}/`, { headers });
+        return { success: true, data: response.data };
+    } catch (err) {
+        return handleError(err);
+    }
+};
+export const marketing_orders: () => ApiResponse<any> = async () => {
+    try {
+        const headers = await getAuthHeaders();
+        const response = await api.get("/marketing/my-orders/", { headers });
+        return { success: true, data: response.data };
+    } catch (err) {
+        return handleError(err);
+    }
+};
+export const marketing_order: (id: string) => ApiResponse<any> = async (id) => {
+    try {
+        const headers = await getAuthHeaders();
+        const response = await api.get(`/marketing/my-orders/${id}/`, { headers });
         return { success: true, data: response.data };
     } catch (err) {
         return handleError(err);

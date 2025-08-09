@@ -1,4 +1,4 @@
-import Order from "./Order";
+import Order from "@/components/Order";
 import { GetUserDashboard } from "@/services/authActions";
 import { notFound } from "next/navigation";
 

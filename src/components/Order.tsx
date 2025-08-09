@@ -5,7 +5,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Link from "next/link";
 import { FaChevronRight } from "react-icons/fa6";
-import { formatShamsiDateString } from "../../../../utils/formatShamsiDateString";
+import { formatShamsiDateString } from "@/utils/formatShamsiDateString";
 const statusLabels: Record<string, { fa: string; color: string }> = {
   pending: { fa: "در انتظار پرداخت", color: "bg-yellow-100 text-yellow-800 " },
   delivered: { fa: "تحویل شده", color: "bg-green-100 text-green-800" },

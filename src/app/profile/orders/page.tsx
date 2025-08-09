@@ -4,11 +4,17 @@ import { GetUserDashboard } from "@/services/authActions";
 import { formatToPersianTimeAgo } from "@/utils/formatToPersianTimeAgo";
 import { MdShoppingCartCheckout } from "react-icons/md";
 import Orders from "./Orders";
+import { marketing_orders } from "@/services/marketingActions";
 
 export default async function Page() {
   const discountedOrders = await GetDiscountedOrders();
+  const marketerOrders = await marketing_orders();
+  console.log(marketerOrders);
   const { orders } = await GetUserDashboard();
-  const mapOrders = (data: any[], type: "regular" | "discounted") =>
+  const mapOrders = (
+    data: any[],
+    type: "regular" | "discounted" | "marketer"
+  ) =>
     data.map((order) => ({
       id: `${order.id}-${type}`,
       order_number: order?.order_number,
@@ -23,15 +29,17 @@ export default async function Page() {
       detailsLink:
         type === "discounted"
           ? `/profile/dis-orders/${order.order_number}`
-          : `/profile/orders/${order.order_number}`,
+          : type == "marketer"
+            ? `/profile/mark-orders/${order.id}`
+            : `/profile/orders/${order.order_number}`,
     }));
 
   const items = [
     ...mapOrders(orders, "regular"),
     ...mapOrders(discountedOrders, "discounted"),
+    ...mapOrders(marketerOrders.data, "marketer"),
   ];
 
-  console.log(items);
   return (
     <div>
       <h1 className="flex items-center gap-1 font-semibold text-xl mb-5">
