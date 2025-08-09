@@ -76,6 +76,7 @@ export default function Orders({ items }: { items: OrderItem[] }) {
       classNames={{ table: "min-h-[400px]" }}
       sortDescriptor={list.sortDescriptor}
       onSortChange={list.sort}
+      isVirtualized
     >
       <TableHeader>
         <TableColumn key="order_number" allowsSorting>

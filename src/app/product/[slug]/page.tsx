@@ -126,7 +126,7 @@ export default async function Page({
               {data.cover_image ? (
                 <Image
                   src={data.cover_image}
-                  alt={data.name}
+                  alt={`${data.name} - مجموعه فروش ابزار و آموزش صافکاری تکنوصاف `}
                   width={200}
                   height={200}
                   priority

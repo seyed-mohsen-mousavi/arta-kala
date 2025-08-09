@@ -93,6 +93,7 @@ export default function PreInvoices() {
       }}
       sortDescriptor={list.sortDescriptor}
       onSortChange={list.sort}
+      isVirtualized
     >
       <TableHeader>
         <TableColumn key="order_number" allowsSorting>

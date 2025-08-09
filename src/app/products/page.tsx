@@ -7,19 +7,13 @@ import { cache } from "react";
 import { CategoryNode } from "@/types/categories";
 
 const getCashedProducts = cache(GetProducts);
-export default async function ProductsPage({
-  searchParams,
-  isShow,
-  items,
-}: any) {
+export default async function ProductsPage({ searchParams }: any) {
   const search = await searchParams;
   const data = await getCashedProducts(search);
   const categoryRes = await GetShopCategoriesTreeList();
   const categories = categoryRes?.data || [];
   return (
     <LayoutShell
-      items={items}
-      isShow={isShow}
       categories={categories}
       products={data.results || []}
       pagination={{ count: data.count, page: data?.page || 1 }}
