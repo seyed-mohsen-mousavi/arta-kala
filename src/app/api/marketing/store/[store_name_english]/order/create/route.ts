@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 
 export async function POST(
     req: NextRequest,
-    { params }: { params: { store_name_english: string } }
+    { params }: { params: Promise<{ store_name_english: string }>}
 ) {
     try {
         const cookieStore = await cookies();
