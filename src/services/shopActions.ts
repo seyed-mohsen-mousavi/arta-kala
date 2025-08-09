@@ -76,7 +76,7 @@ export async function GetProducts(
             results: finalResults
         };
 
-    } catch (error) {
+    } catch {
         return {
             count: 0,
             next: null,
