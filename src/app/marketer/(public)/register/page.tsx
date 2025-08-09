@@ -7,11 +7,11 @@ import { redirect } from "next/navigation";
 async function Register() {
   const res = await marketing_profile_list();
   const marketer = res.data;
-  if (marketer.status === "در حال بررسی") {
+  if (marketer?.status === "pending") {
     redirect("/marketer/pending");
-  } else if (marketer.status === "رد شده") {
+  } else if (marketer?.status === "rejected") {
     redirect("/marketer/rejected");
-  } else if (marketer.status === "تأیید شده") {
+  } else if (marketer?.status === "approved") {
     redirect("/marketer/dashboard");
   }
   return (

@@ -8,9 +8,9 @@ async function Pending() {
   }
 
   const marketer = res.data;
-  if (marketer.status === "رد شده") {
+  if (marketer?.status === "rejected") {
     redirect("/marketer/rejected");
-  } else if (marketer.status == "تأیید شده") {
+  } else if (marketer?.status == "approved") {
     redirect("/marketer/dashboard");
   }
   return (

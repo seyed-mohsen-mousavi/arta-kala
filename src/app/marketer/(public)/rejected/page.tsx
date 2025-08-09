@@ -8,9 +8,9 @@ async function Rejected() {
   }
 
   const marketer = res.data;
-  if (marketer.status === "در حال بررسی") {
+  if (marketer?.status === "pending") {
     redirect("/marketer/pending");
-  } else if (marketer.status == "تأیید شده") {
+  } else if (marketer?.status == "approved") {
     redirect("/marketer/dashboard");
   }
   return (
