@@ -1,7 +1,7 @@
 import { addToast } from "@heroui/toast"
 import api from "./api"
 export const login = async (phone_number: string, password: string) => {
-    const res = await fetch("/api/auth/login", {
+    const res = await fetch("/internal-api/auth/login", {
         method: "POST",
         body: JSON.stringify({ phone_number, password }),
         headers: {
@@ -53,7 +53,7 @@ export const verifyOtp = async (
     referral_code?: string
 ) => {
     try {
-        const result = await fetch("/api/auth/verify-otp", {
+        const result = await fetch("/internal-api/auth/verify-otp", {
             method: "POST",
             body: JSON.stringify({ phone_number, code, referral_code }),
             headers: {
@@ -71,6 +71,8 @@ export const verifyOtp = async (
         addToast({
             title: data.message || "ثبت نام با موفقیت تکمیل شد",
         });
+
+        location.reload()
         return data;
     } catch (error: any) {
         addToast({
@@ -85,7 +87,7 @@ export const verifyOtp = async (
 // user
 export const editInfo = async (data: any) => {
     try {
-        const response = await fetch("/api/users/edit", {
+        const response = await fetch("/internal-api/users/edit", {
             method: "PATCH",
             body: JSON.stringify(data),
             headers: {
@@ -117,7 +119,7 @@ export const editInfo = async (data: any) => {
 };
 export const changePassword = async (data: any) => {
     try {
-        const response = await fetch("/api/users/change-password", {
+        const response = await fetch("/internal-api/users/change-password", {
             method: "POST",
             body: JSON.stringify(data),
             headers: {
@@ -155,7 +157,7 @@ export async function checkPhoneExists(phone: string) {
 }
 export async function GenDiscount(data: { order_amount: number }) {
     try {
-        const response = await fetch("/api/users/discount", {
+        const response = await fetch("/internal-api/users/discount", {
             method: "POST",
             body: JSON.stringify(data),
             headers: {

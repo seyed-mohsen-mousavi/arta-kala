@@ -22,7 +22,7 @@ export default function UserDropdown({ user }: { user: any }) {
     user?.identity?.first_name?.[0] || user?.identity?.phone_number?.[0] || "؟";
   const phone = user?.identity?.phone_number ?? "بدون شماره";
   const onLogout = async () => {
-    await fetch("/api/auth/logout/", {
+    await fetch("/internal-api/auth/logout/", {
       method: "POST",
       credentials: "include",
     });

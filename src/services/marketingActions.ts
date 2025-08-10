@@ -9,6 +9,7 @@ type ApiResponse<T> = Promise<{
     message?: string;
     errors?: any;
     status?: number;
+    store_name?: string
 }>;
 
 async function getToken(): Promise<string | undefined> {
@@ -236,7 +237,7 @@ export async function marketing_store_read(
             return { success: true, data: merged };
         }
 
-        const mergedList = (storeData || []).map((item: any) => {
+        const mergedList = (storeData.products || []).map((item: any) => {
             const discount = discountedMap.get(item.slug);
             if (discount) {
                 return {
@@ -249,7 +250,9 @@ export async function marketing_store_read(
             return item;
         });
 
-        return { success: true, data: mergedList };
+
+        const store_name = storeData?.store_name_persian || ""
+        return { success: true, data: mergedList, store_name };
     } catch (err) {
         console.error("خطا در marketing_store_read:", err);
         return {

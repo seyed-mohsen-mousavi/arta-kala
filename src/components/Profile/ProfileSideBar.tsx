@@ -31,7 +31,7 @@ function ProfileSideBar({ links }: { links: NavLink[] }) {
             <p>{convertNumberToPersian(user.identity?.phone_number)}</p>
             <button
               onClick={async () => {
-                await fetch("/api/auth/logout/", {
+                await fetch("/internal-api/auth/logout/", {
                   method: "POST",
                   credentials: "include",
                 });

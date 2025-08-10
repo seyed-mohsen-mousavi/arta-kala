@@ -180,10 +180,10 @@ export async function GetShopCartList(): Promise<{
 } | null> {
     try {
         const [normalRes, discountedRes] = await Promise.all([
-            fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/shop/cart`, {
+            fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/internal-api/shop/cart`, {
                 method: "GET",
             }),
-            fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/shop/discounted-cart/`, {
+            fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/internal-api/shop/discounted-cart/`, {
                 method: "GET",
             }),
         ]);
@@ -252,8 +252,8 @@ export async function PostShopCart(item: {
     store_name_english?: string
 }) {
     const url = item.is_discounted
-        ? "/api/shop/discounted-cart/"
-        : "/api/shop/cart/";
+        ? "/internal-api/shop/discounted-cart/"
+        : "/internal-api/shop/cart/";
 
     try {
         const res = await fetch(url, {
@@ -275,8 +275,8 @@ export async function PostShopCart(item: {
 export async function PatchShopCart(id: number, data: { quantity: number, is_discounted?: boolean },
 ) {
     const url = data?.is_discounted
-        ? "/api/shop/discounted-cart/"
-        : "/api/shop/cart/";
+        ? "/internal-api/shop/discounted-cart/"
+        : "/internal-api/shop/cart/";
 
     try {
         const res = await fetch(url, {
@@ -307,7 +307,7 @@ export async function PatchShopCart(id: number, data: { quantity: number, is_dis
 
 
 export async function DeleteShopCart(id: string, is_discounted?: boolean) {
-    const url = is_discounted ? "/api/shop/discounted-cart" : "/api/shop/cart";
+    const url = is_discounted ? "/internal-api/shop/discounted-cart" : "/internal-api/shop/cart";
     try {
         const res = await fetch(`${url}?id=${encodeURIComponent(id)}`, {
             method: "DELETE",
@@ -323,7 +323,7 @@ export async function DeleteShopCart(id: string, is_discounted?: boolean) {
 }
 export async function ClearShopCart() {
     try {
-        const res = await fetch(`/api/shop/cart/clear`, {
+        const res = await fetch(`/internal-api/shop/cart/clear`, {
             method: "DELETE",
         });
 
@@ -338,7 +338,7 @@ export async function ClearShopCart() {
 
 export async function createDiscountedOrder(data: any) {
     try {
-        const res = await fetch(`/api/shop/order/discounted`, {
+        const res = await fetch(`/internal-api/shop/order/discounted`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
@@ -364,7 +364,7 @@ export async function createDiscountedOrder(data: any) {
 
 export async function createNormalOrder(data: any) {
     try {
-        const res = await fetch(`/api/shop/order/normal`, {
+        const res = await fetch(`/internal-api/shop/order/normal`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
@@ -390,7 +390,7 @@ export async function createNormalOrder(data: any) {
 export async function marketing_create_order(data: any, store_name_english: string) {
     try {
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/marketing/store/${store_name_english}/order/create`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/internal-api/marketing/store/${store_name_english}/order/create`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -435,7 +435,7 @@ export async function GetComments(product_id: number) {
 
 
 export async function PostComment(product_id: number, data: { text: string; parent?: number | null }) {
-    const res = await fetch(`/api/shop/comments/${String(product_id)}/`, {
+    const res = await fetch(`/internal-api/shop/comments/${String(product_id)}/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -451,7 +451,7 @@ export async function PostComment(product_id: number, data: { text: string; pare
     return res.json();
 }
 export async function DeleteComment(commentId: number) {
-    const res = await fetch(`/api/shop/comments/delete/${commentId}`, {
+    const res = await fetch(`/internal-api/shop/comments/delete/${commentId}`, {
         method: "DELETE",
     });
 

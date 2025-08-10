@@ -10,7 +10,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { store_name_english } = await params;
   const store = await marketing_store_read(store_name_english);
-  // console.log(store);
+  console.log(store);
   const products = store?.data || [];
 
   return {
@@ -39,16 +39,16 @@ async function Page({
   return (
     <>
       <div className="container mx-auto px-4 py-8">
-        {/* {profile && (
+        {store && (
           <div className="mb-8">
             <h1 className="lg:text-3xl 2xl:text-4xl text-2xl font-bold">
-              فروشگاه {profile.store_name_persian}
+              فروشگاه {store?.store_name}
             </h1>
             <p className="text-gray-600 text-sm pt-1">
               {products.length} محصول موجود
             </p>
           </div>
-        )} */}
+        )}
 
         {products.length === 0 ? (
           <div className="text-center text-gray-500">محصولی یافت نشد.</div>

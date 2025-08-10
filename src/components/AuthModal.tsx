@@ -66,7 +66,7 @@ export default function AuthModal() {
     try {
       setLoading(true);
 
-      const verifyRes = await fetch("/api/auth/verify-captcha", {
+      const verifyRes = await fetch("/internal-api/auth/verify-captcha", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: captchaToken }),
@@ -85,6 +85,7 @@ export default function AuthModal() {
       setPhoneNumber(converted);
 
       const exists = await checkPhoneExists(converted);
+      console.log(exists)
       if (exists) {
         setIsNewUser(false);
         setStep("PASSWORD");

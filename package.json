@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prod": "next build && next start"
+    "prod": "next build && next start",
+    "start:custom": "NODE_ENV=production node server.js"
   },
   "dependencies": {
     "@heroui/accordion": "^2.2.19",
@@ -20,6 +21,7 @@
     "axios": "^1.10.0",
     "class-variance-authority": "^0.7.1",
     "dayjs": "^1.11.13",
+    "dotenv": "^17.2.1",
     "framer-motion": "^12.23.0",
     "html-react-parser": "^5.2.5",
     "html2canvas": "^1.4.1",
