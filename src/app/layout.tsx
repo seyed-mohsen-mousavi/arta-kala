@@ -10,6 +10,7 @@ import { CategoriesProvider } from "@/context/CategoriesContext";
 import { CartProvider } from "@/context/CartContextProvider";
 import { dana, iranyekan, noora, pelak } from "@/utils/fonts";
 import LayoutWrapper from "./LayoutWrapper";
+import ConsoleLog from "@/components/ConsoleLog";
 
 export const metadata: Metadata = {
   title: "تکنو صاف | فروشگاه آنلاین با تضمین کیفیت",
@@ -53,11 +54,13 @@ export default async function RootLayout({
 }>) {
   const result = await GetShopCategoriesTreeList();
   const user = (await GetUserDashboard()) || undefined;
+
   return (
     <html lang="fa-IR" dir="rtl" className="scroll-smooth bg-[#f9f9f9]">
       <body
         className={`${iranyekan.variable} ${pelak.variable} ${noora.variable} ${dana.variable} ${iranyekan.className} w-full min-h-screen relative antialiased text-[#212529] flex flex-col overflow-x-hidden`}
       >
+        <ConsoleLog />
         <UserProvider initialUser={user}>
           <AuthModalProvider>
             <CartProvider>
