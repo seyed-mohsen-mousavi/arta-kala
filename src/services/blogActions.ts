@@ -10,11 +10,12 @@ interface BlogPostsParams {
     category?: string;
 }
 
-export const GetBlogPosts = async (params?: BlogPostsParams): Promise<BlogPostsResponse | undefined> => {
+export const GetBlogPosts = async (params?: BlogPostsParams, page?: string): Promise<BlogPostsResponse | undefined> => {
     try {
         const query = new URLSearchParams();
 
         if (params?.category) query.append("category", params.category);
+        if (page) query.append("page", page);
 
         const url = `/blog/posts/?${query.toString()}`;
 

@@ -12,12 +12,14 @@ export default function PaginationBox({
   count,
   searchParams,
   href,
+  total,
 }: {
   page?: number;
-  count: number;
+  count?: number;
   searchParams: any;
   isShow?: boolean;
   href?: string;
+  total?: number;
 }) {
   const router = useRouter();
   const renderItem = ({
@@ -95,11 +97,13 @@ export default function PaginationBox({
       initialPage={page || 1}
       radius="full"
       renderItem={renderItem}
-      total={Math.ceil(count / 20)}
+      total={total ? total : count ? Math.ceil(count / 20) : 1}
       boundaries={3}
       variant="light"
       onChange={(page) => {
-        const params = new URLSearchParams(searchParams).toString();
+        const params = total
+          ? ""
+          : new URLSearchParams(searchParams).toString();
         router.push(`/${href ? href : "products"}/page/${page}?${params}`);
       }}
     />

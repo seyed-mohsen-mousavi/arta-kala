@@ -236,7 +236,7 @@ export default async function Home() {
               <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-zinc-50 flex items-center justify-center border border-zinc-200 p-2">
                 <Image
                   src={qc.image}
-                  alt={qc.label || "دسته‌بندی"}
+                  alt={qc.label + "دسته‌بندی"}
                   width={96}
                   height={96}
                   loading="lazy"
@@ -256,7 +256,8 @@ export default async function Home() {
         >
           <div className="w-full col-span-1 flex flex-row md:flex-col items-center gap-6 justify-between md:py-10">
             <Link
-              href={"#offers"}
+              href={"/products/offers"}
+              aria-label="مشاهده آفرهای ویژه"
               className="flex flex-row lg:flex-col md:w-full h-full justify-between items-center font-dana"
               role="region"
               aria-live="polite"
@@ -266,6 +267,7 @@ export default async function Home() {
                 alt="آفرهای ویژه"
                 width={200}
                 height={200}
+                priority
                 className="w-full h-32 lg:h-40 object-contain"
               />
               <FlipClock targetDate={new Date("9999-12-31T23:59:59")} />

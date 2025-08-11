@@ -77,7 +77,7 @@ const footerData = [
     content: (
       <div className="mt-6 text-center">
         <a
-          href="https://emalls.ir/Shop/833/"
+          href="https://emalls.ir/Shop/X/"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -87,7 +87,7 @@ const footerData = [
             className="m-3"
             loading="lazy"
             width={50}
-            height={100}
+            height={50}
           />
         </a>
       </div>

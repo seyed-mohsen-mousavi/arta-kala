@@ -23,73 +23,36 @@ export default async function ProductsPage({ searchParams }: any) {
   );
 }
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams?: any;
-}): Promise<Metadata> {
-  const categoryId = searchParams?.category_id;
-
-  if (categoryId) {
-    const categoryRes = await GetShopCategoriesTreeList();
-    const categories = categoryRes?.data || [];
-    const category = categories.find(
-      (cat: CategoryNode) => cat.id === +categoryId
-    );
-
-    const categoryTitle = category?.name || "دسته‌بندی انتخاب‌شده";
-
-    const title = `${categoryTitle} | خرید انواع ${categoryTitle} با بهترین قیمت | تکنو صاف`;
-    const description = `خرید اینترنتی ${categoryTitle} از فروشگاه تکنو صاف با بهترین قیمت و ارسال سریع. بررسی و فیلتر محصولات ${categoryTitle}.`;
-
-    return {
-      title,
-      description,
-      keywords: [
-        categoryTitle,
-        "فروشگاه تکنو صاف",
-        "خرید آنلاین",
-        "قیمت مناسب",
-      ],
-      openGraph: {
-        title,
-        description,
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/products?category_id=${categoryId}`,
-        siteName: "تکنو صاف",
-        locale: "fa_IR",
-        type: "website",
-      },
-      twitter: {
-        card: "summary",
-        title,
-        description,
-      },
-      robots: {
-        index: true,
-        follow: true,
-      },
-    };
-  }
+export async function generateMetadata(): Promise<Metadata> {
+  const title = "تخفیف‌های شگفت‌انگیز | فروشگاه تکنو صاف";
+  const description =
+    "جدیدترین پیشنهادهای ویژه و تخفیف‌های شگفت‌انگیز فروشگاه تکنو صاف! خرید محصولات منتخب با قیمت باورنکردنی و ارسال سریع.";
+  const keywords = [
+    "تخفیف ویژه",
+    "پیشنهاد شگفت‌انگیز",
+    "حراج",
+    "فروش ویژه",
+    "قیمت باورنکردنی",
+    "فروشگاه تکنو صاف",
+    "خرید آنلاین ارزان",
+  ];
 
   return {
-    title: "خرید محصولات | فروشگاه تکنو صاف",
-    description:
-      "مشاهده و خرید جدیدترین محصولات با بهترین قیمت از فروشگاه تکنو صاف. فیلتر بر اساس قیمت، موجودی، ویژگی و ...",
-    keywords: ["فروشگاه تکنو صاف", "خرید آنلاین", "محصولات", "قیمت مناسب"],
+    title,
+    description,
+    keywords,
     openGraph: {
-      title: "خرید محصولات | فروشگاه تکنو صاف",
-      description:
-        "فروشگاه تکنو صاف ارائه‌دهنده انواع محصولات با بهترین قیمت و تضمین کیفیت. خرید آنلاین آسان و سریع.",
-      url: `${process.env.NEXT_PUBLIC_SITE_URL}/products`,
+      title,
+      description,
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}/amazing-offers`,
       siteName: "تکنو صاف",
       locale: "fa_IR",
       type: "website",
     },
     twitter: {
       card: "summary",
-      title: "خرید محصولات | تکنو صاف",
-      description:
-        "محصولات متنوع با قیمت مناسب از فروشگاه اینترنتی تکنو صاف. خرید سریع، امن و مطمئن.",
+      title,
+      description,
     },
     robots: {
       index: true,
