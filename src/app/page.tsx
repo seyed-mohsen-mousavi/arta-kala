@@ -9,6 +9,7 @@ import {
   GetFeaturedProducts,
   GetLatestProducts,
   GetProducts,
+  GetShopCategoriesTreeList,
 } from "@/services/shopActions";
 import { GetLatestArticles } from "@/services/blogActions";
 import FlipClock from "@/components/FlipClockWrapper";
@@ -21,33 +22,8 @@ export type ImageType = {
   link?: string;
   order?: number;
 };
+import { HiOutlineCube } from "react-icons/hi";
 
-const quickCategories: { label: string; image: string }[] = [
-  {
-    label: "فرز",
-    image: "/quick-category/1.jpg",
-  },
-  {
-    label: "​جارو شارژی و کارواش",
-    image: "/quick-category/2.jpg",
-  },
-  {
-    label: "شیرآلات",
-    image: "/quick-category/3.png",
-  },
-  {
-    label: "​شستشو و نظافت",
-    image: "/quick-category/4.jpg",
-  },
-  {
-    label: "روشنایی",
-    image: "/quick-category/5.jpg",
-  },
-  {
-    label: "​دریل",
-    image: "/quick-category/6.jpg",
-  },
-];
 const brands: { link: string; name: string; image: string }[] = [
   {
     link: "/",
@@ -145,7 +121,7 @@ import HomeSlider from "@/components/HomeSlider";
 import { homeSliderList } from "@/services/homeActions";
 
 export const metadata: Metadata = {
-  title: "تکنو صاف | فروشگاه آنلاین با تضمین کیفیت",
+  title: " تکنو صاف | فروشگاه آنلاین با تضمین کیفیت",
   description:
     "تکنو صاف، فروشگاه تخصصی با بهترین قیمت و تضمین کیفیت. ارسال سریع، تخفیف‌های ویژه، و مقالات آموزشی تخصصی.",
   keywords: [
@@ -185,6 +161,8 @@ export default async function Home() {
   let latest_products: ProductType[] = [];
   let featured_products: ProductType[] = [];
   let latest_articles = [];
+  const shopCategoriesResponse = await GetShopCategoriesTreeList();
+  const shopCategories = shopCategoriesResponse?.data || [];
   const sliders = await homeSliderList();
   try {
     const [
@@ -219,55 +197,63 @@ export default async function Home() {
           <HomeSlider images={images} />
         </header>
       )}
-
+  <h1 className="sr-only">
+    تکنو صاف | فروشگاه آنلاین ابزار با تضمین کیفیت
+  </h1>
       <section className="max-w-[1270px] mx-auto space-y-10 px-2 sm:px-6">
-        <nav
-          aria-label="دسته‌بندی‌های سریع"
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 w-full py-8"
-        >
-          {quickCategories.map((qc, index) => (
-            <Link
-              key={index}
-              href="/"
-              className="group flex flex-col items-center gap-3 p-4 rounded-2xl border border-zinc-100 shadow transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
-              aria-label={`دسته‌بندی ${qc.label}`}
-              title={qc.label}
-            >
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-zinc-50 flex items-center justify-center border border-zinc-200 p-2">
-                <Image
-                  src={qc.image}
-                  alt={qc.label + "دسته‌بندی"}
-                  width={96}
-                  height={96}
-                  loading="lazy"
-                  className="object-contain w-full h-full transition-transform duration-300 group-hover:scale-105"
-                />
-              </div>
-              <p className="font-bold  lg:text-lg text-center text-zinc-700 group-hover:text-primary-800 transition-colors duration-300">
-                {qc.label}
-              </p>
-            </Link>
-          ))}
-        </nav>
-
+        <section className="w-full flex justify-center items-center">
+          <nav
+            aria-label="دسته‌بندی‌های سریع"
+            className="inline-grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 w-full place-content-center  justify-center py-8 "
+          >
+            {shopCategories.slice(0, 6).map((cat: any) => (
+              <Link
+                key={cat.id}
+                href={`/products?category_id=${cat.id}`}
+                className="group flex flex-col items-center gap-3 p-4 rounded-2xl border border-zinc-100 shadow transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                aria-label={`دسته‌بندی ${cat.name}`}
+                title={cat.name}
+              >
+                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-zinc-50 flex items-center justify-center border border-zinc-200 p-2">
+                  {cat.icon ? (
+                    <Image
+                      src={cat.icon}
+                      alt={`${cat.name} دسته‌بندی`}
+                      width={96}
+                      height={96}
+                      loading="lazy"
+                      className="object-contain w-full h-full transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <HiOutlineCube className="w-12 h-12 text-zinc-400 group-hover:text-primary-700 transition-colors duration-300" />
+                  )}
+                </div>
+                <p className="font-bold lg:text-lg text-center text-zinc-700 group-hover:text-primary-800 transition-colors duration-300">
+                  {cat.name}
+                </p>
+              </Link>
+            ))}
+          </nav>
+        </section>
         <section
-          aria-labelledby="offers-title"
+          aria-labelledby="محصولات تخفیف دار"
           className="bg-gradient-to-r from-primary via-yellow-200 to-primary rounded-3xl pl-5 grid grid-cols-1 lg:grid-cols-5  transition-transform py-2"
         >
-          <div className="w-full col-span-1 flex flex-row md:flex-col items-center gap-6 justify-between md:py-10">
+          <div
+            role="region"
+            aria-label="مشاهده آفرهای ویژه"
+            className="w-full col-span-1 flex flex-row md:flex-col items-center gap-6 justify-between md:py-10"
+          >
             <Link
               href={"/products/offers"}
-              aria-label="مشاهده آفرهای ویژه"
               className="flex flex-row lg:flex-col md:w-full h-full justify-between items-center font-dana"
-              role="region"
-              aria-live="polite"
             >
               <Image
                 src="/Amazings.svg"
                 alt="آفرهای ویژه"
                 width={200}
-                height={200}
-                priority
+                height={128}
+                quality={60}
                 className="w-full h-32 lg:h-40 object-contain"
               />
               <FlipClock targetDate={new Date("9999-12-31T23:59:59")} />
@@ -275,7 +261,7 @@ export default async function Home() {
 
             <Link
               href="/products/offers"
-              className=" bg-white text-black text-xs sm:text-sm px-7 py-2 rounded-full ring-4 ring-primary-200 hover:ring-primary-400 focus:outline-none focus:ring-2 focus:ring-red-400 transition shadow-lg hover:shadow-2xl"
+              className="bg-white text-black text-xs sm:text-sm px-7 py-2 rounded-full ring-4 ring-primary-200 hover:ring-primary-400 focus:outline-none focus:ring-2 focus:ring-red-400 transition shadow-lg hover:shadow-2xl"
             >
               مشاهده همه آف‌ها
             </Link>
@@ -284,23 +270,16 @@ export default async function Home() {
           <div className="w-full lg:col-span-4 px-4 h-full flex flex-col items-center justify-center  md:pl-8 ">
             <Slider spaceBetween={0} items={products} Card={Card} />
           </div>
-
-          {/* <button
-            type="button"
-            className="lg:hidden mx-auto bg-white text-black mb-2 text-sm px-7 py-2 rounded-full ring-4 ring-primary-200 hover:ring-primary-400 focus:outline-none focus:ring-2 focus:ring-red-400 transition shadow-lg hover:shadow-2xl"
-          >
-            مشاهده همه تخفیف ها
-          </button> */}
         </section>
 
         <section
           className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white"
-          aria-labelledby="latest-products-title"
+          aria-labelledby="جدیدترین محصولات"
         >
           <div className="w-full flex justify-between px-4">
-            <h4 id="latest-products-title" className="font-semibold text-2xl">
+            <h2 id="latest-products-title" className="font-semibold text-2xl">
               جدیدترین
-            </h4>
+            </h2>
             <Link href={"/products?sort=newest"} className="underline text-lg">
               مشاهده بیشتر محصولات​​​​​​​
             </Link>
@@ -320,7 +299,6 @@ export default async function Home() {
           alt="تبلیغ ویژه"
           width={1000}
           height={100}
-          fetchPriority="low"
           loading="lazy"
           className="w-full rounded-xl lg:rounded-3xl my-5"
         />
@@ -331,12 +309,12 @@ export default async function Home() {
             aria-labelledby="featured-products-title"
           >
             <div className="w-full flex justify-between px-4">
-              <h4
+              <h2
                 id="featured-products-title"
                 className="font-semibold text-2xl"
               >
                 پر فروش ترین ها
-              </h4>
+              </h2>
               <Link href={"/products"} className="underline text-lg">
                 مشاهده بیشتر محصولات​​​​​​​
               </Link>
@@ -354,12 +332,12 @@ export default async function Home() {
 
         <section
           className="w-full rounded-2xl border-2 border-gray-200 py-2 px-4 bg-white flex flex-col lg:flex-row overflow-hidden"
-          aria-labelledby="articles-title"
+          aria-labelledby="مقالات"
         >
           <div className="w-full lg:w-1/3 flex flex-col lg:justify-between gap-5 px-2 lg:px-4">
-            <h4 id="articles-title" className="font-semibold text-2xl">
+            <h2 id="articles-title" className="font-semibold text-2xl">
               مقالات
-            </h4>
+            </h2>
 
             <nav
               className="hidden lg:flex flex-col gap-2"

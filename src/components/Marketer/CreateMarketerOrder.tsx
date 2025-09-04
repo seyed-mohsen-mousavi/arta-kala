@@ -314,7 +314,7 @@ const CreateMarketerOrder = ({
   return (
     <form
       onSubmit={createOrder}
-      className="grid md:grid-cols-5 gap-6 p-5 rounded max-w-7xl mx-auto"
+      className="grid md:grid-cols-5 gap-6 p-5 rounded items-start"
     >
       <div className="col-span-3 flex flex-col gap-6">
         <h1 className="text-2xl font-bold mb-4">مشخصات گیرنده سفارش</h1>
@@ -490,7 +490,7 @@ const CreateMarketerOrder = ({
         </div>
       </div>
 
-      <div className="col-span-3 md:col-span-2 shadow rounded-lg p-5 space-y-2 border border-zinc-300 sticky">
+      <div className="col-span-3 md:col-span-2 shadow rounded-lg p-5 space-y-2 border border-zinc-300 sticky h-auto">
         {discountAmount > 0 && (
           <div className="flex items-center justify-between text-green-700">
             <p>تخفیف</p>

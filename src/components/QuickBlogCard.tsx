@@ -16,8 +16,8 @@ function QuickBlogCard({ item }: { item: Article }) {
           height={100}
           loading="lazy"
           src={`${process.env.NEXT_PUBLIC_BACK_END}${item.thumbnail}`}
-          alt={item.title}
-          className="w-full h-full object-cover"
+          alt={`تصویر مقاله ${item.title}`}
+          className="w-full h-full object-cover bg-zinc-100/90 backdrop-blur-xl"
         />
         <div className="w-full bg-white/80 text-gray-800 absolute z-10 bottom-0 py-2 px-3 text-lg font-semibold">
           {item.title}

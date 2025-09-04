@@ -221,7 +221,7 @@ function BuyNow({
         isOpen={isBuyOpen}
         onOpenChange={onOpenBuyChange}
         size="5xl"
-        placement="center"
+        placement="bottom-center"
       >
         <ModalContent>
           {() => (

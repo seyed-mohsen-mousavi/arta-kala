@@ -1,9 +1,11 @@
 export const dynamic = "force-dynamic";
 
 import LayoutShell from "@/components/Products/LayoutShell";
+import { breadcrumbSchema, productsSchema } from "@/components/Schema";
 import { GetProducts, GetShopCategoriesTreeList } from "@/services/shopActions";
 import { CategoryNode } from "@/types/categories";
 import { Metadata } from "next";
+import Script from "next/script";
 
 export default async function ProductsPage({ params, searchParams }: any) {
   const { page } = await params;
@@ -13,13 +15,30 @@ export default async function ProductsPage({ params, searchParams }: any) {
   const data = await GetProducts(filters, page);
   const categoryRes = await GetShopCategoriesTreeList();
   const categories = categoryRes?.data || [];
+  const breadcrumbs = [
+    { name: "خانه", url: "/" },
+    { name: "محصولات", url: "/products" },
+  ];
+  const schema = [
+    ...productsSchema(data.results || []),
+    breadcrumbSchema(breadcrumbs),
+  ];
   return (
-    <LayoutShell
-      categories={categories}
-      products={data.results || []}
-      pagination={{ count: data?.count || 0, page: data?.page || 1 }}
-      searchParams={search}
-    />
+    <>
+      <Script
+        type="application/ld+json"
+        strategy="lazyOnload"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(schema).replace(/</g, "\\u003c"),
+        }}
+      />
+      <LayoutShell
+        categories={categories}
+        products={data.results || []}
+        pagination={{ count: data?.count || 0, page: data?.page || 1 }}
+        searchParams={search}
+      />
+    </>
   );
 }
 export async function generateMetadata({

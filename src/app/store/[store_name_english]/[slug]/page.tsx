@@ -82,7 +82,8 @@ async function page({
             href={`/store/${profile.store_name_english}`}
             className="text-cyan-400 spoiler-link relative text-xl"
           >
-            <GrLinkNext className="inline-block mr-1" />  برگشت به فروشگاه {profile.store_name_persian}
+            <GrLinkNext className="inline-block mr-1" /> برگشت به فروشگاه{" "}
+            {profile.store_name_persian}
           </Link>{" "}
         </div>
       )}
@@ -205,7 +206,12 @@ async function page({
                       </p>
                     </div>
                     <div className="size-14 relative">
-                      <img src="/free-delivery-free.svg" alt="ارسال رایگان" />
+                      <Image
+                        width={56}
+                        height={56}
+                        src="/free-delivery-free.svg"
+                        alt="ارسال رایگان"
+                      />
                     </div>
                   </div>
                 </>
@@ -246,7 +252,9 @@ async function page({
                 </p>
               </div>
               <div className="size-14 relative">
-                <img
+                <Image
+                  width={56}
+                  height={56}
                   src="/free-delivery-free.svg"
                   loading="lazy"
                   alt="ارسال رایگان"

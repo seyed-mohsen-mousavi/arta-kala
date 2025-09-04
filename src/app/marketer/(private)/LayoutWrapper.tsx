@@ -24,7 +24,7 @@ export default function LayoutWrapper({
   }
 
   return (
-    <div className="min-h-screen md:flex relative max-sm:animate-fade-left">
+    <div className="min-h-screen md:flex relative max-sm:animate-fade-left overflow-x-hidden">
       <aside className="hidden md:block w-72 shadow-xl ">
         <NavbarMaketer setMobileOpen={setMobileOpen} />
       </aside>

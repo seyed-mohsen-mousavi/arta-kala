@@ -14,6 +14,9 @@ import sanitizeHtml from "sanitize-html";
 import moment from "moment-jalaali";
 import { Metadata } from "next";
 import ReadingProgressBar from "@/components/ReadingProgressBar";
+import { articleSchema, breadcrumbSchema } from "@/components/Schema";
+import { imageSchema } from "@/components/Schema/imageSchema";
+import Script from "next/script";
 
 export async function generateMetadata({
   params,
@@ -65,7 +68,7 @@ export async function generateMetadata({
 async function page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
-  const data = await GetBlogBySlug(decodedSlug);
+  const data: Article = await GetBlogBySlug(decodedSlug);
   const categories = await GetBlogCategoriesMenuStructure();
   const latestPosts = await GetLatestBlogPosts();
   if (!data) return notFound();
@@ -73,8 +76,35 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
     moment.loadPersian({ dialect: "persian-modern", usePersianDigits: true });
     return moment(jalaliDate, "jYYYY-jMM-jDD").format("jDD jMMMM jYYYY");
   };
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://mpttools.co";
+
+  const breadcrumbs = [
+    { name: "خانه", url: `${siteUrl}/` },
+    { name: "محصولات", url: `${siteUrl}/products` },
+    data.category
+      ? {
+          name: data.category.title,
+          url: `${siteUrl}/products?category_id=${data.category.id}`,
+        }
+      : { name: data.category },
+    { name: data.title, url: `${siteUrl}/article/${data.slug}` },
+  ];
+
+  const schema = [
+    articleSchema(data),
+    breadcrumbSchema(breadcrumbs),
+    imageSchema(data.thumbnail, data.title),
+  ];
   return (
     <>
+      <Script
+        type="application/ld+json"
+        strategy="lazyOnload"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(schema).replace(/</g, "\\u003c"),
+        }}
+      />
       <ReadingProgressBar />
 
       <div
@@ -154,7 +184,6 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
                       {formatPersianDate(post.jalali_created)}
                     </p>
                   </div>
-                  
                 </li>
               ))}
             </ul>

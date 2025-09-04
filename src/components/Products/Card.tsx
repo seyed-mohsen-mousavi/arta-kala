@@ -13,6 +13,7 @@ export default function Card({
   href?: string;
   className?: string;
 }) {
+  console.log(item)
   return (
     <Link
       href={href ? href : `/product/${item.slug}`}
@@ -26,8 +27,8 @@ export default function Card({
         <div className="relative">
           {item.cover_image ? (
             <Image
-              width={380}
-              height={180}
+              width={360}
+              height={160}
               src={
                 item.cover_image.startsWith("/media")
                   ? `${process.env.NEXT_PUBLIC_BACK_END}${item.cover_image}`
@@ -54,19 +55,19 @@ export default function Card({
               <div>
                 <div className="flex items-center">
                   <p className="line-through text-zinc-500 ml-2 text-sm">
-                    {item.price.toLocaleString("fa-IR")} تومان
+                    {item.price ? item.price?.toLocaleString("fa-IR") : "۰"} تومان
                   </p>
                   <span className="px-2 text-white bg-danger rounded-full">
                     {item.discount_percentage?.toLocaleString("fa-IR")}%
                   </span>
                 </div>
                 <p className="font-medium text-xl">
-                  {item.final_price.toLocaleString("fa-IR")} تومان
+                  {item?.final_price.toLocaleString("fa-IR")} تومان
                 </p>
               </div>
             ) : (
               <p className="font-bold text-xl ">
-                {item.price.toLocaleString("fa-IR")} تومان
+                {item.price ? item?.price?.toLocaleString("fa-IR") : "۰"} تومان
               </p>
             )}
           </div>

@@ -1,11 +1,12 @@
 export const dynamic = "force-dynamic";
 
 import BlogCard from "@/components/BlogCard";
-import ErrorMessage from "@/components/ErrorMessage";
 import PaginationBox from "@/components/Products/PaginationBox";
+import { articlesSchema, breadcrumbSchema } from "@/components/Schema";
 import { GetBlogPosts } from "@/services/blogActions";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Script from "next/script";
 
 interface PageProps {
   searchParams: Promise<{ category?: string }>;
@@ -77,19 +78,34 @@ export default async function ProductsPage({ params, searchParams }: any) {
   }
 
   const posts = result.data;
+  const breadcrumbs = [
+    { name: "خانه", url: `${process.env.NEXT_PUBLIC_SITE_URL}/` },
+    { name: "مقالات", url: `${process.env.NEXT_PUBLIC_SITE_URL}/articles` },
+  ];
+  const schema = [articlesSchema(posts), breadcrumbSchema(breadcrumbs)];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {posts.map((post) => (
-        <BlogCard key={post.id} item={post} />
-      ))}
-
-      <PaginationBox
-        href="articles"
-        searchParams={search}
-        total={+result.total_pages || 1}
-        page={Number(page) || 1}
+    <>
+      <Script
+        type="application/ld+json"
+        strategy="lazyOnload"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(schema).replace(/</g, "\\u003c"),
+        }}
       />
-    </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {posts.map((post) => (
+          <BlogCard key={post.id} item={post} />
+        ))}
+        <div className="mt-10">
+          <PaginationBox
+            href="articles"
+            searchParams={search}
+            total={+result.total_pages || 1}
+            page={Number(page) || 1}
+          />
+        </div>
+      </div>
+    </>
   );
 }

@@ -51,9 +51,9 @@ function Slider({ images }: { images: any[] }) {
                   src={image.src}
                   alt={image.alt}
                   fill
-                  priority={index === 0}
-                  loading={index === 0 ? "eager" : "lazy"}
-                  quality={85}
+                  priority={index < 3}
+                  loading={index < 3 ? "eager" : "lazy"}
+                  quality={90}
                   className="object-cover rounded-3xl sm:rounded-none"
                 />
               </div>

@@ -1,7 +1,7 @@
 export default function Loading() {
   return (
-    <div className="flex items-start gap-10 p-5 font-pelak animate-pulse container customSm:max-w-[566px]">
-      <div className="w-3/4 bg-white py-10 px-20 shadow-xl rounded-2xl space-y-6 overflow-hidden">
+    <div className="flex flex-col md:flex-row gap-8 p-5 font-pelak container max-w-full md:max-w-[1140px] customSm:max-w-[566px]">
+      <div className="w-full md:w-3/4 bg-white py-6 px-5 md:py-10 md:px-20 shadow-xl rounded-2xl">
         <div className="h-8 w-3/4 bg-zinc-200 rounded" />
 
         <div className="flex items-center gap-5">
@@ -24,7 +24,7 @@ export default function Loading() {
         </div>
       </div>
 
-      <div className="w-3/12 flex flex-col gap-5 sticky top-20">
+      <div className="w-full md:w-1/4 flex flex-col gap-5 sticky top-20">
         <div className="bg-white shadow-2xl p-4 rounded-xl space-y-4">
           <div className="h-8 w-32 bg-zinc-200 rounded" />
           <div className="space-y-2">

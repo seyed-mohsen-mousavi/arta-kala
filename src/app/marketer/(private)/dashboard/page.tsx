@@ -7,6 +7,7 @@ import { getBankClass } from "@/data/iranianBanks";
 import { convertPersianToEnglish } from "@/utils/converNumbers";
 import "iranianbanklogos/dist/ibl.css";
 import SettlementBox from "./SettlementBox";
+// import Chart from "./Chart";
 
 function toPersianNumber(input: string) {
   const enToFa = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
@@ -22,7 +23,6 @@ async function page() {
   const userData = await GetUserDashboard();
   const { identity: user } = userData;
   const res = await marketing_profile_list();
-  console.log(res)
   if (!res.success || !res.data) {
     return (
       <div>
@@ -115,9 +115,9 @@ async function page() {
               <b className="text-black">{res.data.orders.length} سفارش</b>{" "}
               دارید.
             </p>
-            <button className="border border-zinc-400 text-zinc-500 px-3 py-1.5 rounded-lg hover:bg-zinc-100 transition-colors ">
+            <Link href="/marketer/commissions" className="border border-zinc-400 text-zinc-500 px-3 py-1.5 rounded-lg hover:bg-zinc-100 transition-colors ">
               مشاهده همه سفارش‌ها
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -229,7 +229,7 @@ async function page() {
           </div>
         </div>
 
-        {/* <Chart /> */}
+        {/* <Chart orders={data.orders} commissions={data.commissions} /> */}
       </div>
     </section>
   );

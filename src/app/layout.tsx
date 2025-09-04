@@ -46,6 +46,35 @@ export const metadata: Metadata = {
     description: "خرید آنلاین با تضمین کیفیت و ارسال سریع از تکنو صاف",
     images: [`${process.env.NEXT_PUBLIC_SITE_URL}/opengraph-image.jpg`],
   },
+  icons: {
+    icon: [
+      { url: "/assets/icons/icon16.png", type: "image/png", sizes: "16x16" },
+      { url: "/assets/icons/icon32.png", type: "image/png", sizes: "32x32" },
+      { url: "/assets/icons/icon96.png", type: "image/png", sizes: "96x96" },
+    ],
+    apple: [
+      {
+        url: "/assets/icons/apple-icon180.png",
+        type: "image/png",
+        sizes: "180x180",
+      },
+      {
+        url: "/assets/icons/apple-icon96.png",
+        type: "image/png",
+        sizes: "96x96",
+      },
+      {
+        url: "/assets/icons/apple-icon32.png",
+        type: "image/png",
+        sizes: "32x32",
+      },
+      {
+        url: "/assets/icons/apple-icon16.png",
+        type: "image/png",
+        sizes: "16x16",
+      },
+    ],
+  },
 };
 export default async function RootLayout({
   children,
@@ -56,7 +85,7 @@ export default async function RootLayout({
   const user = (await GetUserDashboard()) || undefined;
 
   return (
-    <html lang="fa-IR" dir="rtl" className="scroll-smooth bg-[#f9f9f9]">
+    <html lang="fa-IR" dir="rtl" className="scroll-smooth bg-[#f9f9f9] ">
       <body
         className={`${iranyekan.variable} ${pelak.variable} ${noora.variable} ${dana.variable} ${iranyekan.className} w-full min-h-screen relative antialiased text-[#212529] flex flex-col overflow-x-hidden`}
       >

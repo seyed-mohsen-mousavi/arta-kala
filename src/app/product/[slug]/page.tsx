@@ -13,6 +13,9 @@ import TabsBox from "@/components/Products/TabsBox";
 import AddToCart from "@/components/Products/AddToCart";
 import { Metadata } from "next";
 import { cache } from "react";
+import { breadcrumbSchema, productSchema } from "@/components/Schema";
+import { imageSchema } from "@/components/Schema/imageSchema";
+import Script from "next/script";
 const getProduct = cache(async (slug: string) => {
   return await GetProductBySlug(slug);
 });
@@ -104,9 +107,35 @@ export default async function Page({
 
   const categoryFind = findCategory(categories, data.category);
   const comments = await GetComments(data.id);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://mpttools.co";
 
+  const breadcrumbs = [
+    { name: "خانه", url: `${siteUrl}/` },
+    { name: "محصولات", url: `${siteUrl}/products` },
+    categoryFind
+      ? {
+          name: categoryFind.name,
+          url: `${siteUrl}/products?category_id=${categoryFind.id}`,
+        }
+      : { name: data.category },
+    { name: data.name },
+  ];
+
+  const schema = [
+    productSchema(data),
+    breadcrumbSchema(breadcrumbs),
+    imageSchema(data.cover_image, data.name),
+  ];
   return (
     <>
+      <Script
+        type="application/ld+json"
+        strategy="lazyOnload"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(schema).replace(/</g, "\\u003c"),
+        }}
+      />
+
       <BreadcrumbsBox
         title={data.name}
         items={[
@@ -202,7 +231,7 @@ export default async function Page({
                       </>
                     ) : (
                       <p className="font-dana font-bold text-2xl">
-                        {data.price.toLocaleString("fa-IR")}
+                        {data.price ? data?.price.toLocaleString("fa-IR") : "۰"}
                         <span className="font-light">تومان</span>
                       </p>
                     )}
@@ -255,11 +284,11 @@ export default async function Page({
             <>
               <div className="flex items-center justify-center mb-2">
                 <span className="line-through text-zinc-500 ml-2">
-                  {data.price.toLocaleString("fa-IR")}
+                  {data.price ? data.price.toLocaleString("fa-IR") : "۰"}
                 </span>
               </div>
               <p className="font-dana font-bold text-2xl">
-                {data.price.toLocaleString("fa-IR")}
+                {data.price ? data.price.toLocaleString("fa-IR") : "۰"}
                 <span className="font-light">تومان</span>
               </p>
             </>
@@ -269,30 +298,29 @@ export default async function Page({
             product={data}
           />
         </div>
-        {data.is_available && data.stock > 0 && (
-          <div className="my-10 w-full h-full space-y-3 block lg:hidden px-4">
-            <a href="#" className="text-cyan-400 spoiler-link relative">
-              آیا قیمت مناسب‌تری سراغ دارید؟
-            </a>
-            <div className="bg-white border border-zinc-200 rounded-lg p-2 flex justify-between w-full mt-5 px-3 items-center">
-              <div>
-                <p className="text-zinc-800">ارسال رایگان سفارش</p>
-                <p className="font-light text-zinc-500 font-dana pt-1">
-                  سفارش‌های بالای 5 میلیون تومان
-                </p>
-              </div>
-              <div className="size-14 relative">
-                <Image
-                  width={56}
-                  height={56}
-                  src="/free-delivery-free.svg"
-                  loading="lazy"
-                  alt="ارسال رایگان"
-                />
-              </div>
+        <div className="my-10 w-full h-full space-y-3 block lg:hidden px-4">
+          s
+          <a href="#" className="text-cyan-400 spoiler-link relative">
+            آیا قیمت مناسب‌تری سراغ دارید؟
+          </a>
+          <div className="bg-white border border-zinc-200 rounded-lg p-2 flex justify-between w-full mt-5 px-3 items-center">
+            <div>
+              <p className="text-zinc-800">ارسال رایگان سفارش</p>
+              <p className="font-light text-zinc-500 font-dana pt-1">
+                سفارش‌های بالای 5 میلیون تومان
+              </p>
+            </div>
+            <div className="size-14 relative">
+              <Image
+                width={56}
+                height={56}
+                src="/free-delivery-free.svg"
+                loading="lazy"
+                alt="ارسال رایگان"
+              />
             </div>
           </div>
-        )}
+        </div>
 
         <div className="fixed bottom-0 z-30 right-0 w-full space-y-3 bg-white shadow-2xl sm:hidden p-3">
           {data.is_available && data.stock > 0 && (
@@ -300,22 +328,23 @@ export default async function Page({
               <div className="flex items-center justify-start mb-2">
                 <p className="text-sm">
                   <span className="line-through text-zinc-500 ml-2">
-                    {data.price.toLocaleString("fa-IR")} تومان
+                    {data.price ? data.price.toLocaleString("fa-IR") : "۰"}{" "}
+                    تومان
                   </span>
                 </p>
               </div>
               <p className="font-dana font-bold text-base text-right">
                 <span className="font-bold font-iranyekan text-lg">
-                  {data.price.toLocaleString("fa-IR")}
+                  {data.price ? data.price.toLocaleString("fa-IR") : "۰"}
                 </span>
                 <span className="font-light">تومان</span>
               </p>
-              <AddToCart
-                is_available={data.is_available && data.stock > 0}
-                product={data}
-              />
             </>
           )}
+          <AddToCart
+            is_available={data.is_available && data.stock > 0}
+            product={data}
+          />
         </div>
         <div className="bg-white shadow-lg shadow-black/10 rounded-[5px] w-full mt-7 text-sm">
           <TabsBox

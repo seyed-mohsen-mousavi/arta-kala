@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GoChevronLeft, GoChevronRight, GoChevronUp } from "react-icons/go";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { RiMenu3Fill } from "react-icons/ri";
@@ -34,6 +34,7 @@ import ProductButton from "./ProductButton";
 import UserDropdown from "./UserMenu";
 import { User } from "@/types/user";
 import { convertNumberToPersian } from "@/utils/converNumbers";
+import { LogOutIcon } from "lucide-react";
 
 function Navbar({ title }: { title?: string }) {
   const categories = useCategories();
@@ -97,8 +98,28 @@ function Navbar({ title }: { title?: string }) {
       </ul>
     );
   };
+  const [isSticky, setIsSticky] = useState(false);
+  const stickyRef = useRef<HTMLDivElement | null>(null);
+  const stickyTopRef = useRef(0);
+
+  useEffect(() => {
+    if (!stickyRef.current) return;
+    stickyTopRef.current = stickyRef.current.offsetTop;
+
+    const handleScroll = () => {
+      const scrollY = window.scrollY || window.pageYOffset;
+      if (scrollY >= stickyTopRef.current) {
+        setIsSticky(true);
+      } else {
+        setIsSticky(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   return (
-    <>
+    <header>
       <div className="flex justify-between py-5 px-3 items-center container">
         <MobileDrawer
           onAuthOpen={onOpen}
@@ -117,9 +138,13 @@ function Navbar({ title }: { title?: string }) {
               sizes="(max-width: 768px) 40px, 48px"
             />
           </div>
-          <span className="text-3xl sm:text-4xl font-extrabold font-noora text-gray-800 transition-colors duration-300 float-text">
+          {pathname !== "/" ? (
+            <h1 className="text-2xl font-bold text-zinc-700 group-hover:text-primary transition-colors ease-in-out">
+              {title || "تکنو صاف"}
+            </h1>
+          ) : <span className="text-3xl sm:text-4xl font-extrabold font-noora text-gray-800 transition-colors duration-300 float-text">
             {title ? title : "تکنو صاف"}
-          </span>
+          </span>}
         </Link>
 
         <div className="flex items-center gap-10">
@@ -129,13 +154,22 @@ function Navbar({ title }: { title?: string }) {
               09360381402
             </Link>
           </p>
-          <Link href={"tel:09360381402"} className="lg:hidden">
+          <Link
+            href={"tel:09360381402"}
+            className="lg:hidden"
+            aria-label="تماس با ما"
+          >
             <FiPhoneCall className="size-8 text-zinc-600" />
           </Link>
           <CartDrawer cart={cart} />
         </div>
       </div>
-      <div className="sticky top-0 z-50 h-[54px]  backdrop-blur bg-primary/90 transition-all duration-300 shadow-md">
+      <div
+        ref={stickyRef}
+        className={`transform-none z-50 min-h-[54px] backdrop-blur bg-primary/90 transition-transform duration-300 ease-in-out shadow-md ${
+          isSticky ? "fixed left-0 right-0 top-0" : "relative"
+        }`}
+      >
         <div className="container customSm:max-w-[566px]  lg:px-0 mx-auto w-full h-full">
           <div className="flex items-center justify-between relative h-full">
             <div className="hidden lg:flex items-center h-full ">
@@ -212,21 +246,22 @@ function Navbar({ title }: { title?: string }) {
                   <div className="absolute right-0 top-0 mt-1 mr-1 bg-primary p-[0.45rem] bottom-1 group-hover:w-[calc(100%-0.5rem)] transition-all rounded-full duration-300 h-9 w-9">
                     <FaBriefcase className="size-full text-neutral-700" />
                   </div>
-
-                  {/* <div className="bg-orange-400 absolute flex rounded-full animate-ping opacity-75 h-5 w-5 -top-2 -right-2"></div>
-                  <div className="bg-orange-600 absolute flex rounded-full scale-[90%] h-5 w-5 -top-2 -right-2"></div> */}
                 </ProductButton>
               </div>
             </div>
           </div>
         </div>
       </div>
+      {isSticky && (
+        <div style={{ height: stickyRef.current?.offsetHeight || 54 }}></div>
+      )}
+
       <div
         className={`bg-black/30 z-40 ${
           isOpen ? "opacity-100 visible" : "opacity-0 invisible"
         } fixed top-0 right-0 w-full h-full transition-all ease-linear`}
       ></div>
-    </>
+    </header>
   );
 }
 
@@ -416,16 +451,12 @@ export function MobileDrawer({
       <button
         onClick={onOpen}
         className="hover:bg-white/50 active:bg-white/50 p-2 rounded-sm lg:hidden text-zinc-600 transition-colors ease-in-out"
+        aria-label="باز کردن منو"
       >
         <RiMenu3Fill className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10" />
       </button>
 
-      <Drawer
-        hideCloseButton
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        className="transition-all ease-linear"
-      >
+      <Drawer hideCloseButton isOpen={isOpen} onOpenChange={onOpenChange}>
         <DrawerContent>
           {(onClose) => (
             <>
@@ -476,16 +507,30 @@ export function MobileDrawer({
 
               <DrawerFooter>
                 {user?.identity ? (
-                  <div className="flex flex-row  gap-3 w-full">
-                    <div className="size-14 text-xl ring-4 ring-primary-100 flex items-center justify-center rounded-full bg-primary text-white font-bold">
-                      {firstLetter}
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex flex-row  gap-3 w-full">
+                      <div className="size-14 text-xl ring-4 ring-primary-100 flex items-center justify-center rounded-full bg-primary text-white font-bold">
+                        {firstLetter}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-base">{name}</p>
+                        <p className="text-sm text-gray-500">
+                          {convertNumberToPersian(phone)}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-semibold text-base">{name}</p>
-                      <p className="text-sm text-gray-500">
-                        {convertNumberToPersian(phone)}
-                      </p>
-                    </div>
+                    <button
+                      className="bg-danger/10 text-danger p-3 rounded-xl"
+                      onClick={async () => {
+                        await fetch("/internal-api/auth/logout/", {
+                          method: "POST",
+                          credentials: "include",
+                        });
+                        location.replace("/");
+                      }}
+                    >
+                      <LogOutIcon className="size-5" />
+                    </button>
                   </div>
                 ) : (
                   <button

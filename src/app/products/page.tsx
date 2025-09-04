@@ -5,6 +5,8 @@ import { GetProducts, GetShopCategoriesTreeList } from "@/services/shopActions";
 import { Metadata } from "next";
 import { cache } from "react";
 import { CategoryNode } from "@/types/categories";
+import { breadcrumbSchema, productsSchema } from "@/components/Schema";
+import Script from "next/script";
 
 const getCashedProducts = cache(GetProducts);
 export default async function ProductsPage({ searchParams }: any) {
@@ -12,13 +14,30 @@ export default async function ProductsPage({ searchParams }: any) {
   const data = await getCashedProducts(search);
   const categoryRes = await GetShopCategoriesTreeList();
   const categories = categoryRes?.data || [];
+  const breadcrumbs = [
+    { name: "خانه", url: `${process.env.NEXT_PUBLIC_SITE_URL}/` },
+    { name: "محصولات", url: `${process.env.NEXT_PUBLIC_SITE_URL}/products` },
+  ];
+  const schema = [
+    ...productsSchema(data.results || []),
+    breadcrumbSchema(breadcrumbs),
+  ];
   return (
-    <LayoutShell
-      categories={categories}
-      products={data.results || []}
-      pagination={{ count: data.count, page: data?.page || 1 }}
-      searchParams={search}
-    />
+    <>
+      <Script
+        type="application/ld+json"
+        strategy="lazyOnload"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(schema).replace(/</g, "\\u003c"),
+        }}
+      />
+      <LayoutShell
+        categories={categories}
+        products={data.results || []}
+        pagination={{ count: data.count, page: data?.page || 1 }}
+        searchParams={search}
+      />
+    </>
   );
 }
 
@@ -71,7 +90,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: "خرید محصولات | فروشگاه تکنو صاف",
+    title: "خرید محصولات | تکنو صاف",
     description:
       "مشاهده و خرید جدیدترین محصولات با بهترین قیمت از فروشگاه تکنو صاف. فیلتر بر اساس قیمت، موجودی، ویژگی و ...",
     keywords: ["فروشگاه تکنو صاف", "خرید آنلاین", "محصولات", "قیمت مناسب"],

@@ -43,10 +43,10 @@ export default async function UserDashboard() {
   };
 
   return (
-    <div className="p-10 space-y-2 font-pelak text-gray-900">
+    <div className="sm:p-5 md:p-10 space-y-2 font-pelak text-gray-900">
       <section className="w-full">
         <h2 className="text-3xl font-bold mb-6 text-gray-800">سوابق من</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 rounded-2xl  p-8 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 rounded-2xl  sm:p-2 md:p-8 max-sm:mb-10 w-full">
           <Link
             href={"/profile/orders"}
             className="flex items-center gap-5 bg-white w-full rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6"
@@ -92,13 +92,13 @@ export default async function UserDashboard() {
       </section>
 
       <section className="space-y-2">
-        <div className="p-8">
+        <div className="sm:p-2 md:p-8">
           <div className="w-full flex justify-between items-center mb-8">
-            <h3 className="text-3xl font-bold  flex items-center gap-4 text-zinc-600">
+            <h3 className="text-xl md:text-2xl lg:text-3xl font-bold  flex items-center gap-4 text-zinc-600">
               <FaTruck className="text-zinc-500 " /> آخرین سفارشات
             </h3>
-            <Link href={"/profile/orders"} className="flex items-center gap-2">
-              مشاهده همه سفارش ها <ArrowLeft className="size-4" />
+            <Link href={"/profile/orders"} className="flex items-center gap-0 sm:gap-2 text-xs sm:text-sm">
+              مشاهده همه سفارش ها <ArrowLeft className="size-4 text-zinc-600" />
             </Link>
           </div>
           {lastOrders.length === 0 ? (
@@ -156,16 +156,16 @@ export default async function UserDashboard() {
             </ul>
           )}
         </div>
-        <div className="p-8">
+        <div className="sm:p-2 md:p-8">
           <div className="w-full flex justify-between items-center mb-8">
-            <h3 className="text-3xl font-bold  flex items-center gap-4 text-zinc-600">
+            <h3 className="text-xl md:text-2xl lg:text-3xl font-bold  flex items-center gap-4 text-zinc-600">
               <FaTruck className="text-zinc-500 " /> آخرین پیش فاکتور ها
             </h3>
             <Link
               href={"/profile/pre-invoices"}
-              className="flex items-center gap-2"
+              className="flex items-center gap-0 sm:gap-2 text-xs sm:text-sm"
             >
-              مشاهده همه پیش فاکتور ها <ArrowLeft className="size-4" />
+              مشاهده همه پیش فاکتور ها <ArrowLeft className="size-4 text-zinc-600" />
             </Link>
           </div>
           {lastPreInvoices.length === 0 ? (

@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { BiSearch } from "react-icons/bi";
 import { MdChevronLeft } from "react-icons/md";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { GoChevronUp } from "react-icons/go";
 import { NumberInput, Slider, SliderValue } from "@heroui/react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
@@ -105,6 +105,14 @@ export default function FilterBox({
 
   const hasActiveFilter = Object.values(activeFilters).some(Boolean);
   const [isClearing, setIsClearing] = useState(false);
+  const listRef = useRef<HTMLUListElement>(null);
+  const [hasScroll, setHasScroll] = useState(false);
+
+  useEffect(() => {
+    if (listRef.current) {
+      setHasScroll(listRef.current.scrollHeight > listRef.current.clientHeight);
+    }
+  }, [searchedCategories]);
   return (
     <div
       className={`h-full ${isShow ? "space-y-4" : "hidden lg:flex w-1/3"} flex-col gap-2 sticky`}
@@ -216,26 +224,63 @@ export default function FilterBox({
               />
               <BiSearch className="size-6 absolute top-3 right-2 text-zinc-400" />
             </div>
-            <ul className="overflow-y-auto max-h-64 text-zinc-500 pt-4">
+      {hasScroll && (
+        <div className="absolute bg-gradient-to-t from-black/10 to-transparent w-full h-10 bottom-0 left-0 pointer-events-none"></div>
+      )}
+            <ul className="overflow-y-auto max-h-64 text-zinc-500 pt-4 relative rounded-2xl mb-2 xl:mb-4" ref={listRef}>
               {Array.isArray(searchedCategories) &&
               searchedCategories.length > 0 ? (
-                searchedCategories.map((i) => (
-                  <li key={i.id}>
-                    <button
-                      onClick={() => applyFilters({ category_id: i.id })}
-                      className={`py-2 flex items-center gap-1 ${
-                        searchParams.get("category_id") === i.id.toString()
-                          ? "text-primary-500 font-bold"
-                          : ""
-                      }`}
-                    >
-                      <MdChevronLeft className="size-5" />
-                      <span>{i.name}</span>
-                    </button>
-                  </li>
-                ))
+                searchedCategories.map((cat) => {
+                  const selectedId = searchParams.get("category_id");
+                  const isParentSelected = selectedId === cat.id.toString();
+                  const isChildSelected = cat.children?.some(
+                    (child) => child.id.toString() === selectedId
+                  );
+
+                  return (
+                    <li key={cat.id} className="mb-1">
+                      <button
+                        onClick={() => applyFilters({ category_id: cat.id })}
+                        className={`py-2 flex items-center gap-1 ${
+                          isParentSelected ? "text-primary-500 font-bold" : ""
+                        }`}
+                      >
+                        <MdChevronLeft className="size-5" />
+                        <span>{cat.name}</span>
+                      </button>
+
+                      {(isParentSelected || isChildSelected) &&
+                        cat.children &&
+                        cat.children.length > 0 && (
+                          <ul className="pl-6 border-r border-zinc-200 ml-2">
+                            {cat.children.map((child) => {
+                              const isChildActive =
+                                selectedId === child.id.toString();
+                              return (
+                                <li key={child.id}>
+                                  <button
+                                    onClick={() =>
+                                      applyFilters({ category_id: child.id })
+                                    }
+                                    className={`py-1 flex items-center gap-1 text-sm ${
+                                      isChildActive
+                                        ? "text-primary-500 font-bold"
+                                        : ""
+                                    }`}
+                                  >
+                                    <MdChevronLeft className="size-4" />
+                                    <span>{child.name}</span>
+                                  </button>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        )}
+                    </li>
+                  );
+                })
               ) : (
-                <>دسته بندی یافت نشد </>
+                <>دسته بندی یافت نشد</>
               )}
             </ul>
           </AccordionItem>

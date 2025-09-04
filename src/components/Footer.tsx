@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const FooterSection = ({
@@ -14,7 +14,7 @@ const FooterSection = ({
     <div
       className={`p-4 rounded-lg ${title === "خدمات پس از فروش" ? "mr-10" : ""}`}
     >
-      <h4 className="text-2xl font-semibold text-[#666666] text-right flex items-center gap-2">
+      <h4 className="text-2xl font-semibold text-[#424242] text-right flex items-center gap-2">
         <div className="bg-[#fec001] size-3 rounded-full" />
         {title}
       </h4>
@@ -22,9 +22,9 @@ const FooterSection = ({
         <ul className="list-none mt-4 text-right space-y-3 md:space-y-2">
           {links.map((link, index) => (
             <li key={index} className="border-b border-zinc-100 px-2 py-3">
-              <a href={link.href} className="text-zinc-700">
+              <Link href={link.href} className="text-zinc-700">
                 {link.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
@@ -38,29 +38,27 @@ const footerData = [
   {
     title: "ارتباط با تکنو صاف",
     links: [
-      { href: "https://abzarmart.com/about-us/", label: "درباره ما" },
-      { href: "https://abzarmart.com/contact-us/", label: "تماس با ما" },
-      { href: "https://abzarmart.com/join-us/", label: "فرصت های شغلی" },
-      { href: "https://abzarmart.com/abzarmart-rent/", label: "خرید قسطی" },
+      { href: "/about-us", label: "درباره ما" },
+      { href: "/contact-info", label: "تماس با ما" },
     ],
   },
   {
     title: "راهنمای خرید",
     links: [
       {
-        href: "https://abzarmart.com/payment-method/",
+        href: "#payment-method",
         label: "روش های پرداخت",
       },
       {
-        href: "https://abzarmart.com/customer-service/",
+        href: "#customer-service",
         label: "شرایط ارسال سفارشات",
       },
       {
-        href: "https://abzarmart.com/purchasing-process/",
+        href: "#purchasing-process",
         label: "راهنمای خرید از تکنو صاف",
       },
       {
-        href: "https://abzarmart.com/proform-invoice/",
+        href: "#proform-invoice",
         label: "راهنمای پیش فاکتور",
       },
     ],
@@ -68,28 +66,34 @@ const footerData = [
   {
     title: "خدمات پس از فروش",
     links: [
-      { href: "https://abzarmart.com/guarantee/", label: "خدمات پس از فروش" },
+      { href: "#guarantee", label: "خدمات پس از فروش" },
       {
-        href: "https://abzarmart.com/return-conditions/",
+        href: "#return-conditions",
         label: "شرایط بازگشت کالا",
       },
     ],
     content: (
       <div className="mt-6 text-center">
-        <a
-          href="https://emalls.ir/Shop/X/"
+        <Link
+          href="https://trustseal.enamad.ir/?id=403156&Code=f2vcEIt1dlWn7fD4fETvbnOfiPWwNZtq"
           target="_blank"
+          referrerPolicy="origin"
           rel="noopener noreferrer"
+          className="cursor-pointer p-2 lg:p-4 flex items-center justify-center border-neutral-200 rounded"
         >
-          <Image
-            src="/neshan.svg"
-            alt="نشان اعتباری ایمالز"
-            className="m-3"
-            loading="lazy"
-            width={50}
-            height={50}
-          />
-        </a>
+          <div className="size-[75px] leading-0">
+            <img
+              src="https://trustseal.enamad.ir/logo.aspx?id=403156&Code=f2vcEIt1dlWn7fD4fETvbnOfiPWwNZtq"
+              alt="نماد اعتماد الکترونیکی"
+              className="cursor-pointer rounded-md border border-[#424242] p-1 hover:shadow-md transition object-contain"
+              referrerPolicy="origin"
+              loading="lazy"
+              width={75}
+              height={75}
+              title="نماد اعتماد الکترونیکی"
+            />
+          </div>
+        </Link>
       </div>
     ),
   },
@@ -100,7 +104,7 @@ function Footer() {
     <footer className="w-full bg-[#fed75c] block font-pelak font-medium py-7 shrink-0">
       <div className="flex flex-col md:flex-row justify-center">
         <div className="p-4 rounded-lg ">
-          <h4 className="text-2xl font-semibold text-[#666666] text-right flex items-center gap-2">
+          <h4 className="text-2xl font-semibold text-[#424242] text-right flex items-center gap-2">
             <div className="bg-[#fec001] size-3 rounded-full" />
             فروشگاه تکنو صاف
           </h4>
@@ -111,10 +115,7 @@ function Footer() {
             ابزارآلات و ارائه محتوای مناسب و غنی محقق می‌سازد.
           </p>
         </div>
-        <div
-          id="wz-section-footer"
-          className="flex flex-wrap flex-col sm:flex-row justify-center md:justify-between max-w-screen-xl"
-        >
+        <div className="flex flex-wrap flex-col sm:flex-row justify-center md:justify-between max-w-screen-xl">
           {footerData.map((section, index) => (
             <FooterSection
               key={index}

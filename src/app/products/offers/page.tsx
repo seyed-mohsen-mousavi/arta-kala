@@ -4,7 +4,6 @@ import LayoutShell from "@/components/Products/LayoutShell";
 import { GetProducts, GetShopCategoriesTreeList } from "@/services/shopActions";
 import { Metadata } from "next";
 import { cache } from "react";
-import { CategoryNode } from "@/types/categories";
 
 const getCashedProducts = cache(GetProducts);
 export default async function ProductsPage({ searchParams }: any) {

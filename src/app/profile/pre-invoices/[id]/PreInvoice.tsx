@@ -6,10 +6,10 @@ import Link from "next/link";
 import { FaChevronRight } from "react-icons/fa6";
 import { formatShamsiDateString } from "@/utils/formatShamsiDateString";
 const statusLabels: Record<string, { fa: string; color: string }> = {
-  pending: { fa: "در انتظار پرداخت", color: "bg-yellow-100 text-yellow-800 " },
-  delivered: { fa: "تحویل شده", color: "bg-green-100 text-green-800" },
-  cancelled: { fa: "لغو شده", color: "bg-red-100 text-red-800" },
-  shipped: { fa: "ارسال شده", color: "bg-blue-100 text-blue-800" },
+  pending: { fa: "در انتظار تایید", color: "bg-yellow-100 text-yellow-800 " },
+  approved: { fa: "تایید شده", color: "bg-green-100 text-green-800" },
+  rejected: { fa: "رد شده", color: "bg-red-100 text-red-800" },
+  processed: { fa: "پردازش شده", color: "bg-blue-100 text-blue-800" },
 };
 
 export default function PreInvoice({

@@ -85,7 +85,6 @@ export default function AuthModal() {
       setPhoneNumber(converted);
 
       const exists = await checkPhoneExists(converted);
-      console.log(exists)
       if (exists) {
         setIsNewUser(false);
         setStep("PASSWORD");
@@ -122,7 +121,6 @@ export default function AuthModal() {
         onClose();
         const redirectTo =
           searchParams.get("redirectTo") || "/profile/dashboard";
-        console.log("redirecting to:", redirectTo);
 
         router.push(redirectTo);
       }
