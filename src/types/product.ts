@@ -10,9 +10,15 @@ export default interface ProductType {
   discountPercent?: number;
   slug: string;
   pdfs?: string[];
-  images: string[];
+  images: image[];
   is_available: boolean;
   discount_percentage?: number;
   final_price?: number;
   isDiscounted?: boolean;
+}
+
+interface image {
+  order: number;
+  id: string;
+  image: string
 }

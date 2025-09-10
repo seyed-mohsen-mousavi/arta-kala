@@ -25,6 +25,7 @@ export default async function ProductsPage({ searchParams }: any) {
   return (
     <>
       <Script
+        id="products-jsonld"
         type="application/ld+json"
         strategy="lazyOnload"
         dangerouslySetInnerHTML={{

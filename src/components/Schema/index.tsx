@@ -3,7 +3,6 @@
 import Article from "@/types/blog";
 import ProductType from "@/types/product";
 import stripHtml from "@/utils/stripHtml";
-import moment from "moment-jalaali";
 
 export type BreadcrumbItem = { name: string; url?: string };
 

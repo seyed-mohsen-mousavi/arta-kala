@@ -142,20 +142,25 @@ function Navbar({ title }: { title?: string }) {
             <h1 className="text-2xl font-bold text-zinc-700 group-hover:text-primary transition-colors ease-in-out">
               {title || "تکنو صاف"}
             </h1>
-          ) : <span className="text-3xl sm:text-4xl font-extrabold font-noora text-gray-800 transition-colors duration-300 float-text">
-            {title ? title : "تکنو صاف"}
-          </span>}
+          ) : (
+            <span className="text-3xl sm:text-4xl font-extrabold font-noora text-gray-800 transition-colors duration-300 float-text">
+              {title ? title : "تکنو صاف"}
+            </span>
+          )}
         </Link>
 
         <div className="flex items-center gap-10">
-          <p className="text-zinc-500 text-base font-medium hidden lg:block">
-            شماره تماس:{" "}
-            <Link href={"tel:09360381402"} className="text-lg text-black">
-              09360381402
+          <div className="hidden lg:flex items-center gap-2 text-zinc-600 text-base lg:text-lg font-medium">
+            <span className="font-semibold">شماره تماس:</span>
+            <Link
+              href="tel:03591091009"
+              className="text-lg lg:text-xl font-semibold text-black hover:text-primary-700 transition-colors"
+            >
+              ۰۳۵-۹۱۰۹۱۰۰۹
             </Link>
-          </p>
+          </div>
           <Link
-            href={"tel:09360381402"}
+            href={"tel:03591091009"}
             className="lg:hidden"
             aria-label="تماس با ما"
           >

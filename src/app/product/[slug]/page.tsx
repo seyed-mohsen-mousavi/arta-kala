@@ -16,6 +16,7 @@ import { cache } from "react";
 import { breadcrumbSchema, productSchema } from "@/components/Schema";
 import { imageSchema } from "@/components/Schema/imageSchema";
 import Script from "next/script";
+import ProductSlider from "@/components/Products/ProductSlider";
 const getProduct = cache(async (slug: string) => {
   return await GetProductBySlug(slug);
 });
@@ -98,7 +99,7 @@ export default async function Page({
   const decodedSlug = decodeURIComponent(slug);
   if (!slug || typeof slug !== "string") return notFound();
   const res = await getProduct(decodedSlug);
-
+  console.log(res);
   if (!res) return notFound();
 
   const data: ProductType = res;
@@ -126,9 +127,20 @@ export default async function Page({
     breadcrumbSchema(breadcrumbs),
     imageSchema(data.cover_image, data.name),
   ];
+  const images =
+    data.images && data.images.length > 0
+      ? data.images
+          .sort((a, b) => a.order - b.order)
+          .map((img) => img.image)
+          .filter(Boolean)
+      : data.cover_image
+        ? [data.cover_image]
+        : [];
+        
   return (
     <>
       <Script
+        id="product-jsonld"
         type="application/ld+json"
         strategy="lazyOnload"
         dangerouslySetInnerHTML={{
@@ -151,34 +163,8 @@ export default async function Page({
       <div className="container customSm:max-w-[566px]">
         <div className="bg-white shadow-lg shadow-black/10 rounded-[5px] px-5 py-4 w-full mt-7 text-sm ">
           <div className="flex flex-col md:flex-row justify-between">
-            <div className="w-full lg:w-1/3 h-full flex">
-              {data.cover_image ? (
-                <Image
-                  src={data.cover_image}
-                  alt={`${data.name} - مجموعه فروش ابزار و آموزش صافکاری تکنوصاف `}
-                  width={200}
-                  height={200}
-                  priority
-                  className="border-l-[1px] border-zinc-100 m-1 w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-96 bg-zinc-200 rounded-md flex items-center justify-center border-l-[1px] border-zinc-100 m-1">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-10 w-10 text-zinc-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 4v16m8-8H4"
-                    />
-                  </svg>
-                </div>
-              )}
+            <div className="w-full md:w-1/3 h-full flex">
+              <ProductSlider images={images} alt={data.name} />
             </div>
 
             <div className="w-full lg:w-2/3 p-2 flex flex-col items-start space-y-5 px-4">

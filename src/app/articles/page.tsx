@@ -74,6 +74,7 @@ async function page({ searchParams }: PageProps) {
   return (
     <>
       <Script
+        id="articles-jsonld"
         type="application/ld+json"
         strategy="lazyOnload"
         dangerouslySetInnerHTML={{

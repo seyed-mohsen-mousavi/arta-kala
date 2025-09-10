@@ -68,7 +68,7 @@ export async function generateMetadata({
 async function page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
-  const data: Article = await GetBlogBySlug(decodedSlug);
+  const data = await GetBlogBySlug(decodedSlug);
   const categories = await GetBlogCategoriesMenuStructure();
   const latestPosts = await GetLatestBlogPosts();
   if (!data) return notFound();
@@ -99,6 +99,7 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
   return (
     <>
       <Script
+        id="article-jsonld"
         type="application/ld+json"
         strategy="lazyOnload"
         dangerouslySetInnerHTML={{
