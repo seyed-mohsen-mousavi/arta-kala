@@ -13,11 +13,11 @@ import LayoutWrapper from "./LayoutWrapper";
 import ConsoleLog from "@/components/ConsoleLog";
 
 export const metadata: Metadata = {
-  title: "تکنو صاف | فروشگاه آنلاین با تضمین کیفیت",
+  title: "آرتاکالا | فروشگاه آنلاین با تضمین کیفیت",
   description:
-    "تکنو صاف، فروشگاه تخصصی با بهترین قیمت و تضمین کیفیت. ارسال سریع، تخفیف‌های ویژه، و مقالات آموزشی تخصصی.",
+    "آرتاکالا، فروشگاه تخصصی با بهترین قیمت و تضمین کیفیت. ارسال سریع، تخفیف‌های ویژه، و مقالات آموزشی تخصصی.",
   keywords: [
-    "تکنو صاف",
+    "آرتاکالا",
     "فروشگاه آنلاین",
     "خرید آنلاین",
     "قیمت مناسب",
@@ -25,16 +25,16 @@ export const metadata: Metadata = {
     "تخفیف ویژه",
   ],
   openGraph: {
-    title: "تکنو صاف",
-    description: "خرید آنلاین با تضمین کیفیت و ارسال سریع از تکنو صاف",
+    title: "آرتاکالا",
+    description: "خرید آنلاین با تضمین کیفیت و ارسال سریع از آرتاکالا",
     url: `${process.env.NEXT_PUBLIC_SITE_URL}`,
-    siteName: "تکنو صاف",
+    siteName: "آرتاکالا",
     images: [
       {
         url: `${process.env.NEXT_PUBLIC_SITE_URL}/opengraph-image.jpg`,
         width: 1200,
         height: 630,
-        alt: "تکنو صاف",
+        alt: "آرتاکالا",
       },
     ],
     locale: "fa_IR",
@@ -42,34 +42,34 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "تکنو صاف",
-    description: "خرید آنلاین با تضمین کیفیت و ارسال سریع از تکنو صاف",
+    title: "آرتاکالا",
+    description: "خرید آنلاین با تضمین کیفیت و ارسال سریع از آرتاکالا",
     images: [`${process.env.NEXT_PUBLIC_SITE_URL}/opengraph-image.jpg`],
   },
   icons: {
     icon: [
-      { url: "/assets/icons/icon16.png", type: "image/png", sizes: "16x16" },
-      { url: "/assets/icons/icon32.png", type: "image/png", sizes: "32x32" },
-      { url: "/assets/icons/icon96.png", type: "image/png", sizes: "96x96" },
+      { url: "/assets/icons/icon.png", type: "image/png", sizes: "16x16" },
+      { url: "/assets/icons/icon.png", type: "image/png", sizes: "32x32" },
+      { url: "/assets/icons/icon.png", type: "image/png", sizes: "96x96" },
     ],
     apple: [
       {
-        url: "/assets/icons/apple-icon180.png",
+        url: "/assets/icons/apple-icon.png",
         type: "image/png",
         sizes: "180x180",
       },
       {
-        url: "/assets/icons/apple-icon96.png",
+        url: "/assets/icons/apple-icon.png",
         type: "image/png",
         sizes: "96x96",
       },
       {
-        url: "/assets/icons/apple-icon32.png",
+        url: "/assets/icons/apple-icon.png",
         type: "image/png",
         sizes: "32x32",
       },
       {
-        url: "/assets/icons/apple-icon16.png",
+        url: "/assets/icons/apple-icon.png",
         type: "image/png",
         sizes: "16x16",
       },

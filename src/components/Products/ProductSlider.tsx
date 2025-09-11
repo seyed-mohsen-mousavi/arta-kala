@@ -33,10 +33,11 @@ export default function ProductSlider({ images, alt }: ProductSliderProps) {
 
   return (
     <div className="w-full">
+      {/* Preview Modal */}
       <AnimatePresence>
         {previewImage && (
           <motion.div
-            className="fixed inset-0 z-50 bg-black/80 flex justify-center items-center p-4"
+            className="fixed inset-0 z-50 bg-black/90 flex justify-center items-center p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -53,28 +54,27 @@ export default function ProductSlider({ images, alt }: ProductSliderProps) {
 
             <motion.div
               layoutId={previewImage}
-              className="max-h-[90vh] rounded-md"
+              className="relative max-w-full max-h-full"
               style={{ transform: `scale(${zoom}) rotate(${rotation}deg)` }}
             >
               <Image
                 src={previewImage}
                 alt={alt || "پیش نمایش محصول"}
-                width={900}
-                height={900}
-                className="object-contain max-h-[90vh] rounded-md"
+                fill
+                className="object-contain"
               />
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
+      {/* Main Swiper */}
       <Swiper
         modules={[Pagination, Autoplay, Thumbs]}
         pagination={{ clickable: true }}
         autoplay={{ delay: 4000, disableOnInteraction: false }}
         thumbs={{ swiper: thumbsSwiper }}
         spaceBetween={16}
-        className="w-full"
       >
         {images.map((img, index) => (
           <SwiperSlide
@@ -82,14 +82,16 @@ export default function ProductSlider({ images, alt }: ProductSliderProps) {
             className="flex justify-center items-center cursor-zoom-in relative"
             onClick={() => setPreviewImage(img)}
           >
-            <Image
-              src={img}
-              alt={`${alt || "محصول"} - تصویر ${index + 1}`}
-              width={500}
-              height={500}
-              loading={index === 0 ? "eager" : "lazy"}
-              className="object-contain rounded-lg hover:scale-105 transition duration-300"
-            />
+            <div className="relative w-full h-[300px]">
+              <Image
+                src={img}
+                alt={`${alt || "محصول"} - تصویر ${index + 1}`}
+                fill
+                className="object-contain rounded-lg hover:scale-105 transition duration-300"
+                loading={index === 0 ? "eager" : "lazy"}
+              />
+            </div>
+
             {images.length > 1 && (
               <span className="absolute bottom-2 right-2 text-xs bg-black/60 text-white px-2 py-1 rounded-md">
                 {index + 1} / {images.length}
@@ -99,6 +101,7 @@ export default function ProductSlider({ images, alt }: ProductSliderProps) {
         ))}
       </Swiper>
 
+      {/* Thumbnails */}
       {images.length > 1 && (
         <Swiper
           onSwiper={setThumbsSwiper}
@@ -109,13 +112,14 @@ export default function ProductSlider({ images, alt }: ProductSliderProps) {
         >
           {images.map((img, index) => (
             <SwiperSlide key={index} className="cursor-pointer group">
-              <Image
-                src={img}
-                alt={`تصویر ${index + 1}`}
-                width={80}
-                height={80}
-                className="object-cover rounded-md border-2 border-transparent opacity-70 group-[.swiper-slide-thumb-active]:opacity-100 group-[.swiper-slide-thumb-active]:border-yellow-400 transition"
-              />
+              <div className="relative w-20 h-20">
+                <Image
+                  src={img}
+                  alt={`تصویر ${index + 1}`}
+                  fill
+                  className="object-cover rounded-md border-2 border-transparent opacity-70 group-[.swiper-slide-thumb-active]:opacity-100 group-[.swiper-slide-thumb-active]:border-yellow-400 transition"
+                />
+              </div>
             </SwiperSlide>
           ))}
         </Swiper>

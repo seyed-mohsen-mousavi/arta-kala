@@ -1,15 +1,6 @@
 {
-  "name": "تکنو صاف",
-  "short_name": "تکنو صاف",
-  "lang": "fa-IR",
-  "start_url": "/",
-  "scope": "/",
-  "description": "وب‌سایت رسمی تکنو صاف، ارائه‌دهنده خدمات و محصولات با کیفیت.",
-  "dir": "rtl",
-  "display": "standalone",
-  "orientation": "portrait",
-  "theme_color": "#ffd333",
-  "background_color": "#ffd333",
+  "name": "ArtaKala",
+  "short_name": "ArtaKala",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -23,5 +14,8 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+  "theme_color": "#2e2e73",
+  "background_color": "#2e2e73",
+  "display": "standalone"
 }

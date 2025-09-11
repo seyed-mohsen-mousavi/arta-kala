@@ -21,7 +21,7 @@ function Slider({ images }: { images: any[] }) {
   const goPrev = useCallback(() => swiperRef.current?.slideNext(), []);
 
   if (!isClient) return <SliderSkeleton />;
-
+  console.log(images)
   return (
     <div className="relative w-full h-[200px] lg:h-[420px] group">
       <Swiper
@@ -48,13 +48,13 @@ function Slider({ images }: { images: any[] }) {
             <Link href={image.link || ""} className="block h-full w-full">
               <div className="relative w-full h-full">
                 <Image
-                  src={image.src}
+                  src={`${image.src}`}
                   alt={image.alt}
                   fill
                   priority={index < 3}
                   loading={index < 3 ? "eager" : "lazy"}
                   quality={90}
-                  className="object-cover rounded-3xl sm:rounded-none"
+                  className="object-fill rounded-3xl sm:rounded-none"
                 />
               </div>
             </Link>
@@ -75,23 +75,22 @@ function Slider({ images }: { images: any[] }) {
       )}
 
       {images.length > 1 && (
-        <>
-          <button
-            onClick={goPrev}
-            className="block absolute top-1/2 left-0 md:left-0 -translate-y-1/2 bg-white rounded-full p-1 border border-zinc-400 text-[#a4a4a4] z-20 drop-shadow-xl lg:hover:-translate-x-2 ease-in-out opacity-0 group-hover:opacity-100 transition-all duration-300"
-            aria-label="اسلاید بعدی"
-          >
-            <GoChevronLeft className="size-8 sm:size-10 lg:size-12" />
-          </button>
-
+        <div className="absolute bottom-5 right-0 flex gap-2 items-center px-4 lg:px-8 z-10">
           <button
             onClick={goNext}
-            className="block absolute top-1/2 right-0 md:right-0 -translate-y-1/2 bg-white rounded-full p-1 border border-zinc-400 text-[#a4a4a4] z-20 drop-shadow-xl lg:hover:translate-x-2 ease-in-out opacity-0 group-hover:opacity-100 transition-all duration-300"
+            className="block  bg-white rounded-full p-2.5 border border-zinc-400 text-[#a4a4a4] z-20 drop-shadow-xl lg:hover:translate-x-2 ease-in-out opacity-0 group-hover:opacity-100 transition-all duration-300"
             aria-label="اسلاید قبلی"
           >
-            <GoChevronRight className="size-8 sm:size-10 lg:size-12" />
+            <GoChevronRight className="size-8 sm:size-8 lg:size-10" />
           </button>
-        </>
+          <button
+            onClick={goPrev}
+            className="block  bg-white rounded-full p-2.5 border border-zinc-400 text-[#a4a4a4] z-20 drop-shadow-xl lg:hover:-translate-x-2 ease-in-out opacity-0 group-hover:opacity-100 transition-all duration-300"
+            aria-label="اسلاید بعدی"
+          >
+            <GoChevronLeft className="size-8 sm:size-8 lg:size-10" />
+          </button>
+        </div>
       )}
     </div>
   );

@@ -58,15 +58,15 @@ export async function generateMetadata({
 
     const categoryTitle = category?.name || "دسته‌بندی انتخاب‌شده";
 
-    const title = `${categoryTitle} | خرید انواع ${categoryTitle} با بهترین قیمت | تکنو صاف`;
-    const description = `خرید اینترنتی ${categoryTitle} از فروشگاه تکنو صاف با بهترین قیمت و ارسال سریع. بررسی و فیلتر محصولات ${categoryTitle}.`;
+    const title = `${categoryTitle} | خرید انواع ${categoryTitle} با بهترین قیمت | آرتا کالا`;
+    const description = `خرید اینترنتی ${categoryTitle} از فروشگاه آرتا کالا با بهترین قیمت و ارسال سریع. بررسی و فیلتر محصولات ${categoryTitle}.`;
 
     return {
       title,
       description,
       keywords: [
         categoryTitle,
-        "فروشگاه تکنو صاف",
+        "فروشگاه آرتا کالا",
         "خرید آنلاین",
         "قیمت مناسب",
       ],
@@ -74,7 +74,7 @@ export async function generateMetadata({
         title,
         description,
         url: `${process.env.NEXT_PUBLIC_SITE_URL}/products?category_id=${categoryId}`,
-        siteName: "تکنو صاف",
+        siteName: "آرتا کالا",
         locale: "fa_IR",
         type: "website",
       },
@@ -91,24 +91,24 @@ export async function generateMetadata({
   }
 
   return {
-    title: "خرید محصولات | تکنو صاف",
+    title: "خرید محصولات | آرتا کالا",
     description:
-      "مشاهده و خرید جدیدترین محصولات با بهترین قیمت از فروشگاه تکنو صاف. فیلتر بر اساس قیمت، موجودی، ویژگی و ...",
-    keywords: ["فروشگاه تکنو صاف", "خرید آنلاین", "محصولات", "قیمت مناسب"],
+      "مشاهده و خرید جدیدترین محصولات با بهترین قیمت از فروشگاه آرتا کالا. فیلتر بر اساس قیمت، موجودی، ویژگی و ...",
+    keywords: ["فروشگاه آرتا کالا", "خرید آنلاین", "محصولات", "قیمت مناسب"],
     openGraph: {
-      title: "خرید محصولات | فروشگاه تکنو صاف",
+      title: "خرید محصولات | فروشگاه آرتا کالا",
       description:
-        "فروشگاه تکنو صاف ارائه‌دهنده انواع محصولات با بهترین قیمت و تضمین کیفیت. خرید آنلاین آسان و سریع.",
+        "فروشگاه آرتا کالا ارائه‌دهنده انواع محصولات با بهترین قیمت و تضمین کیفیت. خرید آنلاین آسان و سریع.",
       url: `${process.env.NEXT_PUBLIC_SITE_URL}/products`,
-      siteName: "تکنو صاف",
+      siteName: "آرتا کالا",
       locale: "fa_IR",
       type: "website",
     },
     twitter: {
       card: "summary",
-      title: "خرید محصولات | تکنو صاف",
+      title: "خرید محصولات | آرتا کالا",
       description:
-        "محصولات متنوع با قیمت مناسب از فروشگاه اینترنتی تکنو صاف. خرید سریع، امن و مطمئن.",
+        "محصولات متنوع با قیمت مناسب از فروشگاه اینترنتی آرتا کالا. خرید سریع، امن و مطمئن.",
     },
     robots: {
       index: true,

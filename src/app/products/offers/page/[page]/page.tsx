@@ -23,16 +23,16 @@ export default async function ProductsPage({ params, searchParams }: any) {
   );
 }
 export async function generateMetadata(): Promise<Metadata> {
-  const title = "تخفیف‌های شگفت‌انگیز | فروشگاه تکنو صاف";
+  const title = "تخفیف‌های شگفت‌انگیز | فروشگاه آرتا کالا";
   const description =
-    "جدیدترین پیشنهادهای ویژه و تخفیف‌های شگفت‌انگیز فروشگاه تکنو صاف! خرید محصولات منتخب با قیمت باورنکردنی و ارسال سریع.";
+    "جدیدترین پیشنهادهای ویژه و تخفیف‌های شگفت‌انگیز فروشگاه آرتا کالا! خرید محصولات منتخب با قیمت باورنکردنی و ارسال سریع.";
   const keywords = [
     "تخفیف ویژه",
     "پیشنهاد شگفت‌انگیز",
     "حراج",
     "فروش ویژه",
     "قیمت باورنکردنی",
-    "فروشگاه تکنو صاف",
+    "فروشگاه آرتا کالا",
     "خرید آنلاین ارزان",
   ];
 
@@ -44,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url: `${process.env.NEXT_PUBLIC_SITE_URL}/amazing-offers`,
-      siteName: "تکنو صاف",
+      siteName: "آرتا کالا",
       locale: "fa_IR",
       type: "website",
     },

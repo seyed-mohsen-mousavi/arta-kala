@@ -44,7 +44,7 @@ function SortBox() {
               key={i}
               className={`text-zinc-500 font-light text-sm px-3 py-1 rounded-full  transition-colors ${
                 currentSort === option.value
-                  ? "bg-primary hover:bg-primary-500 text-black cursor-default"
+                  ? "bg-primary hover:bg-primary-500 !text-white cursor-default"
                   : "hover:text-zinc-600"
               }`}
               onClick={() => handleSortChange(option.value)}

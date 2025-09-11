@@ -26,18 +26,18 @@ export async function generateMetadata({
   const data = await GetBlogBySlug((await params).slug);
   if (!data) {
     return {
-      title: "مقاله یافت نشد | تکنو صاف",
+      title: "مقاله یافت نشد | آرتا کالا",
     };
   }
   return {
-    title: `${data.title} | تکنو صاف`,
+    title: `${data.title} | آرتا کالا`,
     description: data.introduction,
-    keywords: [data.title, "مقاله تکنو صاف", `مقاله ${data.title}`],
+    keywords: [data.title, "مقاله آرتا کالا", `مقاله ${data.title}`],
     openGraph: {
       title: data.title,
       description: data.introduction,
       url: `${process.env.NEXT_PUBLIC_SITE_URL}/article/${data.slug}`,
-      siteName: "تکنو صاف",
+      siteName: "آرتا کالا",
       locale: "fa_IR",
       type: "article",
       publishedTime: data.published_at || data.created_at,
@@ -167,7 +167,7 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
                 <li key={post.id} className="flex items-start gap-4">
                   <Link href={`/article/${post.slug}`}>
                     <Image
-                      src={`https://mpttools.co${post.thumbnail}`}
+                      src={`${siteUrl}${post.thumbnail}`}
                       alt=""
                       width={100}
                       height={100}

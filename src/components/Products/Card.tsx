@@ -3,6 +3,7 @@ import ProductType from "@/types/product";
 import Image from "next/image";
 import Link from "next/link";
 import { CiImageOff } from "react-icons/ci";
+import { ShoppingBasket } from "lucide-react";
 
 export default function Card({
   item,
@@ -13,75 +14,88 @@ export default function Card({
   href?: string;
   className?: string;
 }) {
-  console.log(item)
   return (
-    <Link
-      href={href ? href : `/product/${item.slug}`}
+    <div
       key={item.id}
       title={item.name}
-      className="size-full flex relative group/card h-full "
+      className={`bg-white rounded-2xl shadow-md p-3 flex flex-col justify-between gap-3 h-full transition hover:shadow-lg ${className ?? ""}`}
     >
-      <div
-        className={`bg-white shadow rounded-2xl p-3.5 sm:p-5 hover:shadow-lg transition-shadow group/card w-full flex flex-col relative h-96 ${className ?? ""}`}
-      >
-        <div className="relative">
+      <div className="flex items-center justify-between">
+        {item.isDiscounted && item.discount_percentage ? (
+          <span className="bg-red-100 text-red-500 text-xl px-3 py-1 rounded-xl max-lg:text-sm">
+            {item.discount_percentage.toLocaleString("fa-IR")}% تخفیف
+          </span>
+        ) : (
+          <span />
+        )}
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <div className="h-52 flex justify-center items-center overflow-hidden rounded-xl">
           {item.cover_image ? (
             <Image
-              width={360}
-              height={160}
-              src={
-                item.cover_image.startsWith("/media")
-                  ? `${process.env.NEXT_PUBLIC_BACK_END}${item.cover_image}`
-                  : item.cover_image
-              }
-              alt={`${item.name} - مجموعه فروش ابزار و آموزش صافکاری تکنوصاف `}
-              className="w-full h-56 object-cover rounded-t-lg"
+              src={item.cover_image}
+              alt={`${item.name} - آرتا کالا`}
+              width={300}
+              height={200}
+              className="h-full object-contain transition-transform duration-300 hover:scale-105"
               loading="lazy"
-              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
             />
           ) : (
-            <div className="w-full h-56 bg-zinc-200 rounded-md flex items-center justify-center">
-              <CiImageOff className="size-15" />
-            </div>
+            <CiImageOff className="size-16 text-gray-400" />
           )}
         </div>
 
-        <h3 className="font-semibold text-zinc-700 line-clamp-2 text-lg sm:">
-          {item.name}
-        </h3>
-        {item.is_available ? (
-          <div className="relative mt-auto flex justify-end gap-2">
+        <div>
+          <p className="font-bold truncate text-lg text-zinc-800">
+            {item.name}
+          </p>
+          <p className="text-sm text-zinc-400 py-1">{item.category}</p>
+        </div>
+      </div>
+
+      {item.is_available ? (
+        <div className="flex items-center justify-between bg-gray-100 rounded-lg p-2">
+          <div>
             {item.isDiscounted && item.final_price !== undefined ? (
               <div>
-                <div className="flex items-center">
-                  <p className="line-through text-zinc-500 ml-2 text-sm">
-                    {item.price ? item.price?.toLocaleString("fa-IR") : "۰"} تومان
-                  </p>
-                  <span className="px-2 text-white bg-danger rounded-full">
-                    {item.discount_percentage?.toLocaleString("fa-IR")}%
-                  </span>
-                </div>
-                <p className="font-medium text-xl">
-                  {item?.final_price.toLocaleString("fa-IR")} تومان
+                <p className="line-through text-sm text-zinc-500">
+                  {item.price?.toLocaleString("fa-IR")} تومان
+                </p>
+                <p className="font-bold text-xl text-zinc-800">
+                  {item.final_price.toLocaleString("fa-IR")} تومان
                 </p>
               </div>
             ) : (
-              <p className="font-bold text-xl ">
-                {item.price ? item?.price?.toLocaleString("fa-IR") : "۰"} تومان
+              <p className="font-bold text-xl text-zinc-800">
+                {item.price ? item.price.toLocaleString("fa-IR") : "۰"} تومان
               </p>
             )}
           </div>
-        ) : (
-          <div className="w-full pt-[7.5px] pb-[7.5px]">
-            <div className="inline-flex items-center justify-center w-full relative text-zinc-500">
-              <hr className="w-full h-px my-0 bg-zinc-600 border-0 rounded-sm" />
-              <p className="absolute px-2 pb-0.5 -translate-x-1/2 bg-white left-1/2 text-ellipsis text-nowrap whitespace-nowrap font-semibold">
-                در حال حاضر موجود نیست
-              </p>
-            </div>
+
+          <Link
+            href={href ? href : `/product/${item.slug}`}
+            className="btn bg-primary  text-white py-3.5 px-5 rounded-2xl flex items-center gap-2 transition text-lg hover:bg-primary/90"
+          >
+            <ShoppingBasket className="size-6" />
+            خرید محصول
+          </Link>
+        </div>
+      ) : (
+        <div className="flex items-center justify-between bg-gray-100 rounded-lg p-2">
+          <div>
+            <p className="font-bold text-xl text-zinc-800">ناموجود</p>
           </div>
-        )}
-      </div>
-    </Link>
+
+          <Link
+            href={href ? href : `/product/${item.slug}`}
+            className="btn !bg-orange-400  text-white py-3.5 px-5 rounded-2xl flex items-center gap-2 transition text-lg "
+          >
+            <ShoppingBasket className="size-6" />
+            مشاهده
+          </Link>
+        </div>
+      )}
+    </div>
   );
 }

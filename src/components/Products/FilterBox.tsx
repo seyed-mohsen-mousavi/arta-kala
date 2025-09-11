@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { BiSearch } from "react-icons/bi";
 import { MdChevronLeft } from "react-icons/md";
@@ -117,19 +116,6 @@ export default function FilterBox({
     <div
       className={`h-full ${isShow ? "space-y-4" : "hidden lg:flex w-1/3"} flex-col gap-2 sticky`}
     >
-      {!isShow && (
-        <div className="bg-white shadow rounded-sm p-2 flex justify-between w-full px-3 items-center">
-          <div>
-            <p className="text-zinc-800">ارسال رایگان سفارش</p>
-            <p className="font-light text-zinc-500 font-dana pt-1">
-              سفارش‌های بالای 5 میلیون تومان
-            </p>
-          </div>
-          <div className="size-14 relative">
-            <Image fill src="/free-delivery-free.svg" alt="" />
-          </div>
-        </div>
-      )}
       {hasActiveFilter && (
         <button
           onClick={() => {
@@ -224,10 +210,13 @@ export default function FilterBox({
               />
               <BiSearch className="size-6 absolute top-3 right-2 text-zinc-400" />
             </div>
-      {hasScroll && (
-        <div className="absolute bg-gradient-to-t from-black/10 to-transparent w-full h-10 bottom-0 left-0 pointer-events-none"></div>
-      )}
-            <ul className="overflow-y-auto max-h-64 text-zinc-500 pt-4 relative rounded-2xl mb-2 xl:mb-4" ref={listRef}>
+            {hasScroll && (
+              <div className="absolute bg-gradient-to-t from-black/10 to-transparent w-full h-10 bottom-0 left-0 pointer-events-none"></div>
+            )}
+            <ul
+              className="overflow-y-auto max-h-64 text-zinc-500 pt-4 relative rounded-2xl mb-2 xl:mb-4"
+              ref={listRef}
+            >
               {Array.isArray(searchedCategories) &&
               searchedCategories.length > 0 ? (
                 searchedCategories.map((cat) => {
@@ -374,7 +363,7 @@ export default function FilterBox({
                 </div>
               </div>
               <button
-                className="btn-primary mx-auto p-3 font-light rounded-xs disabled:opacity-50"
+                className="btn btn-primary mx-auto p-3 font-light rounded-xs disabled:opacity-50"
                 type="submit"
                 disabled={isPending}
               >

@@ -10,17 +10,17 @@ import {
 import { CategoryNode } from "@/types/categories";
 import ProductType from "@/types/product";
 import TabsBox from "@/components/Products/TabsBox";
-import AddToCart from "@/components/Products/AddToCart";
 import { Metadata } from "next";
 import { cache } from "react";
 import { breadcrumbSchema, productSchema } from "@/components/Schema";
 import { imageSchema } from "@/components/Schema/imageSchema";
 import Script from "next/script";
 import ProductSlider from "@/components/Products/ProductSlider";
+import AddToCart from "@/components/Products/AddToCart";
 const getProduct = cache(async (slug: string) => {
   return await GetProductBySlug(slug);
 });
-export function findCategory(
+function findCategory(
   categories: CategoryNode[],
   targetName: string
 ): CategoryNode | undefined {
@@ -99,7 +99,6 @@ export default async function Page({
   const decodedSlug = decodeURIComponent(slug);
   if (!slug || typeof slug !== "string") return notFound();
   const res = await getProduct(decodedSlug);
-  console.log(res);
   if (!res) return notFound();
 
   const data: ProductType = res;
@@ -136,7 +135,7 @@ export default async function Page({
       : data.cover_image
         ? [data.cover_image]
         : [];
-        
+  console.log(data);
   return (
     <>
       <Script
@@ -192,7 +191,6 @@ export default async function Page({
               </div>
 
               <div>
-                <p className="font-semibold text-base mb-2">توضیحات</p>
                 <div
                   className="prose text-sm [&_a]:spoiler-link"
                   dangerouslySetInnerHTML={{ __html: data.description_1 }}

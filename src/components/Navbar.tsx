@@ -27,7 +27,7 @@ import { useCategories } from "../context/CategoriesContext";
 import SearchBox from "./SearchBox";
 import { FiPhoneCall } from "react-icons/fi";
 import { CiImageOff, CiLogin } from "react-icons/ci";
-import { FaBasketShopping, FaBriefcase } from "react-icons/fa6";
+import { FaBasketShopping } from "react-icons/fa6";
 import { CartFormat, useCart } from "../context/CartContextProvider";
 import EmptyCart from "./EmptyCart";
 import ProductButton from "./ProductButton";
@@ -35,18 +35,18 @@ import UserDropdown from "./UserMenu";
 import { User } from "@/types/user";
 import { convertNumberToPersian } from "@/utils/converNumbers";
 import { LogOutIcon } from "lucide-react";
-
-function Navbar({ title }: { title?: string }) {
+import logo from "../../public/logo.png";
+function Navbar() {
   const categories = useCategories();
   const pathname = usePathname();
   const { onOpen }: any = useAuthModal();
   const links = [
     { href: "/", label: "صفحه اصلی" },
-    { href: "/products", label: "محصولات" },
+    { href: "/products", label: "همه محصولات" },
+    { href: "/products/offers", label: "کالاهای دارای تخفیف" },
     { href: "/articles", label: "مقالات" },
-    { href: "/gallery", label: "گالری" },
-    { href: "/about-us", label: "درباره ما" },
-    { href: "/contact-info", label: "ارتباط با ما" },
+    // { href: "/about-us", label: "درباره ما" },
+    // { href: "/contact-info", label: "ارتباط با ما" },
   ];
   const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
@@ -58,7 +58,7 @@ function Navbar({ title }: { title?: string }) {
           categories?.map((category, index) => (
             <li
               key={index}
-              className="group relative hover:bg-[#525d66] whitespace-nowrap pt-2"
+              className="group relative hover:bg-black/10 whitespace-nowrap pt-2"
             >
               <Link
                 href={`/products/?category_id=${category.id}`}
@@ -128,25 +128,14 @@ function Navbar({ title }: { title?: string }) {
           categories={categories}
         />
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="logo-wrapper">
-            <Image
-              alt="لوگوی تکنو صاف"
-              src="/logo.png"
-              fill
-              priority
-              className="logo-float"
-              sizes="(max-width: 768px) 40px, 48px"
-            />
-          </div>
-          {pathname !== "/" ? (
-            <h1 className="text-2xl font-bold text-zinc-700 group-hover:text-primary transition-colors ease-in-out">
-              {title || "تکنو صاف"}
-            </h1>
-          ) : (
-            <span className="text-3xl sm:text-4xl font-extrabold font-noora text-gray-800 transition-colors duration-300 float-text">
-              {title ? title : "تکنو صاف"}
-            </span>
-          )}
+          <Image
+            src={logo}
+            alt="ArtaKala - آرتا کالا"
+            title="آرتا کالا"
+            width={160}
+            height={40}
+            placeholder="blur"
+          />
         </Link>
 
         <div className="flex items-center gap-10">
@@ -156,7 +145,7 @@ function Navbar({ title }: { title?: string }) {
               href="tel:03591091009"
               className="text-lg lg:text-xl font-semibold text-black hover:text-primary-700 transition-colors"
             >
-              ۰۳۵-۹۱۰۹۱۰۰۹
+              035-36264264
             </Link>
           </div>
           <Link
@@ -184,10 +173,10 @@ function Navbar({ title }: { title?: string }) {
                   onMouseLeave={() => setIsOpen(false)}
                   className="relative sm:w-[190px] lg:w-[190px]  xl:w-[260px] 2xl:w-80 h-[35px]"
                 >
-                  <div className="absolute bg-[#3d464d] top-0  size-full rounded-xs pt-10">
+                  <div className="absolute bg-white top-0  size-full rounded-md pt-10">
                     {categories && (
                       <ul
-                        className={`bg-[#3d464d] text-white ransition-all duration-400 ease-in-out ${
+                        className={`bg-white text-[#3d464d] ransition-all duration-400 ease-in-out ${
                           isOpen ? "max-h-[500px] visible" : "max-h-0 invisible"
                         }`}
                       >
@@ -197,7 +186,7 @@ function Navbar({ title }: { title?: string }) {
                   </div>
                   <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="relative p-0 px-4 text-white z-[1] size-full text-right sm:text-xs xl:text-[.987rem] flex items-center justify-between group/button border-none outline-none"
+                    className="relative p-0 px-4 text-[#3d464d] z-[1] size-full text-right sm:text-xs xl:text-[.987rem] flex items-center justify-between group/button border-none outline-none"
                   >
                     <div className="flex items-center gap-1">
                       <HiOutlineMenuAlt2 className="sm:size-5 xl:size-7" />
@@ -217,8 +206,8 @@ function Navbar({ title }: { title?: string }) {
                     key={href}
                     href={href}
                     className={clsx(
-                      "p-2 rounded-xs transition-colors ease-out hover:bg-white/50",
-                      pathname === href && "bg-white/70 font-bold"
+                      "p-2 rounded-xs transition-colors ease-out hover:bg-white/50 hover:text-[#3d464d] font-medium",
+                      pathname === href ? "bg-white/70 font-bold" : "text-white"
                     )}
                   >
                     {label}
@@ -234,24 +223,13 @@ function Navbar({ title }: { title?: string }) {
                 ) : (
                   <button
                     onClick={onOpen}
-                    className="p-2.5 px-2.5 hidden lg:px-5 w-full font-bold rounded-full bg-white hover:bg-zinc-100 active:bg-zinc-200 transition-colors ease-in-out text-black text-center md:text-sm sm:flex text-nowrap items-center justify-center gap-1 sm:gap-3"
+                    className="p-2.5 px-2.5 hidden lg:px-6 w-full font-bold rounded-full bg-white hover:bg-zinc-100 active:bg-zinc-200 transition-colors ease-in-out text-black text-center  sm:flex text-nowrap items-center justify-center gap-1 sm:gap-3"
                     aria-label="ورود / عضویت"
                   >
                     <CiLogin className="size-5 md:size-6 stroke-1" />
                     <span className="">ورود </span>
                   </button>
                 )}
-                <ProductButton
-                  href="/marketer/dashboard"
-                  className="relative w-full group h-11 text-slate-950 transition-all font-bold flex items-center justify-center whitespace-nowrap rounded-full hover:rotate-[3deg] will-change-transform duration-300 shadow-lg hover:shadow-xl text-full pr-[4rem] pl-6 bg-white shadow-yellow-400/30 hover:shadow-yellow-400/30"
-                  aria-label="بازاریاب شو"
-                >
-                  <div>بازاریاب شو</div>
-
-                  <div className="absolute right-0 top-0 mt-1 mr-1 bg-primary p-[0.45rem] bottom-1 group-hover:w-[calc(100%-0.5rem)] transition-all rounded-full duration-300 h-9 w-9">
-                    <FaBriefcase className="size-full text-neutral-700" />
-                  </div>
-                </ProductButton>
               </div>
             </div>
           </div>

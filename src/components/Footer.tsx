@@ -1,138 +1,128 @@
 import Link from "next/link";
 import React from "react";
+import {
+  FaPhoneAlt,
+  FaWhatsapp,
+  FaInstagram,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
 
 const FooterSection = ({
   title,
   links,
   children,
 }: {
-  links: { href: string; label: string }[];
+  links: { href: string; label: string; icon?: React.ReactNode }[];
   title: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }) => {
   return (
-    <div
-      className={`p-4 rounded-lg ${title === "خدمات پس از فروش" ? "mr-10" : ""}`}
-    >
-      <h4 className="text-2xl font-semibold text-[#424242] text-right flex items-center gap-2">
-        <div className="bg-[#fec001] size-3 rounded-full" />
+    <div className={`p-4 rounded-lg ${title === "دسترسی سریع" ? "mr-10" : ""}`}>
+      <h4 className="text-2xl font-semibold text-[#424242] text-right flex items-center gap-2 mb-4">
+        <div className="bg-primary-400 w-3 h-3 rounded-full" />
         {title}
       </h4>
+
       {links.length > 0 && (
-        <ul className="list-none mt-4 text-right space-y-3 md:space-y-2">
+        <ul className="list-none mt-2 text-right space-y-3 md:space-y-2">
           {links.map((link, index) => (
-            <li key={index} className="border-b border-zinc-100 px-2 py-3">
-              <Link href={link.href} className="text-zinc-700">
+            <li
+              key={index}
+              className="flex items-center justify-between border-b border-zinc-100 px-2 py-3 hover:bg-gray-50 transition rounded-md"
+            >
+              <Link
+                href={link.href}
+                className="text-zinc-700 flex items-center gap-2"
+              >
+                {link.icon && (
+                  <span className="text-primary-500">{link.icon}</span>
+                )}
                 {link.label}
               </Link>
             </li>
           ))}
         </ul>
       )}
-      {children && children}
+
+      {children && (
+        <div className="mt-4 flex gap-4 justify-end">{children}</div>
+      )}
     </div>
   );
 };
 
 const footerData = [
   {
-    title: "ارتباط با تکنو صاف",
+    title: "شماره های ارتباطی",
     links: [
-      { href: "/about-us", label: "درباره ما" },
-      { href: "/contact-info", label: "تماس با ما" },
+      { href: "tel:03536264264", label: "۰۳۵-۳۶۲۶۴۲۶۴", icon: <FaPhoneAlt /> },
+      { href: "tel:09130176574", label: "۰۹۱۳۰۱۷۶۵۷۴", icon: <FaPhoneAlt /> },
     ],
   },
   {
-    title: "راهنمای خرید",
+    title: "آدرس شرکت",
     links: [
       {
-        href: "#payment-method",
-        label: "روش های پرداخت",
-      },
-      {
-        href: "#customer-service",
-        label: "شرایط ارسال سفارشات",
-      },
-      {
-        href: "#purchasing-process",
-        label: "راهنمای خرید از تکنو صاف",
-      },
-      {
-        href: "#proform-invoice",
-        label: "راهنمای پیش فاکتور",
+        href: "#",
+        label: "یزد-خیابان شهید رجایی-نبش کوچه 30-آرتاکالا",
+        icon: <FaMapMarkerAlt />,
       },
     ],
   },
   {
-    title: "خدمات پس از فروش",
+    title: "لینک مفید",
     links: [
-      { href: "#guarantee", label: "خدمات پس از فروش" },
+      { href: "#", label: "کالاهای دارای تخفیف" },
+      { href: "#", label: "کالاهای ویژه" },
+      { href: "#", label: "کالاهای پرفروش" },
+      { href: "#", label: "محصولات دارای تخفیف" },
+      { href: "#", label: "محصولات ویژه" },
+    ],
+  },
+  {
+    title: "دسترسی سریع",
+    links: [
+      { href: "#", label: "مقالات" },
+      { href: "#", label: "ورود به حساب" },
+    ],
+  },
+  {
+    title: "فروشگاه در رسانه ها",
+    links: [
       {
-        href: "#return-conditions",
-        label: "شرایط بازگشت کالا",
+        href: "https://www.instagram.com/https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwie9ci72ciEAxWE9gIHHfB7CaMQFnoECA0QAw&url=https%3A%2F%2Fwww.instagram.com%2Farta_kalaa%2F%3Fhl%3Dfa&usg=AOvVaw38WwvFwsYB6p_aeEA3VZnU&opi=89978449",
+        label: "اینستاگرام",
+        icon: <FaInstagram />,
+      },
+      {
+        href: "https://api.whatsapp.com/send?phone=989199750828",
+        label: "واتساپ",
+        icon: <FaWhatsapp />,
       },
     ],
-    content: (
-      <div className="mt-6 text-center">
-        <Link
-          href="https://trustseal.enamad.ir/?id=403156&Code=f2vcEIt1dlWn7fD4fETvbnOfiPWwNZtq"
-          target="_blank"
-          referrerPolicy="origin"
-          rel="noopener noreferrer"
-          className="cursor-pointer p-2 lg:p-4 flex items-center justify-center border-neutral-200 rounded"
-        >
-          <div className="size-[75px] leading-0">
-            <img
-              src="https://trustseal.enamad.ir/logo.aspx?id=403156&Code=f2vcEIt1dlWn7fD4fETvbnOfiPWwNZtq"
-              alt="نماد اعتماد الکترونیکی"
-              className="cursor-pointer rounded-md border border-[#424242] p-1 hover:shadow-md transition object-contain"
-              referrerPolicy="origin"
-              loading="lazy"
-              width={75}
-              height={75}
-              title="نماد اعتماد الکترونیکی"
-            />
-          </div>
-        </Link>
-      </div>
-    ),
   },
 ];
 
 function Footer() {
   return (
-    <footer className="w-full bg-[#fed75c] block font-pelak font-medium py-7 shrink-0">
+    <footer className="w-full bg-white shadow-2xl block font-pelak font-medium py-10 shrink-0">
       <div className="flex flex-col md:flex-row justify-center">
-        <div className="p-4 rounded-lg ">
-          <h4 className="text-2xl font-semibold text-[#424242] text-right flex items-center gap-2">
-            <div className="bg-[#fec001] size-3 rounded-full" />
-            فروشگاه تکنو صاف
-          </h4>
-          <p className="text-lg font-medium text-black mt-10 max-w-[460px]">
-            تکنو صاف با فراهم آوردن تنوع معقولی از محصولات در کنار عرضه با قیمت
-            مناسب آن‌ها، به دنبال خرید راحت و رضایت‌بخش ابزارآلات برای همراهان
-            خودش است و این مهم را با مهیا کردن امکان بررسی فنی و کاربردی
-            ابزارآلات و ارائه محتوای مناسب و غنی محقق می‌سازد.
-          </p>
-        </div>
-        <div className="flex flex-wrap flex-col sm:flex-row justify-center md:justify-between max-w-screen-xl">
+        <div className="flex flex-wrap flex-col sm:flex-row justify-center md:justify-between max-w-screen-xl w-full">
           {footerData.map((section, index) => (
             <FooterSection
               key={index}
               title={section.title}
               links={section.links || []}
-            >
-              {section.content}
-            </FooterSection>
+            />
           ))}
         </div>
       </div>
-      <div id="wze60" className="text-center pt-10 mx-auto mt-5">
+      <div className="text-center pt-10 mx-auto mt-5">
         <p
-          className="text-lg text-gray-600 -mt-16"
-          style={{ fontFamily: "pelak,tahoma,serif" }}
+          className="text-lg text-gray-600"
+          style={{ fontFamily: "pelak, tahoma, serif" }}
         >
-          تمام حقوق این سایت نزد تکنو صاف محفوظ است.
+          تمام حقوق این سایت نزد آرتا کالا محفوظ است.
         </p>
       </div>
     </footer>

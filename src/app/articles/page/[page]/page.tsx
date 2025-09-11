@@ -28,11 +28,11 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const category = (await searchParams).category;
 
-  let title = "مقالات تکنو صاف";
-  let description = "آخرین مقالات و اخبار مرتبط با تکنو صاف را اینجا بخوانید.";
+  let title = "مقالات آرتا کالا";
+  let description = "آخرین مقالات و اخبار مرتبط با آرتا کالا را اینجا بخوانید.";
   if (category) {
-    title = `مقالات دسته‌بندی ${category} | تکنو صاف`;
-    description = `مقالات مرتبط با دسته‌بندی شماره ${category} در فروشگاه تکنو صاف.`;
+    title = `مقالات دسته‌بندی ${category} | آرتا کالا`;
+    description = `مقالات مرتبط با دسته‌بندی شماره ${category} در فروشگاه آرتا کالا.`;
   }
 
   return {
@@ -40,15 +40,15 @@ export async function generateMetadata({
     description,
     keywords: [
       "مقالات",
-      "تکنو صاف",
-      "اخبار تکنو صاف",
+      "آرتا کالا",
+      "اخبار آرتا کالا",
       ...(category ? [`دسته‌بندی ${category}`] : []),
     ],
     openGraph: {
       title,
       description,
       url: `${process.env.NEXT_PUBLIC_SITE_URL}/articles${category ? `?category=${category}` : ""}`,
-      siteName: "تکنو صاف",
+      siteName: "آرتا کالا",
       locale: "fa_IR",
       type: "website",
     },

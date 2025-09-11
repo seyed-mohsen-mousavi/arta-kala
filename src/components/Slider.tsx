@@ -13,6 +13,7 @@ function ProductSlider({
   className,
   slidesPerView = 4,
   firstItem,
+  navigation = true,
 }: {
   items: any[];
   Card: any;
@@ -20,6 +21,7 @@ function ProductSlider({
   slidesPerView?: number;
   className?: string;
   firstItem?: ReactNode;
+  navigation?: boolean;
 }) {
   const swiperRef: any = useRef(null);
   const safeItems = Array.isArray(items) ? items : [];
@@ -42,13 +44,13 @@ function ProductSlider({
           0: {
             slidesPerView: 1,
           },
-          480: {
+          728: {
             slidesPerView: 2,
           },
-          768: {
+          1220: {
             slidesPerView: 3,
           },
-          1224: {
+          1720: {
             slidesPerView: slidesPerView,
           },
         }}
@@ -65,9 +67,11 @@ function ProductSlider({
       </Swiper>
 
       {/* دکمه‌ها */}
-      <button
-        onClick={() => swiperRef.current?.slideNext()}
-        className={`
+      {navigation && (
+        <>
+          <button
+            onClick={() => swiperRef.current?.slideNext()}
+            className={`
     absolute top-1/2 -left-8 md:-left-12 -translate-y-1/2 
     z-20 
     w-12 h-12 md:w-14 md:h-14
@@ -79,16 +83,16 @@ function ProductSlider({
     hover:shadow-md 
     transition-shadow duration-200 ease-in-out 
     active:outline-none active:ring-2 active:ring-primary-400 
-    ${className ? className  : ""}
+    ${className ? className : ""}
   `}
-        aria-label="Next Slide"
-      >
-        <GoChevronLeft className="size-8 md:size-10" />
-      </button>
+            aria-label="Next Slide"
+          >
+            <GoChevronLeft className="size-8 md:size-10" />
+          </button>
 
-      <button
-        onClick={() => swiperRef.current?.slidePrev()}
-        className={`
+          <button
+            onClick={() => swiperRef.current?.slidePrev()}
+            className={`
     absolute top-1/2 -right-8 md:-right-12 -translate-y-1/2 
     z-20 
     w-12 h-12 md:w-14 md:h-14
@@ -100,12 +104,14 @@ function ProductSlider({
     hover:shadow-md 
     transition-shadow duration-200 ease-in-out 
     active:outline-none active:ring-2 active:ring-primary-400 
-    ${className ? className  : ""}
+    ${className ? className : ""}
   `}
-        aria-label="Previous Slide"
-      >
-        <GoChevronRight className="size-8 md:size-10" />
-      </button>
+            aria-label="Previous Slide"
+          >
+            <GoChevronRight className="size-8 md:size-10" />
+          </button>
+        </>
+      )}
     </div>
   ) : (
     "خطا در دریافت اطلاعات"

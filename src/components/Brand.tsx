@@ -1,21 +1,27 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 
-export default function Brand({ item }: { item: any }) {
+interface BrandProps {
+  item: {
+    image: string;
+    name: string;
+  };
+}
+
+export default function Brand({ item }: BrandProps) {
   return (
-    <Link href={item?.link} className="size-full">
+    <div className="w-full h-full flex items-center justify-center">
       <Image
-        className="h-full block mx-auto object-contain w-full max-h-32"
-        width={150}
         src={item.image}
         alt={item.name}
         title={item.name}
+        width={150}
         height={150}
+        className="object-contain h-32 w-full"
         loading="lazy"
         fetchPriority="low"
       />
-    </Link>
+    </div>
   );
 }
